@@ -1,0 +1,53 @@
+{
+  "name": "prestapp",
+  "version": "1.0.0",
+  "description": "Aplicacion para prestamos en modalidad diaria",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "babel-node dist/index.js --env-file=.env",
+    "build": "babel src/ -d dist",
+    "dev": "nodemon src/index.js --exec babel-node --env-file=.env"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gguerreroi/prestaapp.git"
+  },
+  "author": "gguerrero",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gguerreroi/prestaapp/issues"
+  },
+  "homepage": "https://github.com/gguerreroi/prestaapp#readme",
+  "dependencies": {
+    "@babel/node": "^7.28.0",
+    "@babel/polyfill": "^7.12.1",
+    "autoprefixer": "^10.4.21",
+    "axios": "^1.11.0",
+    "connect-session-sequelize": "^8.0.2",
+    "cookie-parser": "^1.4.7",
+    "cron": "^4.3.3",
+    "dotenv": "^17.2.1",
+    "ejs": "^3.1.10",
+    "exceljs": "^4.4.0",
+    "express": "^5.1.0",
+    "express-ejs-layouts": "^2.5.1",
+    "express-fileupload": "^1.5.2",
+    "express-session": "^1.18.2",
+    "fs-extra": "^11.3.1",
+    "morgan": "^1.10.1",
+    "mssql": "^11.0.1",
+    "passport": "^0.7.0",
+    "passport-local": "^1.0.0",
+    "postcss": "^8.5.6",
+    "puppeteer": "^24.17.0",
+    "sequelize": "^6.37.7",
+    "tailwindcss": "^4.1.12"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.28.3",
+    "@babel/core": "^7.28.3",
+    "@babel/preset-env": "^7.28.3",
+    "nodemon": "^3.1.10"
+  }
+}

@@ -1,0 +1,427 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PrestaApp | Nuevo Préstamo</title>
+
+    <!-- Su tema general -->
+    <link rel="stylesheet" href="/assets/css/style.custom.css" />
+
+    <!-- Estilos específicos de esta pantalla -->
+    <style>
+        .loanPage{ min-height: 100vh; padding: 18px; }
+        .loanHeader{
+            max-width: 980px; margin: 0 auto 14px;
+            display: grid; grid-template-columns: auto 1fr auto;
+            gap: 12px; align-items: center;
+        }
+        .loanHeader__title h1{ margin: 0; font-size: 18px; }
+        .loanHeader__title p{ margin: 4px 0 0; color: var(--muted); font-size: 13px; }
+        .loanHeader__spacer{ height: 1px; }
+
+        .loanMain{ max-width: 980px; margin: 0 auto; }
+        .loanCard{ padding: 16px; }
+
+        .form{ display: grid; gap: 14px; }
+        .field{ display: grid; gap: 8px; }
+
+        .label{ font-size: 13px; color: var(--muted); font-weight: 700; }
+
+        .input{
+            width: 100%;
+            padding: 12px 12px;
+            border-radius: 14px;
+            border: 1px solid var(--line);
+            background: rgba(255,255,255,.03);
+            color: var(--text);
+            outline: none;
+        }
+        .input:focus{
+            border-color: rgba(79,140,255,.45);
+            box-shadow: 0 0 0 4px rgba(79,140,255,.12);
+        }
+
+        .help{ font-size: 12px; color: var(--muted); }
+        .error{ font-size: 12px; color: rgba(255, 77, 109, .95); min-height: 16px; }
+
+        .rowBetween{
+            display: flex; align-items: center; justify-content: space-between; gap: 10px;
+        }
+
+        .amountPill{
+            border: 1px solid rgba(79,140,255,.35);
+            background: rgba(79,140,255,.12);
+            border-radius: 999px;
+            padding: 6px 10px;
+            font-weight: 800;
+            font-size: 13px;
+            white-space: nowrap;
+        }
+
+        .range{ width: 100%; accent-color: var(--primary); }
+
+        .rangeMeta{
+            display: flex; justify-content: space-between;
+            color: var(--muted); font-size: 12px;
+        }
+
+        .summary{
+            margin-top: 4px;
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            padding: 12px;
+            background: rgba(0,0,0,.10);
+            display: grid;
+            gap: 10px;
+        }
+        .summary__item{
+            display: grid;
+            grid-template-columns: 130px 1fr;
+            gap: 12px;
+            align-items: center;
+        }
+        .summary__label{ color: var(--muted); font-size: 12px; }
+        .summary__value{ font-weight: 800; font-size: 13px; word-break: break-word; }
+
+        .calcGrid{
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .miniCard{
+            border: 1px solid var(--line);
+            background: rgba(255,255,255,.02);
+            border-radius: 16px;
+            padding: 12px;
+        }
+        .miniCard__label{ color: var(--muted); font-size: 12px; margin: 0; }
+        .miniCard__value{ margin: 6px 0 0; font-size: 18px; font-weight: 900; }
+
+        .pillOk{
+            display: inline-flex; align-items:center; gap:8px;
+            border: 1px solid rgba(0, 255, 170, .30);
+            background: rgba(0,255,170,.10);
+            border-radius: 999px;
+            padding: 6px 10px;
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .actions{
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+
+        .fineprint{ margin: 0; font-size: 12px; }
+
+        @media (max-width: 720px){
+            .loanHeader{ grid-template-columns: 1fr; justify-items: start; }
+            .summary__item{ grid-template-columns: 1fr; }
+            .calcGrid{ grid-template-columns: 1fr; }
+            .actions{ justify-content: stretch; }
+            .actions .btn{ width: 100%; }
+        }
+    </style>
+</head>
+
+<body class="app">
+<div class="loanPage">
+    <header class="loanHeader">
+        <a class="btn btn--ghost" href="/">← Volver</a>
+
+        <div class="loanHeader__title">
+            <h1>Crear préstamo</h1>
+            <p></p>
+        </div>
+
+        <div class="loanHeader__spacer">
+            <span class="pillOk" id="pillStatus" style="display:none;">✔ Listo</span>
+        </div>
+    </header>
+
+    <main class="loanMain">
+        <section class="card loanCard">
+            <div class="card__header">
+                <div>
+                    <h2 class="card__title">Datos del préstamo</h2>
+                    <p class="card__subtitle">CUI, nombre del cliente y monto</p>
+                </div>
+            </div>
+
+            <form id="loanForm" class="form" novalidate>
+                <!-- CUI -->
+                <div class="field">
+                    <label class="label" for="cui">CUI (13 dígitos)</label>
+                    <input
+                            id="cui"
+                            name="cui"
+                            class="input"
+                            inputmode="numeric"
+                            autocomplete="off"
+                            maxlength="13"
+                            placeholder="Ej: 1234567890123"
+                            required
+                    />
+                    <small class="help">Solo números, 13 dígitos exactos.</small>
+                    <small class="error" id="cuiError" aria-live="polite"></small>
+                </div>
+
+                <!-- Nombre -->
+                <div class="field">
+                    <label class="label" for="nombre">Nombre completo</label>
+                    <input
+                            id="nombre"
+                            name="nombre"
+                            class="input"
+                            autocomplete="name"
+                            placeholder="Ej: Juan Pérez"
+                            required
+                    />
+                    <small class="error" id="nombreError" aria-live="polite"></small>
+                </div>
+
+                <!-- Cantidad -->
+                <div class="field">
+                    <div class="rowBetween">
+                        <label class="label" for="cantidad">Cantidad</label>
+                        <div class="amountPill" id="amountPill">Q 500</div>
+                    </div>
+
+                    <input
+                            id="cantidad"
+                            name="cantidad"
+                            class="range"
+                            type="range"
+                            min="500"
+                            max="50000"
+                            step="500"
+                            value="500"
+                            aria-describedby="cantidadHelp"
+                    />
+
+                    <div class="rangeMeta">
+                        <span>Q 500</span>
+                        <span>Q 50,000</span>
+                    </div>
+
+                </div>
+
+                <!-- Cálculos -->
+                <div class="calcGrid">
+                    <div class="miniCard">
+                        <p class="miniCard__label">Cuota diaria</p>
+                        <p class="miniCard__value" id="cuotaDiaria">Q 0</p>
+                        <p class="help" style="margin:8px 0 0;">Redondeada hacia arriba a quetzales enteros.</p>
+                    </div>
+
+                    <div class="miniCard">
+                        <p class="miniCard__label">Total a pagar (35 días)</p>
+                        <p class="miniCard__value" id="totalPagar">Q 0</p>
+                        <p class="help" style="margin:8px 0 0;">Plazo fijo: 35 días.</p>
+                    </div>
+                </div>
+
+                <!-- Resumen -->
+                <div class="summary" aria-live="polite">
+                    <div class="summary__item">
+                        <span class="summary__label">CUI</span>
+                        <span class="summary__value" id="sumCui">—</span>
+                    </div>
+                    <div class="summary__item">
+                        <span class="summary__label">Cliente</span>
+                        <span class="summary__value" id="sumNombre">—</span>
+                    </div>
+                    <div class="summary__item">
+                        <span class="summary__label">Principal</span>
+                        <span class="summary__value" id="sumPrincipal">Q 500</span>
+                    </div>
+                    <div class="summary__item">
+                        <span class="summary__label">Cuota diaria</span>
+                        <span class="summary__value" id="sumCuota">Q 0</span>
+                    </div>
+                    <div class="summary__item">
+                        <span class="summary__label">Total a pagar</span>
+                        <span class="summary__value" id="sumTotal">Q 0</span>
+                    </div>
+                </div>
+
+                <!-- Acciones -->
+                <div class="actions">
+                    <button type="button" class="btn" id="btnReset">Limpiar</button>
+                    <button type="submit" class="btn btn--primary" id="btnSubmit" disabled>
+                        Guardar préstamo
+                    </button>
+                </div>
+
+                <p class="muted fineprint">
+
+                </p>
+            </form>
+        </section>
+    </main>
+</div>
+
+<script>
+	(function () {
+		const form = document.getElementById('loanForm');
+
+		const cui = document.getElementById('cui');
+		const nombre = document.getElementById('nombre');
+		const cantidad = document.getElementById('cantidad');
+
+		const cuiError = document.getElementById('cuiError');
+		const nombreError = document.getElementById('nombreError');
+
+		const amountPill = document.getElementById('amountPill');
+		const btnSubmit = document.getElementById('btnSubmit');
+		const btnReset = document.getElementById('btnReset');
+		const pillStatus = document.getElementById('pillStatus');
+
+		const sumCui = document.getElementById('sumCui');
+		const sumNombre = document.getElementById('sumNombre');
+		const sumPrincipal = document.getElementById('sumPrincipal');
+		const sumCuota = document.getElementById('sumCuota');
+		const sumTotal = document.getElementById('sumTotal');
+
+		const uiCuota = document.getElementById('cuotaDiaria');
+		const uiTotal = document.getElementById('totalPagar');
+
+		const PLAZO_DIAS = 35;      // constante
+		const K_PAR = 20;           // U35
+		const K_IMPAR = 15;         // V35
+
+		// Q enteros (sin centavos)
+		const moneyInt = (n) => {
+			const value = Math.round(Number(n || 0));
+			return new Intl.NumberFormat('es-GT', { maximumFractionDigits: 0 }).format(value);
+		};
+
+		const moneyQ = (n) => `Q ${moneyInt(n)}`;
+
+		function onlyDigits13(value) {
+			const digits = String(value || '').replace(/\D/g, '');
+			return digits.slice(0, 13);
+		}
+
+		function calcular(principal) {
+			const N = principal / 500;                // factor 500
+			const par = Math.ceil(N / 2);             // REDONDEAR(N/2;0) para enteros -> equivale a CEIL
+			const impar = N - par;                    // N - par
+
+			const cuota = Math.ceil((K_PAR * par) + (K_IMPAR * impar)); // redondeo hacia arriba a entero
+			const total = cuota * PLAZO_DIAS;
+
+			return { N, par, impar, cuota, total };
+		}
+
+		function validateAndRender() {
+			let ok = true;
+
+			// Normalizar CUI
+			const cuiVal = onlyDigits13(cui.value);
+			if (cui.value !== cuiVal) cui.value = cuiVal;
+
+			if (!cuiVal) {
+				cuiError.textContent = 'El CUI es obligatorio.';
+				ok = false;
+			} else if (cuiVal.length !== 13) {
+				cuiError.textContent = 'El CUI debe tener exactamente 13 dígitos.';
+				ok = false;
+			} else {
+				cuiError.textContent = '';
+			}
+
+			// Nombre
+			const nameVal = (nombre.value || '').trim();
+			if (!nameVal) {
+				nombreError.textContent = 'El nombre completo es obligatorio.';
+				ok = false;
+			} else if (nameVal.length < 3) {
+				nombreError.textContent = 'Ingrese un nombre válido.';
+				ok = false;
+			} else {
+				nombreError.textContent = '';
+			}
+
+			// Principal (slider)
+			const principal = Number(cantidad.value || 500);
+			amountPill.textContent = moneyQ(principal);
+
+			// Cálculos
+			const calc = calcular(principal);
+			uiCuota.textContent = moneyQ(calc.cuota);
+			uiTotal.textContent = moneyQ(calc.total);
+
+			// Resumen
+			sumCui.textContent = cuiVal ? cuiVal : '—';
+			sumNombre.textContent = nameVal ? nameVal : '—';
+			sumPrincipal.textContent = moneyQ(principal);
+			sumCuota.textContent = moneyQ(calc.cuota);
+			sumTotal.textContent = moneyQ(calc.total);
+
+			btnSubmit.disabled = !ok;
+			pillStatus.style.display = ok ? 'inline-flex' : 'none';
+
+			return { ok, principal, calc, cuiVal, nameVal };
+		}
+
+		// Eventos
+		cui.addEventListener('input', validateAndRender);
+		nombre.addEventListener('input', validateAndRender);
+		cantidad.addEventListener('input', validateAndRender);
+
+		btnReset.addEventListener('click', () => {
+			form.reset();
+			cantidad.value = 500;
+			pillStatus.style.display = 'none';
+			validateAndRender();
+		});
+
+		form.addEventListener('submit', (e) => {
+			e.preventDefault();
+
+			const state = validateAndRender();
+			if (!state.ok) return;
+
+			const payload = {
+				cui: state.cuiVal,
+				nombre: state.nameVal,
+				principal: state.principal,
+				cuota_diaria: state.calc.cuota,
+				total_pagar: state.calc.total,
+				plazo_dias: PLAZO_DIAS
+			};
+
+			// Envío a backend (ajuste la ruta)
+			// fetch('/api/prestamos', {
+			//   method: 'POST',
+			//   headers: { 'Content-Type': 'application/json' },
+			//   body: JSON.stringify(payload)
+			// })
+			// .then(r => r.ok ? r.json() : Promise.reject(r))
+			// .then(data => { ... })
+			// .catch(err => { ... });
+
+			console.log('Préstamo a guardar:', payload);
+
+			// UX simple
+			btnSubmit.textContent = 'Guardado ✔';
+			btnSubmit.disabled = true;
+			setTimeout(() => {
+				btnSubmit.textContent = 'Guardar préstamo';
+				validateAndRender();
+			}, 1200);
+		});
+
+		// init
+		validateAndRender();
+	})();
+</script>
+</body>
+</html>

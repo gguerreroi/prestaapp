@@ -1,0 +1,11 @@
+{
+  "presets": [
+    "@babel/preset-env"
+  ],
+  "ignore": [
+    "/public",
+    "**/__public__",
+    "**/src**/__public__",
+    "src**/__public__"
+  ]
+}

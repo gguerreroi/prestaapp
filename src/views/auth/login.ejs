@@ -1,0 +1,44 @@
+<div class="d-flex flex-column flex-column-fluid justify-content-center align-items-center min-vh-100 py-10 px-5">
+
+    <div class="w-100" style="max-width: 420px;">
+        <div class="card gc-auth-card">
+            <div class="card-body p-10 p-lg-12">
+
+                <!-- Logo dentro del form -->
+                <div class="text-center mb-8">
+                    <img alt="Logo" src="/assets/media/logos/logo-bg.png" class="gc-login-logo mb-4"/>
+                    <h1 class="fw-bolder mb-2">Iniciar sesión</h1>
+                    <div class="text-muted">Ingrese sus credenciales para continuar</div>
+                </div>
+
+                <form class="w-100" novalidate="novalidate" id="kt_sign_in_form" action="#" method="post">
+                    <div class="fv-row mb-5">
+                        <label class="form-label fw-semibold">Usuario</label>
+                        <input class="form-control form-control-lg" type="text" name="email" autocomplete="off"
+                               id="email"/>
+                    </div>
+
+                    <div class="fv-row mb-8">
+                        <label class="form-label fw-semibold">Contraseña</label>
+                        <input class="form-control form-control-lg" type="password" name="password" id="password"/>
+                    </div>
+
+                    <button type="submit" id="kt_sign_in_submit" class="btn btn-lg btn-primary w-100" disabled>
+                        <span class="indicator-label">Entrar</span>
+                        <span class="indicator-progress">
+                Por favor espere...
+                <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+              </span>
+                    </button>
+                </form>
+
+            </div>
+        </div>
+
+        <div class="text-center text-muted fs-7 mt-6">
+            ©
+            <script>document.write(new Date().getFullYear())</script>
+            GuateEmpeños Credifácil
+        </div>
+    </div>
+</div>

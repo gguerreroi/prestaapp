@@ -1,0 +1,8 @@
+<script src="/assets/plugins/global/plugins.bundle.js"></script>
+<script src="/assets/js/scripts.bundle.js"></script>
+
+<% if (typeof pageScripts !== 'undefined' && Array.isArray(pageScripts)) { %>
+    <% pageScripts.forEach(function (src) { %>
+        <script src="<%= src %>"></script>
+    <% }) %>
+<% } %>

@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <base href="/" />
+    <title>PrestaApp | Inicio</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Metronic 8 Global Styles (ajuste rutas según su demo/build) -->
+    <link rel="stylesheet" href="/assets/plugins/global/plugins.bundle.css" />
+    <link rel="stylesheet" href="/assets/css/style.bundle.css" />
+
+    <!-- (Opcional) su CSS custom encima para pequeños ajustes -->
+    <link rel="stylesheet" href="/assets/css/style.custom.css" />
+
+</head>
+
+<body id="kt_body"
+      class="header-fixed header-tablet-and-mobile-fixed toolbar-enabled toolbar-fixed toolbar-tablet-and-mobile-fixed aside-enabled aside-fixed"
+      style="--kt-toolbar-height:55px;--kt-toolbar-height-tablet-and-mobile:55px">
+
+<!-- App Root -->
+<div class="d-flex flex-column flex-root">
+    <!-- Page -->
+    <div class="page d-flex flex-row flex-column-fluid">
+
+        <!-- Aside (Sidebar) -->
+        <div id="kt_aside"
+             class="aside aside-dark aside-hoverable"
+             data-kt-drawer="true"
+             data-kt-drawer-name="aside"
+             data-kt-drawer-activate="{default: true, lg: false}"
+             data-kt-drawer-overlay="true"
+             data-kt-drawer-width="{default:'200px', '300px': '250px'}"
+             data-kt-drawer-direction="start"
+             data-kt-drawer-toggle="#kt_aside_mobile_toggle">
+
+            <!-- Brand -->
+            <div class="aside-logo flex-column-auto" id="kt_aside_logo">
+                <a href="/" class="d-flex align-items-center gap-3 px-6 py-6">
+                    <img alt="Logo" src="/assets/media/logos/logo-bg.png" class="h-35px" />
+                    <div class="text-white">
+                        <div class="fw-bolder">PrestaApp</div>
+                        <div class="fs-8 opacity-75">Panel</div>
+                    </div>
+                </a>
+                <div id="kt_aside_toggle" class="btn btn-icon w-auto px-0 btn-active-color-primary aside-toggle"
+                     data-kt-toggle="true"
+                     data-kt-toggle-state="active"
+                     data-kt-toggle-target="body"
+                     data-kt-toggle-name="aside-minimize">
+            <span class="svg-icon svg-icon-1 rotate-180">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                     fill="none">
+                    <path d="M11.2657 11.4343L15.45 7.25C15.8642 6.83579 15.8642 6.16421 15.45 5.75C15.0358 5.33579 14.3642 5.33579 13.95 5.75L8.40712 11.2929C8.01659 11.6834 8.01659 12.3166 8.40712 12.7071L13.95 18.25C14.3642 18.6642 15.0358 18.6642 15.45 18.25C15.8642 17.8358 15.8642 17.1642 15.45 16.75L11.2657 12.5657C10.9533 12.2533 10.9533 11.7467 11.2657 11.4343Z"
+                          fill="black"/>
+                </svg>
+            </span>
+                </div>
+            </div>
+
+            <!-- Menu -->
+            <div class="aside-menu flex-column-fluid">
+                <div class="hover-scroll-overlay-y my-5 my-lg-5" id="kt_aside_menu_wrapper" data-kt-scroll="true"
+                     data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-height="auto"
+                     data-kt-scroll-dependencies="#kt_aside_logo" data-kt-scroll-wrappers="#kt_aside_menu"
+                     data-kt-scroll-offset="0">
+
+                    <div class="menu menu-column menu-title-gray-300 menu-state-primary menu-state-icon-primary
+                        menu-state-bullet-primary menu-arrow-gray-500"
+                         id="kt_aside_menu" data-kt-menu="true" data-kt-menu-expand="false">
+
+                        <div class="menu-item">
+                            <a class="menu-link active" href="/">
+                  <span class="menu-icon">
+                    <i class="ki-duotone ki-home fs-2">
+                      <span class="path1"></span><span class="path2"></span>
+                    </i>
+                  </span>
+                                <span class="menu-title">Inicio</span>
+                            </a>
+                        </div>
+
+                        <div class="menu-item">
+                            <a class="menu-link" href="/prestamos">
+                  <span class="menu-icon">
+                    <i class="ki-duotone ki-credit-cart fs-2">
+                      <span class="path1"></span><span class="path2"></span>
+                    </i>
+                  </span>
+                                <span class="menu-title">Préstamos</span>
+                            </a>
+                        </div>
+
+                        <div class="menu-item">
+                            <a class="menu-link" href="/clientes">
+                  <span class="menu-icon">
+                    <i class="ki-duotone ki-people fs-2">
+                      <span class="path1"></span><span class="path2"></span>
+                    </i>
+                  </span>
+                                <span class="menu-title">Clientes</span>
+                            </a>
+                        </div>
+
+                        <div class="menu-item">
+                            <a class="menu-link" href="/pagos">
+                  <span class="menu-icon">
+                    <i class="ki-duotone ki-receipt fs-2">
+                      <span class="path1"></span><span class="path2"></span>
+                    </i>
+                  </span>
+                                <span class="menu-title">Pagos</span>
+                            </a>
+                        </div>
+
+                        <div class="menu-item">
+                            <a class="menu-link" href="/reportes">
+                  <span class="menu-icon">
+                    <i class="ki-duotone ki-chart-line fs-2">
+                      <span class="path1"></span><span class="path2"></span>
+                    </i>
+                  </span>
+                                <span class="menu-title">Reportes</span>
+                            </a>
+                        </div>
+
+                        <div class="menu-item mt-6">
+                            <div class="menu-content px-8">
+                                <div class="separator separator-dashed separator-white opacity-25"></div>
+                            </div>
+                        </div>
+
+                        <div class="menu-item">
+                            <a class="menu-link" href="/configuracion">
+                  <span class="menu-icon">
+                    <i class="ki-duotone ki-setting-2 fs-2">
+                      <span class="path1"></span><span class="path2"></span>
+                    </i>
+                  </span>
+                                <span class="menu-title">Configuración</span>
+                            </a>
+                        </div>
+
+                        <div class="menu-item">
+                            <a class="menu-link" href="/api/auth/logout">
+                  <span class="menu-icon">
+                    <i class="ki-duotone ki-exit-left fs-2">
+                      <span class="path1"></span><span class="path2"></span>
+                    </i>
+                  </span>
+                                <span class="menu-title">Cerrar sesión</span>
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Aside -->
+
+        <!-- Wrapper -->
+        <div class="wrapper d-flex flex-column flex-row-fluid" id="kt_wrapper">
+
+            <!-- Header -->
+            <div id="kt_header" class="header align-items-stretch">
+                <div class="container-fluid d-flex align-items-stretch justify-content-between">
+
+                    <!-- Mobile aside toggle -->
+                    <div class="d-flex align-items-center d-lg-none ms-n2 me-2">
+                        <div class="btn btn-icon btn-active-light-primary" id="kt_aside_mobile_toggle">
+                            <i class="ki-duotone ki-burger-menu-2 fs-1">
+                                <span class="path1"></span><span class="path2"></span><span class="path3"></span>
+                            </i>
+                        </div>
+                    </div>
+
+                    <!-- Header title -->
+                    <div class="d-flex align-items-center flex-grow-1">
+                        <div class="page-title d-flex flex-column justify-content-center me-3">
+                            <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">
+                                Inicio
+                            </h1>
+                            <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
+                                <li class="breadcrumb-item text-muted">Resumen de su operación hoy</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Header right -->
+                    <div class="d-flex align-items-center flex-shrink-0">
+                        <!-- Search -->
+                        <div class="d-none d-md-flex align-items-center me-3">
+                <span class="svg-icon svg-icon-2 svg-icon-gray-500 position-absolute ms-4">
+                  <i class="ki-duotone ki-magnifier fs-2">
+                    <span class="path1"></span><span class="path2"></span>
+                  </i>
+                </span>
+                            <input type="text"
+                                   class="form-control form-control-solid w-250px ps-12"
+                                   placeholder="Buscar cliente, préstamo, recibo..." />
+                        </div>
+
+                        <!-- User -->
+                        <div class="d-flex align-items-center">
+                            <div class="d-flex flex-column me-3 text-end">
+                                <span class="fw-bold text-gray-800">Gabo</span>
+                                <span class="fs-8 text-muted">Administrador</span>
+                            </div>
+                            <div class="symbol symbol-35px symbol-circle">
+                                <span class="symbol-label bg-light-primary text-primary fw-bolder">G</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <!-- /Header -->
+
+            <!-- Content -->
+            <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+                <div class="container-fluid">
+
+                    <!-- KPI Cards -->
+                    <div class="row g-5 g-xl-8">
+
+                        <div class="col-xl-3 col-md-6">
+                            <div class="card card-xl-stretch mb-xl-8">
+                                <div class="card-body d-flex align-items-center">
+                                    <div class="symbol symbol-45px me-5">
+                      <span class="symbol-label bg-light-primary">
+                        <i class="ki-duotone ki-wallet fs-2 text-primary">
+                          <span class="path1"></span><span class="path2"></span>
+                        </i>
+                      </span>
+                                    </div>
+                                    <div class="d-flex flex-column">
+                                        <span class="text-muted fw-semibold">Cobros de hoy</span>
+                                        <span class="fs-2 fw-bold text-gray-800">Q 0</span>
+                                        <span class="fs-8 text-muted">Actualizado recientemente</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-3 col-md-6">
+                            <div class="card card-xl-stretch mb-xl-8">
+                                <div class="card-body d-flex align-items-center">
+                                    <div class="symbol symbol-45px me-5">
+                      <span class="symbol-label bg-light-warning">
+                        <i class="ki-duotone ki-time fs-2 text-warning">
+                          <span class="path1"></span><span class="path2"></span>
+                        </i>
+                      </span>
+                                    </div>
+                                    <div class="d-flex flex-column">
+                                        <span class="text-muted fw-semibold">Pagos pendientes</span>
+                                        <span class="fs-2 fw-bold text-gray-800">0</span>
+                                        <span class="fs-8 text-muted">Próximos 7 días</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-3 col-md-6">
+                            <div class="card card-xl-stretch mb-xl-8">
+                                <div class="card-body d-flex align-items-center">
+                                    <div class="symbol symbol-45px me-5">
+                      <span class="symbol-label bg-light-success">
+                        <i class="ki-duotone ki-user fs-2 text-success">
+                          <span class="path1"></span><span class="path2"></span>
+                        </i>
+                      </span>
+                                    </div>
+                                    <div class="d-flex flex-column">
+                                        <span class="text-muted fw-semibold">Clientes nuevos</span>
+                                        <span class="fs-2 fw-bold text-gray-800">0</span>
+                                        <span class="fs-8 text-muted">Últimas 24 horas</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-3 col-md-6">
+                            <div class="card card-xl-stretch mb-xl-8">
+                                <div class="card-body d-flex align-items-center">
+                                    <div class="symbol symbol-45px me-5">
+                      <span class="symbol-label bg-light-info">
+                        <i class="ki-duotone ki-graph-up fs-2 text-info">
+                          <span class="path1"></span><span class="path2"></span>
+                        </i>
+                      </span>
+                                    </div>
+                                    <div class="d-flex flex-column">
+                                        <span class="text-muted fw-semibold">Préstamos activos</span>
+                                        <span class="fs-2 fw-bold text-gray-800">0</span>
+                                        <span class="fs-8 text-muted">En curso</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Quick Actions + Alerts -->
+                    <div class="row g-5 g-xl-8">
+                        <div class="col-xl-8">
+                            <div class="card mb-5 mb-xl-8">
+                                <div class="card-header">
+                                    <div class="card-title">
+                                        <h3 class="fw-bold m-0">Acciones rápidas</h3>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="d-flex flex-wrap gap-3">
+                                        <a href="/prestamos/nuevo" class="btn btn-primary">+ Nuevo préstamo</a>
+                                        <a href="/pagos/registrar" class="btn btn-light-primary">Registrar pago</a>
+                                        <a href="/clientes/nuevo" class="btn btn-light">+ Nuevo cliente</a>
+                                        <a href="/reportes" class="btn btn-light">Ver reportes</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-4">
+                            <div class="card mb-5 mb-xl-8">
+                                <div class="card-header">
+                                    <div class="card-title">
+                                        <h3 class="fw-bold m-0">Alertas</h3>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="notice d-flex bg-light-primary rounded border-primary border border-dashed p-6">
+                      <span class="svg-icon svg-icon-2tx svg-icon-primary me-4">
+                        <i class="ki-duotone ki-information-5 fs-2x">
+                          <span class="path1"></span><span class="path2"></span><span class="path3"></span>
+                        </i>
+                      </span>
+                                        <div class="d-flex flex-stack flex-grow-1">
+                                            <div class="fw-semibold">
+                                                <div class="fs-6 text-gray-800">Sin alertas por el momento.</div>
+                                                <div class="fs-7 text-muted">Todo en orden.</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Aquí puede poner alertas reales -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity Table -->
+                    <div class="card mb-5 mb-xl-8">
+                        <div class="card-header border-0 pt-5">
+                            <h3 class="card-title align-items-start flex-column">
+                                <span class="card-label fw-bold fs-3 mb-1">Actividad reciente</span>
+                                <span class="text-muted mt-1 fw-semibold fs-7">Movimientos más recientes del sistema</span>
+                            </h3>
+                            <div class="card-toolbar">
+                                <a href="/movimientos" class="btn btn-sm btn-light">Ver todo</a>
+                            </div>
+                        </div>
+
+                        <div class="card-body py-3">
+                            <div class="table-responsive">
+                                <table class="table table-row-dashed table-row-gray-300 align-middle gs-0 gy-4">
+                                    <thead>
+                                    <tr class="fw-bold text-muted">
+                                        <th class="min-w-140px">Fecha</th>
+                                        <th class="min-w-200px">Cliente</th>
+                                        <th class="min-w-150px">Acción</th>
+                                        <th class="min-w-120px text-end">Monto</th>
+                                        <th class="min-w-120px">Estado</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td colspan="5" class="text-center text-muted py-8">
+                                            Aún no hay actividad registrada.
+                                        </td>
+                                    </tr>
+
+                                    <!-- Ejemplo:
+                                    <tr>
+                                      <td>2026-02-07 09:12</td>
+                                      <td>
+                                        <div class="d-flex align-items-center">
+                                          <div class="symbol symbol-35px me-3">
+                                            <span class="symbol-label bg-light">JP</span>
+                                          </div>
+                                          <div class="d-flex flex-column">
+                                            <span class="text-gray-800 fw-bold">Juan Pérez</span>
+                                            <span class="text-muted fw-semibold fs-7">CUI: 123...</span>
+                                          </div>
+                                        </div>
+                                      </td>
+                                      <td><span class="badge badge-light-primary">Pago</span></td>
+                                      <td class="text-end fw-bold">Q 150</td>
+                                      <td><span class="badge badge-light-success">Aplicado</span></td>
+                                    </tr>
+                                    -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <!-- /Content -->
+
+            <!-- Footer -->
+            <div class="footer py-4 d-flex flex-lg-column" id="kt_footer">
+                <div class="container-fluid d-flex flex-column flex-md-row align-items-center justify-content-between">
+                    <div class="text-dark order-2 order-md-1">
+                        <span class="text-muted fw-semibold me-1">©</span>
+                        <span class="text-gray-800 fw-bold">PrestaApp</span>
+                    </div>
+                    <div class="text-muted fw-semibold">
+                        v1.0
+                    </div>
+                </div>
+            </div>
+            <!-- /Footer -->
+
+        </div>
+        <!-- /Wrapper -->
+    </div>
+</div>
+
+<!-- Metronic 8 Global Scripts (ajuste rutas según su demo/build) -->
+<script src="/assets/plugins/global/plugins.bundle.js"></script>
+<script src="/assets/js/scripts.bundle.js"></script>
+
+<!-- (Opcional) JS de página -->
+<script>
+	// Aquí puede cargar KPIs reales vía fetch, etc.
+</script>
+</body>
+</html>
