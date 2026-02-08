@@ -18,19 +18,14 @@
         <!-- Aside (Sidebar) -->
         <%- include('../partials/aside') %>
         <!-- /Aside -->
-
         <!-- Wrapper -->
         <div class="wrapper d-flex flex-column flex-row-fluid" id="kt_wrapper">
-
             <!-- Header -->
             <%- include('../partials/header') %>
             <!-- /Header -->
-
             <!-- Content -->
             <%- body %>
-
-
-
+            <!-- Content -->
             <!-- Footer -->
             <div class="footer py-4 d-flex flex-lg-column" id="kt_footer">
                 <div class="container-fluid d-flex flex-column flex-md-row align-items-center justify-content-between">
@@ -38,8 +33,8 @@
                         <span class="text-muted fw-semibold me-1">©</span>
                         <span class="text-gray-800 fw-bold">PrestaApp</span>
                         <span class="text-muted fw-semibold ms-3">
-        IP: <span class="text-gray-700"><%= clientIp || 'N/A' %></span>
-      </span>
+                        IP: <span class="text-gray-700"><%= clientIp || 'N/A' %></span>
+                        </span>
                     </div>
                     <div class="text-muted fw-semibold">
                         v1.0
@@ -51,7 +46,6 @@
         <!-- /Wrapper -->
     </div>
 </div>
-
 <%- include('../partials/scripts') %>
 </body>
 </html>
