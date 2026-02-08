@@ -1,0 +1,132 @@
+<div id="kt_aside"
+     class="aside aside-dark aside-hoverable"
+     data-kt-drawer="true"
+     data-kt-drawer-name="aside"
+     data-kt-drawer-activate="{default: true, lg: false}"
+     data-kt-drawer-overlay="true"
+     data-kt-drawer-width="{default:'200px', '300px': '250px'}"
+     data-kt-drawer-direction="start"
+     data-kt-drawer-toggle="#kt_aside_mobile_toggle">
+
+    <!-- Brand -->
+    <div class="aside-logo flex-column-auto" id="kt_aside_logo">
+        <a href="/" class="d-flex align-items-center gap-3 px-6 py-6">
+            <img alt="Logo" src="/assets/media/logos/logo-bg.png" class="h-35px" />
+            <div class="text-white">
+                <div class="fw-bolder">PrestaApp</div>
+                <div class="fs-8 opacity-75">Panel</div>
+            </div>
+        </a>
+        <div id="kt_aside_toggle" class="btn btn-icon w-auto px-0 btn-active-color-primary aside-toggle"
+             data-kt-toggle="true"
+             data-kt-toggle-state="active"
+             data-kt-toggle-target="body"
+             data-kt-toggle-name="aside-minimize">
+            <span class="svg-icon svg-icon-1 rotate-180">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                     fill="none">
+                    <path d="M11.2657 11.4343L15.45 7.25C15.8642 6.83579 15.8642 6.16421 15.45 5.75C15.0358 5.33579 14.3642 5.33579 13.95 5.75L8.40712 11.2929C8.01659 11.6834 8.01659 12.3166 8.40712 12.7071L13.95 18.25C14.3642 18.6642 15.0358 18.6642 15.45 18.25C15.8642 17.8358 15.8642 17.1642 15.45 16.75L11.2657 12.5657C10.9533 12.2533 10.9533 11.7467 11.2657 11.4343Z"
+                          fill="black"/>
+                </svg>
+            </span>
+        </div>
+    </div>
+
+    <!-- Menu -->
+    <div class="aside-menu flex-column-fluid">
+        <div class="hover-scroll-overlay-y my-5 my-lg-5" id="kt_aside_menu_wrapper" data-kt-scroll="true"
+             data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-height="auto"
+             data-kt-scroll-dependencies="#kt_aside_logo" data-kt-scroll-wrappers="#kt_aside_menu"
+             data-kt-scroll-offset="0">
+
+            <div class="menu menu-column menu-title-gray-300 menu-state-primary menu-state-icon-primary
+                        menu-state-bullet-primary menu-arrow-gray-500"
+                 id="kt_aside_menu" data-kt-menu="true" data-kt-menu-expand="false">
+
+                <div class="menu-item">
+                    <a class="menu-link active" href="/">
+                  <span class="menu-icon">
+                    <i class="ki-duotone ki-home fs-2">
+                      <span class="path1"></span><span class="path2"></span>
+                    </i>
+                  </span>
+                        <span class="menu-title">Inicio</span>
+                    </a>
+                </div>
+
+                <div class="menu-item">
+                    <a class="menu-link" href="/prestamos">
+                  <span class="menu-icon">
+                    <i class="ki-duotone ki-credit-cart fs-2">
+                      <span class="path1"></span><span class="path2"></span>
+                    </i>
+                  </span>
+                        <span class="menu-title">Préstamos</span>
+                    </a>
+                </div>
+
+                <div class="menu-item">
+                    <a class="menu-link" href="/clientes">
+                  <span class="menu-icon">
+                    <i class="ki-duotone ki-people fs-2">
+                      <span class="path1"></span><span class="path2"></span>
+                    </i>
+                  </span>
+                        <span class="menu-title">Clientes</span>
+                    </a>
+                </div>
+
+                <div class="menu-item">
+                    <a class="menu-link" href="/pagos">
+                  <span class="menu-icon">
+                    <i class="ki-duotone ki-receipt fs-2">
+                      <span class="path1"></span><span class="path2"></span>
+                    </i>
+                  </span>
+                        <span class="menu-title">Pagos</span>
+                    </a>
+                </div>
+
+                <div class="menu-item">
+                    <a class="menu-link" href="/reportes">
+                  <span class="menu-icon">
+                    <i class="ki-duotone ki-chart-line fs-2">
+                      <span class="path1"></span><span class="path2"></span>
+                    </i>
+                  </span>
+                        <span class="menu-title">Reportes</span>
+                    </a>
+                </div>
+
+                <div class="menu-item mt-6">
+                    <div class="menu-content px-8">
+                        <div class="separator separator-dashed separator-white opacity-25"></div>
+                    </div>
+                </div>
+
+                <div class="menu-item">
+                    <a class="menu-link" href="/configuracion">
+                  <span class="menu-icon">
+                    <i class="ki-duotone ki-setting-2 fs-2">
+                      <span class="path1"></span><span class="path2"></span>
+                    </i>
+                  </span>
+                        <span class="menu-title">Configuración</span>
+                    </a>
+                </div>
+
+                <div class="menu-item">
+                    <a class="menu-link" href="/api/auth/logout">
+                  <span class="menu-icon">
+                    <i class="ki-duotone ki-exit-left fs-2">
+                      <span class="path1"></span><span class="path2"></span>
+                    </i>
+                  </span>
+                        <span class="menu-title">Cerrar sesión</span>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

@@ -4,6 +4,6 @@ import prestamos from "./modules/prestamo/prestamo.app.routes"
 const app = Router();
 
 app.use(root)
-app.use("/prestamos", prestamos);
+//app.use("/prestamos", prestamos);
 
 export default app;

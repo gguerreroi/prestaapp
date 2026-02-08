@@ -1,26 +1,54 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
+    <base href="/" />
+    <title>PrestaApp</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
     <%- include('../partials/head') %>
 </head>
-<body id="kt_body" class="header-fixed header-tablet-and-mobile-fixed aside-enabled">
+<body id="kt_body"
+      class="header-fixed header-tablet-and-mobile-fixed toolbar-enabled toolbar-fixed toolbar-tablet-and-mobile-fixed aside-enabled aside-fixed"
+      style="--kt-toolbar-height:55px;--kt-toolbar-height-tablet-and-mobile:55px">
+<!-- App Root -->
 <div class="d-flex flex-column flex-root">
+    <!-- Page -->
     <div class="page d-flex flex-row flex-column-fluid">
-
+        <!-- Aside (Sidebar) -->
         <%- include('../partials/aside') %>
+        <!-- /Aside -->
 
+        <!-- Wrapper -->
         <div class="wrapper d-flex flex-column flex-row-fluid" id="kt_wrapper">
-            <%- include('../partials/header') %>
 
-            <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
-                <div class="container-xxl" id="kt_content_container">
-                    <%- include('../partials/flashes') %>
-                    <%- body %>
+            <!-- Header -->
+            <%- include('../partials/header') %>
+            <!-- /Header -->
+
+            <!-- Content -->
+            <%- body %>
+
+
+
+            <!-- Footer -->
+            <div class="footer py-4 d-flex flex-lg-column" id="kt_footer">
+                <div class="container-fluid d-flex flex-column flex-md-row align-items-center justify-content-between">
+                    <div class="text-dark order-2 order-md-1">
+                        <span class="text-muted fw-semibold me-1">©</span>
+                        <span class="text-gray-800 fw-bold">PrestaApp</span>
+                        <span class="text-muted fw-semibold ms-3">
+        IP: <span class="text-gray-700"><%= clientIp || 'N/A' %></span>
+      </span>
+                    </div>
+                    <div class="text-muted fw-semibold">
+                        v1.0
+                    </div>
                 </div>
             </div>
-
-            <%- include('../partials/footer') %>
+            <!-- /Footer -->
         </div>
+        <!-- /Wrapper -->
     </div>
 </div>
 

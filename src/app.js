@@ -17,6 +17,7 @@ import apiRoutes from "./api.routes";
 import sequelizeSession from "./config/session";
 import error404 from "./middlewares/error404";
 import error500 from "./middlewares/error500";
+import viewLocals from "./middlewares/viewLocals.middleware";
 
 const app = express();
 
@@ -37,10 +38,8 @@ app.set('layout', 'layouts/main');
 app.use(morgan("dev"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-
 app.use(cookieParser(env.APP.COOKIE));
 app.use(fileUpload());
-
 app.use(
 	session({
 		secret: env.APP.SESSION,
@@ -51,10 +50,10 @@ app.use(
 		}),
 	})
 );
-
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(passport.authenticate("session"));
+app.use(viewLocals);
 
 app.use(express.static(path.join(__dirname, "../public")));
 app.use("/", appRoutes);

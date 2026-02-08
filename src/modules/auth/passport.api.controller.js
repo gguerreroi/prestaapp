@@ -36,11 +36,7 @@ async function authController(request, username, password, done){
 						return item.IDENOMBRE;
 					}) : ['/']
 
-					/*
-					User.username = DB_USER
-					User.password = DB_PASSWORD
-					User.database = DB_NAME
-					*/
+
 					done(null, User)
 				}else {
 					done(null, false, outApi(

@@ -1,8 +1,7 @@
 function requireSessionAuth(req, res, next) {
 	if (req.isAuthenticated && req.isAuthenticated()) return next();
-	return res.render('auth',{
+	return res.render('auth/login',{
 		layout: 'layouts/auth',
-		title: 'Iniciar sesión',
 		pageScripts: ['/assets/js/custom/auth.js']
 	});
 }
