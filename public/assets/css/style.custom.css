@@ -1,0 +1,302 @@
+/* =========================================
+   GUATEMPEÑOS CREDIFACIL - KT8 Theme Override
+   Azul + Amarillo (logo) + Estados de cobranza
+   ========================================= */
+
+:root{
+    /* Marca */
+    --gc-primary: #0B5ED7;
+    --gc-primary-dark: #083A8F;
+    --gc-secondary: #FFE45C;
+
+    /* Estados negocio */
+    --gc-paid: #2ECC71;     /* Pagado / al día */
+    --gc-late: #FF8A00;     /* Atraso leve / advertencia */
+    --gc-default: #E63946;  /* Moroso / crítico */
+    --gc-neutral: #64748B;  /* Informativo */
+
+    /* UI base */
+    --gc-bg-main: #F4F6F8;
+    --gc-text-dark: #1F2937;
+    --gc-text-light: #FFFFFF;
+
+    /* Sombras suaves */
+    --gc-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+}
+
+/* Fondo general */
+body{
+    background-color: var(--gc-bg-main);
+    color: var(--gc-text-dark);
+}
+
+/* Utilidad de texto corporativo */
+.ra-text-color{
+    color: var(--gc-primary) !important;
+}
+
+/* =========================================
+   KT8 HEADER
+   ========================================= */
+/* Header fijo desktop */
+@media (min-width: 992px){
+    .header-fixed .header,
+    #kt_header{
+        background-color: var(--gc-primary) !important;
+    }
+}
+
+/* Header fijo móvil/tablet */
+@media (max-width: 991.98px){
+    .header-tablet-and-mobile-fixed .header,
+    #kt_header_mobile{
+        background-color: var(--gc-primary) !important;
+    }
+}
+
+/* Texto/íconos del header */
+#kt_header .menu-title,
+#kt_header .menu-link,
+#kt_header i,
+#kt_header .btn,
+#kt_header .svg-icon svg [fill]{
+    color: var(--gc-text-light) !important;
+    fill: var(--gc-text-light) !important;
+}
+
+/* Hover header */
+#kt_header .menu-link:hover .menu-title,
+#kt_header .menu-link:hover{
+    color: var(--gc-secondary) !important;
+}
+
+/* =========================================
+   KT8 ASIDE (Sidebar)
+   ========================================= */
+#kt_aside, .aside{
+    background-color: var(--gc-primary-dark) !important;
+}
+
+#kt_aside .aside-logo,
+.aside .aside-logo{
+    background-color: var(--gc-primary-dark) !important;
+}
+
+/* Sección */
+#kt_aside .menu-section,
+.aside-menu .menu-section{
+    color: var(--gc-secondary) !important;
+    letter-spacing: 0.5px;
+}
+
+/* Links */
+#kt_aside .menu-link,
+.aside-menu .menu-item .menu-link{
+    color: rgba(255,255,255,0.88) !important;
+}
+
+/* Hover */
+#kt_aside .menu-link:hover,
+.aside-menu .menu-item .menu-link:hover{
+    background-color: rgba(255,255,255,0.08) !important;
+    color: var(--gc-text-light) !important;
+}
+
+/* Active */
+#kt_aside .menu-link.active,
+#kt_aside .menu-link.active .menu-title,
+#kt_aside .menu-link.active i,
+.aside-menu .menu-item .menu-link.active{
+    background-color: var(--gc-primary) !important;
+    color: var(--gc-text-light) !important;
+}
+
+/* Submenu active indicator */
+#kt_aside .menu-link.active{
+    border-left: 3px solid var(--gc-secondary);
+}
+
+/* =========================================
+   BOTONES (Bootstrap / KT8)
+   ========================================= */
+.btn.btn-primary{
+    background-color: var(--gc-primary) !important;
+    border-color: var(--gc-primary) !important;
+    color: var(--gc-text-light) !important;
+}
+.btn.btn-primary:hover,
+.btn.btn-primary:focus{
+    background-color: var(--gc-primary-dark) !important;
+    border-color: var(--gc-primary-dark) !important;
+}
+
+.btn.btn-warning{
+    background-color: var(--gc-secondary) !important;
+    border-color: var(--gc-secondary) !important;
+    color: var(--gc-text-dark) !important;
+}
+
+.btn.btn-success{
+    background-color: var(--gc-paid) !important;
+    border-color: var(--gc-paid) !important;
+    color: var(--gc-text-light) !important;
+}
+
+.btn.btn-danger{
+    background-color: var(--gc-default) !important;
+    border-color: var(--gc-default) !important;
+    color: var(--gc-text-light) !important;
+}
+
+/* Outline */
+.btn.btn-outline-primary{
+    border-color: var(--gc-primary) !important;
+    color: var(--gc-primary) !important;
+}
+.btn.btn-outline-primary:hover{
+    background-color: var(--gc-primary) !important;
+    color: var(--gc-text-light) !important;
+}
+
+/* =========================================
+   FORMS (Focus)
+   ========================================= */
+.form-control:focus, .form-select:focus{
+    border-color: rgba(11, 94, 215, 0.6) !important;
+    box-shadow: 0 0 0 0.2rem rgba(11, 94, 215, 0.15) !important;
+}
+
+/* Cards */
+.card{
+    border: 1px solid rgba(31,41,55,0.08);
+    box-shadow: none;
+}
+.card.gc-elevated{
+    box-shadow: var(--gc-shadow);
+}
+
+/* Links */
+a{
+    color: var(--gc-primary);
+}
+a:hover{
+    color: var(--gc-primary-dark);
+}
+
+/* =========================================
+   ESTADOS DE COBRANZA: Pagos / Atrasos / Morosos
+   ========================================= */
+
+/* BADGES (recomendado usar estas clases en HTML) */
+.badge.gc-paid{
+    background-color: rgba(46, 204, 113, 0.15) !important;
+    color: #137A3E !important;
+    border: 1px solid rgba(46, 204, 113, 0.35) !important;
+}
+
+.badge.gc-late{
+    background-color: rgba(255, 138, 0, 0.15) !important;
+    color: #8A4B00 !important;
+    border: 1px solid rgba(255, 138, 0, 0.35) !important;
+}
+
+.badge.gc-default{
+    background-color: rgba(230, 57, 70, 0.15) !important;
+    color: #A1121F !important;
+    border: 1px solid rgba(230, 57, 70, 0.35) !important;
+}
+
+/* ALERTAS */
+.alert.gc-paid{
+    background-color: rgba(46, 204, 113, 0.12) !important;
+    border-color: rgba(46, 204, 113, 0.35) !important;
+    color: #0F5132 !important;
+}
+.alert.gc-late{
+    background-color: rgba(255, 138, 0, 0.12) !important;
+    border-color: rgba(255, 138, 0, 0.35) !important;
+    color: #7A3E00 !important;
+}
+.alert.gc-default{
+    background-color: rgba(230, 57, 70, 0.12) !important;
+    border-color: rgba(230, 57, 70, 0.35) !important;
+    color: #842029 !important;
+}
+
+/* TABLE ROW HIGHLIGHT (aplicar clase a <tr>) */
+tr.gc-row-paid{
+    background-color: rgba(46, 204, 113, 0.08) !important;
+}
+tr.gc-row-late{
+    background-color: rgba(255, 138, 0, 0.08) !important;
+}
+tr.gc-row-default{
+    background-color: rgba(230, 57, 70, 0.08) !important;
+}
+
+/* Borde izquierdo para filas (más visible) */
+tr.gc-row-paid td:first-child{
+    border-left: 4px solid var(--gc-paid) !important;
+}
+tr.gc-row-late td:first-child{
+    border-left: 4px solid var(--gc-late) !important;
+}
+tr.gc-row-default td:first-child{
+    border-left: 4px solid var(--gc-default) !important;
+}
+
+/* CARDS de resumen de cartera (aplicar clase al .card) */
+.card.gc-card-paid{
+    border-left: 5px solid var(--gc-paid) !important;
+}
+.card.gc-card-late{
+    border-left: 5px solid var(--gc-late) !important;
+}
+.card.gc-card-default{
+    border-left: 5px solid var(--gc-default) !important;
+}
+
+/* KPIs: números grandes */
+.gc-kpi-value{
+    font-weight: 700;
+    font-size: 1.6rem;
+    letter-spacing: 0.2px;
+}
+.gc-kpi-paid{ color: var(--gc-paid) !important; }
+.gc-kpi-late{ color: var(--gc-late) !important; }
+.gc-kpi-default{ color: var(--gc-default) !important; }
+
+/* =========================================
+   LOGO (Header/Aside)
+   ========================================= */
+#kt_header .logo img,
+#kt_aside .aside-logo img{
+    max-height: 46px;
+}
+
+/* ===== Login centrado (KT8) ===== */
+.gc-auth-card{
+    border: 1px solid rgba(31,41,55,0.08);
+    border-radius: 16px;
+    box-shadow: var(--gc-shadow);
+}
+
+/* Logo dentro del formulario */
+.gc-login-logo{
+    width: 220px;
+    max-width: 100%;
+    height: auto;
+    display: inline-block;
+    filter: drop-shadow(0 10px 18px rgba(0,0,0,0.10));
+}
+
+/* Ajustes para teléfonos */
+@media (max-width: 576px){
+    .gc-login-logo{
+        width: 180px;
+    }
+
+    .card-body{
+        padding: 2rem !important;
+    }
+}
