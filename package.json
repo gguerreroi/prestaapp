@@ -37,6 +37,7 @@
     "fs-extra": "^11.3.1",
     "morgan": "^1.10.1",
     "mssql": "^11.0.1",
+    "multer": "^2.0.2",
     "passport": "^0.7.0",
     "passport-local": "^1.0.0",
     "postcss": "^8.5.6",

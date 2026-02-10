@@ -47,43 +47,154 @@
                     </div>
 
                     <div class="card-body">
-                        <form id="loanForm" novalidate>
-
+                        <form id="loanForm" novalidate enctype="multipart/form-data">
+                            <!-- Fecha inicio -->
+                            <%   const today = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Guatemala' }); // YYYY-MM-DD %>
+                            <div class="mb-6">
+                                <label class="form-label fw-semibold" for="fechaInicio">Fecha de inicio</label>
+                                <input
+                                        id="fechaInicio"
+                                        name="fecha_inicio"
+                                        type="date"
+                                        class="form-control form-control-lg"
+                                        value="<%= today || '' %>"
+                                        required
+                                />
+                                <div class="text-danger fs-7 mt-1" id="fechaInicioError" aria-live="polite"></div>
+                            </div>
                             <!-- CUI -->
                             <div class="mb-6">
                                 <label class="form-label fw-semibold" for="cui">CUI (13 dígitos)</label>
-                                <input
-                                        id="cui"
-                                        name="cui"
-                                        class="form-control form-control-lg"
-                                        inputmode="numeric"
-                                        autocomplete="off"
-                                        maxlength="13"
-                                        placeholder="Ej: 1234567890123"
-                                        required
-                                />
-                                <div class="form-text">Solo números, 13 dígitos exactos.</div>
+                                <div class="input-group input-group-lg">
+                                    <input
+                                            id="cui"
+                                            name="cui"
+                                            class="form-control"
+                                            inputmode="numeric"
+                                            autocomplete="off"
+                                            maxlength="13"
+                                            placeholder="Ej: 1234567890123"
+                                            required
+                                    />
+                                    <button type="button" class="btn btn-light" id="btnBuscarCui">
+                                        Buscar
+                                    </button>
+                                </div>
+
+                                <div class="form-text">Se valida dígito verificador.</div>
                                 <div class="text-danger fs-7 mt-1" id="cuiError" aria-live="polite"></div>
+
+                                <div class="mt-3" id="cuiStatusWrap" style="display:none;">
+                                    <span class="badge" id="cuiStatusBadge">—</span>
+                                    <span class="text-muted fs-7 ms-2" id="cuiStatusText"></span>
+                                </div>
                             </div>
 
-                            <!-- Nombre -->
-                            <div class="mb-6">
-                                <label class="form-label fw-semibold" for="nombre">Nombre completo</label>
-                                <input
-                                        id="nombre"
-                                        name="nombre"
-                                        class="form-control form-control-lg"
-                                        autocomplete="name"
-                                        placeholder="Ej: Juan Pérez"
-                                        required
-                                />
-                                <div class="text-danger fs-7 mt-1" id="nombreError" aria-live="polite"></div>
+                            <!-- Sección: Cliente existente (solo lectura) -->
+                            <div class="mb-6" id="clienteExistenteCard" style="display:none;">
+                                <div class="notice d-flex bg-light-primary rounded border-primary border border-dashed p-4">
+      <span class="svg-icon svg-icon-2tx me-3">
+        <!-- ícono opcional -->
+      </span>
+                                    <div class="d-flex flex-stack flex-grow-1">
+                                        <div class="fw-semibold">
+                                            <div class="fs-6 text-gray-800 fw-bold" id="clienteExistenteNombre">—</div>
+                                            <div class="text-muted fs-7" id="clienteExistenteDetalle">—</div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
-                            <!-- Cantidad -->
+                            <!-- Sección: Nuevo cliente (solo si NO existe el CUI) -->
+                            <div class="mb-6" id="nuevoClienteWrap" style="display:none;">
+                                <div class="separator my-6"></div>
+                                <h4 class="fw-bold mb-4">Crear cliente</h4>
+
+                                <div class="row g-5">
+                                    <div class="col-12 col-md-6">
+                                        <label class="form-label fw-semibold" for="nombres">Nombres</label>
+                                        <input id="nombres" name="nombres" class="form-control form-control-lg" autocomplete="given-name" />
+                                        <div class="text-danger fs-7 mt-1" id="nombresError" aria-live="polite"></div>
+                                    </div>
+
+                                    <div class="col-12 col-md-6">
+                                        <label class="form-label fw-semibold" for="apellidos">Apellidos</label>
+                                        <input id="apellidos" name="apellidos" class="form-control form-control-lg" autocomplete="family-name" />
+                                        <div class="text-danger fs-7 mt-1" id="apellidosError" aria-live="polite"></div>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label class="form-label fw-semibold" for="direccion">Dirección</label>
+                                        <input id="direccion" name="direccion" class="form-control form-control-lg" autocomplete="street-address" />
+                                        <div class="text-danger fs-7 mt-1" id="direccionError" aria-live="polite"></div>
+                                    </div>
+
+                                    <div class="col-12 col-md-6">
+                                        <label class="form-label fw-semibold" for="telefono">Teléfono</label>
+                                        <input id="telefono" name="telefono" class="form-control form-control-lg" inputmode="tel" autocomplete="tel" />
+                                        <div class="text-danger fs-7 mt-1" id="telefonoError" aria-live="polite"></div>
+                                    </div>
+
+                                    <div class="col-12 col-md-6">
+                                        <label class="form-label fw-semibold" for="cartera">Cartera (Agente de cobranza)</label>
+                                        <select id="cartera" name="cartera" class="form-select form-select-lg">
+                                            <option value="">Seleccione…</option>
+                                        </select>
+                                        <div class="text-danger fs-7 mt-1" id="carteraError" aria-live="polite"></div>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label class="form-label fw-semibold" for="observaciones">Observaciones</label>
+                                        <textarea id="observaciones" name="observaciones" class="form-control form-control-lg" rows="3"></textarea>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label class="form-label fw-semibold" for="referencias_vivienda">Referencias de vivienda</label>
+                                        <textarea id="referencias_vivienda" name="referencias_vivienda" class="form-control form-control-lg" rows="3"></textarea>
+                                    </div>
+
+                                    <!-- Archivos / Fotos -->
+                                    <div class="col-12">
+                                        <div class="separator my-6"></div>
+                                        <h5 class="fw-bold mb-4">Fotografías</h5>
+
+                                        <div class="row g-5">
+                                            <div class="col-12 col-md-6">
+                                                <label class="form-label fw-semibold" for="cuiFrontal">CUI Frontal</label>
+                                                <input id="cuiFrontal" name="cuiFrontal" type="file" class="form-control form-control-lg" accept="image/*" />
+                                            </div>
+
+                                            <div class="col-12 col-md-6">
+                                                <label class="form-label fw-semibold" for="cuiDorsal">CUI Dorsal</label>
+                                                <input id="cuiDorsal" name="cuiDorsal" type="file" class="form-control form-control-lg" accept="image/*" />
+                                            </div>
+
+                                            <div class="col-12 col-md-6">
+                                                <label class="form-label fw-semibold" for="fotoVivienda">Foto de vivienda</label>
+                                                <input id="fotoVivienda" name="fotoVivienda" type="file" class="form-control form-control-lg" accept="image/*" />
+                                            </div>
+
+                                            <div class="col-12 col-md-6">
+                                                <label class="form-label fw-semibold" for="fotoPersona">Foto de la persona</label>
+                                                <input id="fotoPersona" name="fotoPersona" type="file" class="form-control form-control-lg" accept="image/*" />
+                                            </div>
+
+                                            <div class="col-12">
+                                                <div class="form-text">
+                                                    Recomendación: máximo 2–5 MB por imagen.
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Monto préstamo -->
+                            <div class="separator my-6"></div>
+
                             <div class="mb-6">
                                 <div class="d-flex align-items-center justify-content-between mb-2">
-                                    <label class="form-label fw-semibold mb-0" for="cantidad">Cantidad</label>
+                                    <label class="form-label fw-semibold mb-0" for="cantidad">Monto préstamo</label>
                                     <span class="badge badge-light-primary fs-7" id="amountPill">Q 500</span>
                                 </div>
 
@@ -106,17 +217,8 @@
 
                             <!-- Actions -->
                             <div class="d-flex flex-column flex-sm-row gap-3 justify-content-end">
-                                <button type="button" class="btn btn-light" id="btnReset">
-                                    Limpiar
-                                </button>
-
-                                <button type="submit" class="btn btn-primary" id="btnSubmit" disabled>
-                                    Guardar préstamo
-                                </button>
-                            </div>
-
-                            <div class="mt-6 text-muted fs-7">
-                                Plazo fijo: <span class="fw-semibold text-gray-800">35 días</span>. La cuota diaria se redondea hacia arriba a quetzales enteros.
+                                <button type="button" class="btn btn-light" id="btnReset">Limpiar</button>
+                                <button type="submit" class="btn btn-primary" id="btnSubmit" disabled>Guardar préstamo</button>
                             </div>
 
                         </form>
