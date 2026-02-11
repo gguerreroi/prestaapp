@@ -21,17 +21,33 @@ export async function datatables(req, res) {
 		const start = Math.max(0, Number(req.query.start || 0));
 		const length = Math.max(10, Math.min(500, Number(req.query.length || 10)));
 
-		const searchValue = (req.query?.search?.value || "").toString().trim();
+		const searchValue = (
+			req.query?.search?.value ??
+			req.query?.["search[value]"] ??
+			""
+		).toString().trim();
 
-		const orderColIndex = Number(req.query?.order?.[0]?.column ?? 0);
-		const orderDirRaw = (req.query?.order?.[0]?.dir || "asc").toString().toLowerCase();
+		const orderColIndex = Number(
+			req.query?.order?.[0]?.column ??
+			req.query?.["order[0][column]"] ??
+			0
+		);
+
+		const orderDirRaw = (
+			req.query?.order?.[0]?.dir ??
+			req.query?.["order[0][dir]"] ??
+			"asc"
+		).toString().toLowerCase();
+
+		const requestedOrderCol = (
+			req.query?.columns?.[orderColIndex]?.name ??
+			req.query?.columns?.[orderColIndex]?.data ??
+			req.query?.[`columns[${orderColIndex}][name]`] ??
+			req.query?.[`columns[${orderColIndex}][data]`] ??
+			""
+		).toString().trim();
+
 		const orderDir = orderDirRaw === "desc" ? "DESC" : "ASC";
-
-		const columns = Array.isArray(req.query.columns) ? req.query.columns : [];
-
-		// ✅ Use name primero; data puede venir vacío (como su columna cliente)
-		const requestedOrderCol =
-			(columns?.[orderColIndex]?.name || columns?.[orderColIndex]?.data || "").toString().trim();
 
 		// ===== 1) Verificar que la vista exista y obtener columnas válidas =====
 		// Importante: OBJECT_ID('schema.view') funciona con vistas
@@ -83,6 +99,8 @@ export async function datatables(req, res) {
       ORDER BY ${orderColumnSafe} ${orderDir}
       OFFSET @start ROWS FETCH NEXT @length ROWS ONLY;
     `;
+
+		console.log("DataTables SQL:", { sqlTotal, sqlFiltered, sqlData, params: { start, length, searchValue, orderColumnSafe, orderDir } });
 
 		const reqDb = pool.request();
 		reqDb.input("start", mssql.Int, start);
