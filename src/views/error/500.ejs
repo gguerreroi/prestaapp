@@ -1,76 +1,95 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>500 - Error interno del servidor</title>
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-
-    <!-- Estilos globales -->
-    <link rel="stylesheet" href="/css/main.css">
-</head>
-<body>
-
-<main style="min-height: 100vh; display: flex; align-items: center; justify-content: center;">
-    <section style="text-align: center; max-width: 560px;">
-
-        <h1 style="font-size: 3.5rem; margin-bottom: 0;">
-            500
-        </h1>
-
-        <h2 style="margin-top: 0.5rem;">
-            Error interno del servidor
-        </h2>
-
-        <p style="margin-top: 1rem; color: #666;">
-            Ocurrió un problema inesperado al procesar su solicitud.
-        </p>
-
-        <p style="margin-top: 0.5rem; color: #666;">
-            Por favor, intente nuevamente en unos momentos.
-        </p>
-
-        <% if (typeof path !== 'undefined') { %>
-            <p style="margin-top: 1rem; font-size: 0.9rem; color: #999;">
-                Ruta: <%= path %>
-            </p>
-        <% } %>
-
-        <% if (typeof error !== 'undefined' && error) { %>
-            <details style="margin-top: 1.5rem; text-align: left;">
-                <summary style="cursor: pointer; color: #555;">
-                    Detalles técnicos
-                </summary>
-                <pre style="
-            margin-top: 0.5rem;
-            padding: 1rem;
-            background: #f5f5f5;
-            border-radius: 4px;
-            overflow-x: auto;
-            font-size: 0.85rem;
-            color: #333;
-          ">
-<%= error.stack || error.message || error %>
-          </pre>
-            </details>
-        <% } %>
-
-        <div style="margin-top: 2rem;">
-            <a href="/" style="
-          display: inline-block;
-          padding: 0.6rem 1.4rem;
-          background: #0361cb;
-          color: #fff;
-          text-decoration: none;
-          border-radius: 4px;
-        ">
-                Volver al inicio
-            </a>
+<div class="d-flex flex-column flex-column-fluid">
+    <!-- Toolbar (opcional: si usted lo usa en páginas internas) -->
+    <div class="toolbar py-3 py-lg-6" id="kt_toolbar">
+        <div class="container-xxl d-flex flex-stack flex-wrap gap-2">
+            <div class="page-title d-flex flex-column justify-content-center me-3">
+                <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">
+                    Error interno
+                </h1>
+                <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
+                    <li class="breadcrumb-item text-muted">
+                        <a href="/" class="text-muted text-hover-primary">Inicio</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <span class="bullet bg-gray-400 w-5px h-2px"></span>
+                    </li>
+                    <li class="breadcrumb-item text-dark">500</li>
+                </ul>
+            </div>
         </div>
+    </div>
 
-    </section>
-</main>
+    <!-- Content -->
+    <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+        <div class="container-xxl" id="kt_content_container">
 
-</body>
-</html>
+            <div class="d-flex flex-center flex-column min-vh-100 py-10">
+
+                <div class="card gc-elevated w-100" style="max-width: 720px;">
+                    <div class="card-body p-10 p-lg-12 text-center">
+
+                        <!-- Número -->
+                        <div class="fw-bolder display-1 text-gray-900 mb-2">
+                            500
+                        </div>
+
+                        <!-- Título -->
+                        <div class="fw-bold fs-2 text-gray-800 mb-3">
+                            Error interno del servidor
+                        </div>
+
+                        <!-- Texto -->
+                        <div class="text-muted fs-6 mb-1">
+                            Ocurrió un problema inesperado al procesar su solicitud.
+                        </div>
+                        <div class="text-muted fs-6 mb-6">
+                            Por favor, intente nuevamente en unos momentos.
+                        </div>
+
+                        <% if (typeof path !== 'undefined' && path) { %>
+                            <div class="text-gray-600 fs-7 mb-6">
+                                Ruta: <span class="fw-semibold"><%= path %></span>
+                            </div>
+                        <% } %>
+
+                        <% if (typeof error !== 'undefined' && error) { %>
+                            <div class="text-start">
+                                <details class="border rounded p-4 bg-light">
+                                    <summary class="fw-semibold text-gray-700" style="cursor:pointer;">
+                                        Detalles técnicos
+                                    </summary>
+
+                                    <div class="separator my-4"></div>
+
+                                    <pre class="mb-0" style="white-space: pre-wrap; word-break: break-word; font-size: 12px;">
+<%= error.stack || error.message || error %>
+                  </pre>
+                                </details>
+                            </div>
+                        <% } %>
+
+                        <div class="separator my-8"></div>
+
+                        <div class="d-flex flex-center gap-3 flex-wrap">
+                            <a href="/" class="btn btn-primary">
+                                Volver al inicio
+                            </a>
+
+                            <button type="button" class="btn btn-light" onclick="window.location.reload()">
+                                Reintentar
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Pie pequeño -->
+                <div class="text-muted fs-7 mt-6">
+                    PrestaApp • Error 500
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>

@@ -300,3 +300,32 @@ tr.gc-row-default td:first-child{
         padding: 2rem !important;
     }
 }
+
+/*
+* Resaltar fila del día actual en tablas de cobranza o calendario
+*/
+
+/* Fila HOY: borde sin fondo */
+.gc-today-row{
+    position: relative;
+    outline: 2px solid rgba(255, 193, 7, .95);
+    outline-offset: -2px; /* se pega a la fila */
+    border-radius: 8px;   /* ojo: en tr no siempre aplica visualmente, pero ayuda */
+}
+
+/* Quitamos fondo para que sea “solo borde” */
+.gc-today-row td{
+    background: transparent !important;
+}
+
+/* Pulse real y visible: sombra externa que aparece/desaparece */
+.gc-today-row{
+    animation: gcRowPulse 1.6s ease-in-out infinite;
+}
+
+@keyframes gcRowPulse{
+    0%   { box-shadow: 0 0 0 0 rgba(255, 193, 7, .55); }
+    60%  { box-shadow: 0 0 0 10px rgba(255, 193, 7, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 193, 7, 0); }
+}
+

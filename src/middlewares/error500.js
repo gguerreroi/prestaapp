@@ -12,7 +12,7 @@ function error500(err, req, res, next) {
 	}
 
 	return res.status(500).render('error/500', {
-		path: req.path,
+		path: req.originalUrl || req.path,
 		error: err,        // si no quieres exponer detalles en prod, luego lo ocultamos
 		userInfo: 'Error general',
 	});

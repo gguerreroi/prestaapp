@@ -1,0 +1,280 @@
+<%
+const fmtQ = (n) => new Intl.NumberFormat('es-GT', { style: 'currency', currency: 'GTQ', maximumFractionDigits: 0 }).format(Number(n || 0));
+const fmtDateTimeGT = (d) => d
+        ? new Date(d).toLocaleString('es-GT', {
+            timeZone: 'America/Guatemala',
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit'
+        })
+        : '-';
+const fmtDate = (d) => d
+        ? new Date(d).toLocaleDateString('es-GT', {
+            timeZone: 'UTC',
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+        })
+        : '-';
+const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+const isToday = (d) => {
+    if (!d) return false;
+    return new Date(d).toISOString().slice(0, 10) === today;
+};
+
+function badgeEstado(st) {
+    switch ((st || '').toUpperCase()) {
+        case 'ACTIVO': return 'badge-light-success';
+        case 'PAGADO': return 'badge-light-success';
+        case 'PENDIENTE': return 'badge-light-warning';
+        case 'ATRASADO':
+        case 'MOROSO': return 'badge-light-danger';
+        case 'ANULADO': return 'badge-light-secondary';
+        default: return 'badge-light';
+    }
+}
+const cliente_nombre = `${prestamo.cliente_nombres || ''} ${prestamo.cliente_apellidos || ''}`.trim();
+const agente_nombre = `${prestamo.agente_nombres || ''} ${prestamo.agente_apellidos || ''}`.trim();
+
+const cuotas_pagadas = Number(totales?.cuotas_pagadas || 0);
+const total_cuotas = Number(prestamo.plazo_dias || 35);
+const progreso = total_cuotas > 0 ? Math.min(100, Math.round((cuotas_pagadas / total_cuotas) * 100)) : 0;
+%>
+
+<!--begin::Toolbar-->
+<div class="toolbar py-3 py-lg-6" id="kt_toolbar">
+    <div class="container-xxl d-flex flex-stack flex-wrap gap-2">
+        <div class="page-title d-flex flex-column justify-content-center me-3">
+            <h4 class="page-heading d-flex text-dark fw-bold fs-5 flex-column justify-content-center my-0">
+                Préstamo Detalle <span class="text-muted">#<%= prestamo.prestamo_id %></span>
+            </h4>
+            <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
+                <li class="breadcrumb-item text-muted"><a href="/" class="text-muted text-hover-primary">Inicio</a></li>
+                <li class="breadcrumb-item"><span class="bullet bg-gray-400 w-5px h-2px"></span></li>
+                <li class="breadcrumb-item text-muted"><a href="/prestamos" class="text-muted text-hover-primary">Préstamos</a></li>
+                <li class="breadcrumb-item"><span class="bullet bg-gray-400 w-5px h-2px"></span></li>
+                <li class="breadcrumb-item text-dark">Detalle</li>
+            </ul>
+        </div>
+
+        <div class="d-flex align-items-center gap-2 gap-lg-3">
+            <a href="/prestamos" class="btn btn-light">Volver</a>
+            <button type="button" class="btn btn-primary" id="btnPagar" disabled>
+                Registrar pago
+                <span class="badge badge-light ms-2" id="payCount">0</span>
+            </button>
+            <span class="badge <%= badgeEstado(prestamo.estado) %> text-uppercase"><%= prestamo.estado %></span>
+        </div>
+    </div>
+</div>
+<!--end::Toolbar-->
+
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+    <div class="container-xxl" id="kt_content_container">
+
+        <div class="row g-5 g-xl-8">
+
+            <!-- Left -->
+            <div class="col-12 col-xl-5">
+
+                <!-- Cliente -->
+                <div class="card gc-elevated mb-5">
+                    <div class="card-header">
+                        <div class="card-title"><h3 class="fw-bold m-0">Cliente</h3></div>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="symbol symbol-45px symbol-circle me-4">
+                <span class="symbol-label bg-light-primary text-primary fw-bolder">
+                  <%= (cliente_nombre || 'C').slice(0,1).toUpperCase() %>
+                </span>
+                            </div>
+
+                            <div class="flex-grow-1">
+                                <div class="fw-bold fs-5 text-gray-800"><%= cliente_nombre || '-' %></div>
+                                <div class="text-muted fs-7">
+                                    CUI: <span class="fw-semibold"><%= prestamo.cliente_cui9 %>-<%= prestamo.cliente_cui4 %></span>
+                                </div>
+                            </div>
+
+                            <a class="btn btn-sm btn-light" href="/clientes/<%= prestamo.cliente_cui9 %>">Ver cliente</a>
+                        </div>
+
+                        <div class="separator my-5"></div>
+
+                        <div class="row g-4">
+                            <div class="col-12">
+                                <div class="text-muted fw-semibold">Teléfono</div>
+                                <div class="fw-bold"><%= prestamo.cliente_telefono || '-' %></div>
+                            </div>
+                            <div class="col-12">
+                                <div class="text-muted fw-semibold">Dirección</div>
+                                <div class="fw-bold"><%= prestamo.cliente_direccion || '-' %></div>
+                            </div>
+                            <div class="col-12">
+                                <div class="text-muted fw-semibold">Agente (cartera)</div>
+                                <div class="fw-bold"><%= agente_nombre || '-' %></div>
+                            </div>
+                            <div class="col-12">
+                                <div class="text-muted fw-semibold">Referencias vivienda</div>
+                                <div class="fw-bold"><%= prestamo.cliente_referencias_vivienda || '-' %></div>
+                            </div>
+                            <div class="col-12">
+                                <div class="text-muted fw-semibold">Observaciones</div>
+                                <div class="fw-bold"><%= prestamo.cliente_observaciones || '-' %></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Préstamo -->
+                <div class="card gc-elevated">
+                    <div class="card-header">
+                        <div class="card-title"><h3 class="fw-bold m-0">Préstamo</h3></div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-4">
+                            <div class="col-6">
+                                <div class="text-muted fw-semibold">Principal</div>
+                                <div class="fw-bolder fs-4"><%= fmtQ(prestamo.principal) %></div>
+                            </div>
+                            <div class="col-6">
+                                <div class="text-muted fw-semibold">Cuota diaria</div>
+                                <div class="fw-bolder fs-4"><%= fmtQ(prestamo.cuota_diaria) %></div>
+                            </div>
+                            <div class="col-6">
+                                <div class="text-muted fw-semibold">Inicio</div>
+                                <div class="fw-bolder fs-4"><%- fmtDate(prestamo.fecha_inicio) %></div>
+                            </div>
+                            <div class="col-6">
+                                <div class="text-muted fw-semibold">Plazo</div>
+                                <div class="fw-bolder fs-4"><%= prestamo.plazo_dias %> días</div>
+                            </div>
+                            <div class="col-6">
+                                <div class="text-muted fw-semibold">Total a pagar</div>
+                                <div class="fw-bolder fs-4"><%= fmtQ(prestamo.total_pagar) %></div>
+                            </div>
+                            <div class="col-6">
+                                <div class="text-muted fw-semibold">Cuotas Pendientes</div>
+                                <div class="fw-bolder fs-4"><%= totales.cuotas_pendientes %></div>
+                            </div>
+                        </div>
+
+                        <div class="separator my-5"></div>
+
+                        <div class="d-flex flex-stack mb-2">
+                            <div class="text-muted fw-semibold">Progreso</div>
+                            <div class="fw-bold"><%= cuotas_pagadas %>/<%= total_cuotas %> (<%= progreso %>%)</div>
+                        </div>
+                        <div class="progress h-8px bg-light">
+                            <div class="progress-bar" role="progressbar" style="width:<%= progreso %>%;" aria-valuenow="<%= progreso %>" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+
+                        <div class="separator my-5"></div>
+
+                        <div class="text-muted fs-7">
+                            Creado: <span class="fw-semibold text-gray-800"><%= fmtDateTimeGT(prestamo._creado) %></span>
+                            <span class="mx-2">—</span>
+                            <span class="text-gray-700"><%= prestamo._usuariocreo || '-' %></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right -->
+            <div class="col-12 col-xl-7">
+
+                <!-- Totales -->
+                <div class="row g-5 mb-5">
+                    <div class="col-6 col-md-3">
+                        <div class="card gc-elevated"><div class="card-body p-5">
+                                <div class="text-muted fw-semibold">Total a pagar</div>
+                                <div class="fw-bolder fs-4"><%= fmtQ(totales.total_programado) %></div>
+                            </div></div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="card gc-elevated"><div class="card-body p-5">
+                                <div class="text-muted fw-semibold">Pagado</div>
+                                <div class="fw-bolder fs-4"><%= fmtQ(totales.total_pagado) %></div>
+                            </div></div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="card gc-elevated"><div class="card-body p-5">
+                                <div class="text-muted fw-semibold">Saldo</div>
+                                <div class="fw-bolder fs-4"><%= fmtQ(totales.saldo_pendiente) %></div>
+                            </div></div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="card gc-elevated"><div class="card-body p-5">
+                                <div class="text-muted fw-semibold">Mora</div>
+                                <div class="fw-bolder fs-4"><%= fmtQ(totales.total_mora) %></div>
+                            </div></div>
+                    </div>
+                </div>
+
+                <!-- Plan -->
+                <div class="card gc-elevated">
+                    <div class="card-header">
+                        <div class="card-title"><h3 class="fw-bold m-0">Plan de pagos</h3></div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-row-dashed table-row-gray-300 align-middle gs-0 gy-3">
+                                <thead>
+                                <tr class="fw-bold text-muted">
+                                    <th class="w-25px ps-4">
+                                        <div class="form-check form-check-sm form-check-custom form-check-solid">
+                                            <input class="form-check-input" type="checkbox" id="checkAllCuotas" />
+                                        </div>
+                                    </th>
+                                    <th class="min-w-40px">#</th>
+                                    <th class="min-w-130px">Fecha</th>
+                                    <th class="min-w-120px text-end">Cuota</th>
+                                    <th class="min-w-120px">Estado</th>
+                                    <th class="min-w-120px">Pago</th>
+                                    <th class="min-w-120px text-end">Mora</th>
+                                    <th class="min-w-140px text-end pe-3">Pagado</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <% plan.forEach((r) => { %>
+                                    <tr class="<%= isToday(r.fecha_cuota) ? 'gc-today-row' : '' %>">
+                                        <% const canPay = ['PENDIENTE','ATRASADO'].includes(String(r.estado || '').toUpperCase()); %>
+                                        <td class="w-25px ps-4">
+                                            <div class="form-check form-check-sm form-check-custom form-check-solid">
+                                                <input
+                                                        class="form-check-input js-cuota-check"
+                                                        type="checkbox"
+                                                        <%= canPay ? '' : 'disabled' %>
+                                                        data-cuota="<%= r.dia_num %>"
+                                                        data-mora="<%= r.mora || 0 %>"
+                                                        data-importe="<%= r.cuota_programada || 0 %>"
+                                                />
+                                            </div>
+                                        </td>
+
+                                        <td class="fw-bold text-gray-800"><%= r.dia_num %></td>
+                                        <td><%= fmtDate(r.fecha_cuota) %></td>
+                                        <td class="text-end fw-bold"><%= fmtQ(r.cuota_programada) %></td>
+                                        <td><span class="badge <%= badgeEstado(r.estado) %> text-uppercase"><%= r.estado %></span></td>
+                                        <td><%= fmtDate(r.fecha_pago) %></td>
+                                        <td class="text-end"><%= (r.mora || 0) > 0 ? fmtQ(r.mora) : '-' %></td>
+                                        <td class="text-end pe-3"><%= (r.monto_pagado || 0) > 0 ? fmtQ(r.monto_pagado) : '-' %></td>
+                                    </tr>
+                                <% }) %>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+<script>
+	window.__PRESTAMO_ID__ = "<%- prestamo.prestamo_id %>";
+</script>

@@ -38,7 +38,7 @@ export async function createLoan(req, res) {
 		// ======= BODY =======
 		const {
 			cui, // puede venir con espacios
-			fecha_inicio,
+			fecha_prestamo,
 			principal,
 			cuota_diaria,
 			total_pagar,
@@ -59,7 +59,7 @@ export async function createLoan(req, res) {
 		if (!cui) {
 			return res.status(400).json({ code: "VALIDATION", message: "cui es obligatorio" });
 		}
-		if (!fecha_inicio) {
+		if (!fecha_prestamo) {
 			return res.status(400).json({ code: "VALIDATION", message: "fecha_inicio es obligatoria" });
 		}
 
@@ -104,7 +104,7 @@ export async function createLoan(req, res) {
 		request.input("estado_cliente", mssql.Char(2), estado_cliente ?? "AC");
 
 		// Préstamo
-		request.input("fecha_inicio", mssql.Date, fecha_inicio); // YYYY-MM-DD
+		request.input("fecha_prestamo", mssql.Date, fecha_prestamo); // YYYY-MM-DD
 		request.input("principal", mssql.Int, pPrincipal);
 		request.input("cuota_diaria", mssql.Int, pCuota);
 		request.input("total_pagar", mssql.Int, pTotal);

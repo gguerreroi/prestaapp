@@ -7,11 +7,11 @@
 	// ======= Inputs base =======
 	const cui = document.getElementById("cui");
 	const cantidad = document.getElementById("cantidad");
-	const fechaInicio = document.getElementById("fechaInicio"); // name="fecha_inicio"
+	const fechaPrestamo = document.getElementById("fechaPrestamo"); // name="fecha_inicio"
 
 	// ======= UI / errores =======
 	const cuiError = document.getElementById("cuiError");
-	const fechaInicioError = document.getElementById("fechaInicioError");
+	const fechaPrestamoError = document.getElementById("fechaPrestamoError");
 
 	const amountPill = document.getElementById("amountPill");
 	const btnSubmit = document.getElementById("btnSubmit");
@@ -166,7 +166,7 @@
 
 	function clearErrors() {
 		if (cuiError) cuiError.textContent = "";
-		if (fechaInicioError) fechaInicioError.textContent = "";
+		if (fechaPrestamoError) fechaPrestamoError.textContent = "";
 
 		if (nombresError) nombresError.textContent = "";
 		if (apellidosError) apellidosError.textContent = "";
@@ -175,15 +175,15 @@
 		if (carteraError) carteraError.textContent = "";
 	}
 
-	function validateFechaInicio() {
-		if (!fechaInicio) return true;
+	function validatefechaPrestamo() {
+		if (!fechaPrestamo) return true;
 
-		const val = (fechaInicio.value || "").trim();
+		const val = (fechaPrestamo.value || "").trim();
 		if (!val) {
-			fechaInicioError && (fechaInicioError.textContent = "La fecha de inicio es obligatoria.");
+			fechaPrestamoError && (fechaPrestamoError.textContent = "La fecha de inicio es obligatoria.");
 			return false;
 		}
-		fechaInicioError && (fechaInicioError.textContent = "");
+		fechaPrestamoError && (fechaPrestamoError.textContent = "");
 		return true;
 	}
 
@@ -282,15 +282,15 @@
 	function getDisplayName() {
 		if (customerFound && customerData) {
 			return (
-				customerData.NombreCompleto ||
-				`${customerData.nombres || ""} ${customerData.apellidos || ""}`.trim() ||
+				customerData.NombreCompleto.toUpperCase() ||
+				`${customerData.nombres.toUpperCase() || ""} ${customerData.apellidos.toUpperCase() || ""}`.trim() ||
 				"—"
 			);
 		}
 
 		const vN = (nombres?.value || "").trim();
 		const vA = (apellidos?.value || "").trim();
-		const combined = `${vN} ${vA}`.trim();
+		const combined = `${vN} ${vA}`.trim().toUpperCase();
 		return combined || "—";
 	}
 
@@ -340,23 +340,23 @@
 				throw new Error(`Error al buscar cliente (${res.status})`);
 			}
 
-			const data = await res.json();
+			const {data} = await res.json();
 
 			customerFound = true;
-			customerData = data;
+			customerData = data[0];
 
 			showNewCustomer(false);
 			showExistingCustomer(true);
 
 			if (clienteExistenteNombre) {
 				clienteExistenteNombre.textContent =
-					data.NombreCompleto || `${data.nombres || ""} ${data.apellidos || ""}`.trim() || "Cliente";
+					data[0].nombre_completo || `${data[0].nombres || ""} ${data[0].apellidos || ""}`.trim() || "Cliente";
 			}
 
 			if (clienteExistenteDetalle) {
 				const t = [];
-				if (data.telefono) t.push(`Tel: ${data.telefono}`);
-				if (data.direccion) t.push(data.direccion);
+				if (data[0].telefono) t.push(`Tel: ${data[0].telefono}`);
+				if (data[0].direccion) t.push(data[0].direccion);
 				clienteExistenteDetalle.textContent = t.join(" • ") || "Cliente existente en el sistema.";
 			}
 
@@ -376,7 +376,7 @@
 		clearErrors();
 
 		const cuiState = validateCui();
-		const okFecha = validateFechaInicio();
+		const okFecha = validatefechaPrestamo();
 
 		// Mostrar nombre en resumen:
 		// - Si existe cliente: nombre del cliente
@@ -421,7 +421,7 @@
 		buscarClientePorCui();
 	});
 
-	fechaInicio?.addEventListener("change", validateAll);
+	fechaPrestamo?.addEventListener("change", validateAll);
 	cantidad?.addEventListener("input", validateAll);
 
 	// Campos nuevo cliente (para habilitar botón cuando llenan)
@@ -438,8 +438,8 @@
 		// Reset slider a base
 		if (cantidad) cantidad.value = 500;
 
-		// Fecha inicio: hoy (si quedó vacía tras reset)
-		if (fechaInicio && !fechaInicio.value) fechaInicio.value = todayLocalYYYYMMDD();
+		// Fecha Prestamo: hoy (si quedó vacía tras reset)
+		if (fechaPrestamo && !fechaPrestamo.value) fechaPrestamo.value = todayLocalYYYYMMDD();
 
 		// Limpieza
 		clearErrors();
@@ -511,8 +511,8 @@
 	});
 
 	// ======= Init =======
-	// Fecha inicio default
-	if (fechaInicio && !fechaInicio.value) fechaInicio.value = todayLocalYYYYMMDD();
+	// Fecha Prestamo default
+	if (fechaPrestamo && !fechaPrestamo.value) fechaPrestamo.value = todayLocalYYYYMMDD();
 
 	// Estado inicial
 	setFormStatusBadge("Pendiente", "warn");
@@ -539,5 +539,4 @@
 			}
 		}
 	});
-
 })();

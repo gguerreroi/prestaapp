@@ -21,7 +21,7 @@
         </div>
 
         <div class="d-flex align-items-center gap-2 gap-lg-3">
-            <a href="/loans" class="btn btn-light">
+            <a href="/prestamos" class="btn btn-light">
                 Volver
             </a>
 
@@ -51,16 +51,16 @@
                             <!-- Fecha inicio -->
                             <%   const today = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Guatemala' }); // YYYY-MM-DD %>
                             <div class="mb-6">
-                                <label class="form-label fw-semibold" for="fechaInicio">Fecha de inicio</label>
+                                <label class="form-label fw-semibold" for="fechaPrestamo">Fecha Desembolso</label>
                                 <input
-                                        id="fechaInicio"
-                                        name="fecha_inicio"
+                                        id="fechaPrestamo"
+                                        name="fecha_prestamo"
                                         type="date"
                                         class="form-control form-control-lg"
                                         value="<%= today || '' %>"
                                         required
                                 />
-                                <div class="text-danger fs-7 mt-1" id="fechaInicioError" aria-live="polite"></div>
+                                <div class="text-danger fs-7 mt-1" id="fechaPrestamoError" aria-live="polite"></div>
                             </div>
                             <!-- CUI -->
                             <div class="mb-6">
@@ -113,19 +113,19 @@
                                 <div class="row g-5">
                                     <div class="col-12 col-md-6">
                                         <label class="form-label fw-semibold" for="nombres">Nombres</label>
-                                        <input id="nombres" name="nombres" class="form-control form-control-lg" autocomplete="given-name" />
+                                        <input id="nombres" name="nombres" class="form-control form-control-lg text-uppercase" autocomplete="given-name" />
                                         <div class="text-danger fs-7 mt-1" id="nombresError" aria-live="polite"></div>
                                     </div>
 
                                     <div class="col-12 col-md-6">
                                         <label class="form-label fw-semibold" for="apellidos">Apellidos</label>
-                                        <input id="apellidos" name="apellidos" class="form-control form-control-lg" autocomplete="family-name" />
+                                        <input id="apellidos" name="apellidos" class="form-control form-control-lg text-uppercase" autocomplete="family-name" />
                                         <div class="text-danger fs-7 mt-1" id="apellidosError" aria-live="polite"></div>
                                     </div>
 
                                     <div class="col-12">
                                         <label class="form-label fw-semibold" for="direccion">Dirección</label>
-                                        <input id="direccion" name="direccion" class="form-control form-control-lg" autocomplete="street-address" />
+                                        <input id="direccion" name="direccion" class="form-control form-control-lg text-uppercase" autocomplete="street-address" />
                                         <div class="text-danger fs-7 mt-1" id="direccionError" aria-live="polite"></div>
                                     </div>
 
@@ -145,12 +145,12 @@
 
                                     <div class="col-12">
                                         <label class="form-label fw-semibold" for="observaciones">Observaciones</label>
-                                        <textarea id="observaciones" name="observaciones" class="form-control form-control-lg" rows="3"></textarea>
+                                        <textarea id="observaciones" name="observaciones" class="form-control form-control-lg text-uppercase" rows="3"></textarea>
                                     </div>
 
                                     <div class="col-12">
                                         <label class="form-label fw-semibold" for="referencias_vivienda">Referencias de vivienda</label>
-                                        <textarea id="referencias_vivienda" name="referencias_vivienda" class="form-control form-control-lg" rows="3"></textarea>
+                                        <textarea id="referencias_vivienda" name="referencias_vivienda" class="form-control form-control-lg text-uppercase" rows="3"></textarea>
                                     </div>
 
                                     <!-- Archivos / Fotos -->
