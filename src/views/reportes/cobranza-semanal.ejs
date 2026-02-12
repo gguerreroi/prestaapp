@@ -1,0 +1,232 @@
+<!--begin::Toolbar-->
+<div class="toolbar py-3 py-lg-6" id="kt_toolbar">
+    <div class="container-xxl d-flex flex-stack flex-wrap gap-2">
+        <div class="page-title d-flex flex-column justify-content-center me-3">
+            <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">
+                Cobranza Semanal
+            </h1>
+            <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
+                <li class="breadcrumb-item text-muted">
+                    <a href="/" class="text-muted text-hover-primary">Inicio</a>
+                </li>
+                <li class="breadcrumb-item"><span class="bullet bg-gray-400 w-5px h-2px"></span></li>
+                <li class="breadcrumb-item text-muted">
+                    <a href="/reportes" class="text-muted text-hover-primary">Reportes</a>
+                </li>
+                <li class="breadcrumb-item"><span class="bullet bg-gray-400 w-5px h-2px"></span></li>
+                <li class="breadcrumb-item text-dark">Cobranza Semanal</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!--end::Toolbar-->
+
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+    <div class="container-xxl" id="kt_content_container">
+
+        <!-- Filtros y navegacion -->
+        <div class="card mb-5">
+            <div class="card-body py-5">
+                <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+
+                    <!-- Navegacion de semanas -->
+                    <div class="d-flex align-items-center gap-2">
+                        <a href="/reportes/cobranza-semanal?semana=<%= semanaAnterior %><%= filtroAgente ? '&agente=' + filtroAgente : '' %>"
+                           class="btn btn-icon btn-sm btn-light" title="Semana anterior">
+                            <i class="ki-duotone ki-left fs-2">
+                                <span class="path1"></span><span class="path2"></span>
+                            </i>
+                        </a>
+
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="ki-duotone ki-calendar fs-4 text-primary">
+                                <span class="path1"></span><span class="path2"></span>
+                            </i>
+                            <span class="fw-bold fs-5 text-gray-800">
+                                <%= diasSemana[0].fechaCorta %> - <%= diasSemana[6].fechaCorta %>
+                            </span>
+                            <input type="date" id="inputSemana" class="form-control form-control-sm form-control-solid w-150px"
+                                   value="<%= fechaLunes %>" />
+                        </div>
+
+                        <a href="/reportes/cobranza-semanal?semana=<%= semanaSiguiente %><%= filtroAgente ? '&agente=' + filtroAgente : '' %>"
+                           class="btn btn-icon btn-sm btn-light" title="Semana siguiente">
+                            <i class="ki-duotone ki-right fs-2">
+                                <span class="path1"></span><span class="path2"></span>
+                            </i>
+                        </a>
+
+                        <a href="/reportes/cobranza-semanal<%= filtroAgente ? '?agente=' + filtroAgente : '' %>"
+                           class="btn btn-sm btn-light-primary ms-2">Hoy</a>
+                    </div>
+
+                    <!-- Filtro por agente -->
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="text-muted fs-7">Agente:</span>
+                        <select class="form-select form-select-solid form-select-sm w-200px" id="fltAgente">
+                            <option value="">Todos</option>
+                            <% agentes.forEach(function(ag) { %>
+                                <option value="<%= ag.agente_id %>" <%= filtroAgente == ag.agente_id ? 'selected' : '' %>>
+                                    <%= ag.nombre %>
+                                </option>
+                            <% }) %>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabla de cobranza semanal -->
+        <div class="card">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-row-dashed align-middle gs-0 gy-2 mb-0">
+                        <thead>
+                            <tr class="fw-bold text-muted fs-7 text-uppercase bg-light">
+                                <th class="ps-4 min-w-50px text-center">No.</th>
+                                <th class="min-w-200px">Cliente</th>
+                                <th class="min-w-100px text-end">Saldo</th>
+                                <% diasSemana.forEach(function(dia) { %>
+                                    <th class="min-w-100px text-center">
+                                        <div><%= dia.nombre %></div>
+                                        <div class="fw-semibold text-muted fs-8"><%= dia.fechaCorta %></div>
+                                    </th>
+                                <% }) %>
+                            </tr>
+                        </thead>
+                        <tbody class="fw-semibold text-gray-700">
+                            <% if (prestamos.length === 0) { %>
+                                <tr>
+                                    <td colspan="<%= 3 + diasSemana.length %>" class="text-center text-muted py-8">
+                                        No hay prestamos activos con cuotas en esta semana.
+                                    </td>
+                                </tr>
+                            <% } else { %>
+                                <% prestamos.forEach(function(p, idx) { %>
+                                    <tr>
+                                        <td class="ps-4 text-center text-muted"><%= idx + 1 %></td>
+                                        <td>
+                                            <div class="d-flex flex-column">
+                                                <a href="/prestamos/<%= p.prestamo_id %>" class="text-gray-800 fw-bold text-hover-primary">
+                                                    <%= p.cliente_nombre %>
+                                                </a>
+                                                <span class="text-muted fs-8">
+                                                    #<%= p.prestamo_id %> &middot; Q<%= p.cuota_diaria %>/dia
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td class="text-end fw-bold">
+                                            Q <%= p.saldo.toLocaleString('es-GT') %>
+                                        </td>
+                                        <% diasSemana.forEach(function(dia) { %>
+                                            <% const cuota = p.dias[dia.fecha]; %>
+                                            <td class="text-center">
+                                                <% if (cuota) { %>
+                                                    <% if (cuota.estado_cuota === 'PAGADO') { %>
+                                                        <span class="badge badge-light-success fs-8 px-3 py-2">
+                                                            Q<%= cuota.monto_pagado %>
+                                                        </span>
+                                                    <% } else if (cuota.estado_cuota === 'ATRASADO' || cuota.estado_cuota === 'MOROSO') { %>
+                                                        <span class="badge badge-light-danger fs-8 px-3 py-2">
+                                                            Q<%= cuota.cuota_programada %>
+                                                        </span>
+                                                    <% } else { %>
+                                                        <span class="badge badge-light fs-8 px-3 py-2">
+                                                            Q<%= cuota.cuota_programada %>
+                                                        </span>
+                                                    <% } %>
+                                                <% } else { %>
+                                                    <span class="text-muted fs-8">-</span>
+                                                <% } %>
+                                            </td>
+                                        <% }) %>
+                                    </tr>
+                                <% }) %>
+                            <% } %>
+                        </tbody>
+                        <% if (prestamos.length > 0) { %>
+                        <tfoot>
+                            <tr class="fw-bold bg-light-primary">
+                                <td colspan="2" class="ps-4">TOTALES</td>
+                                <td class="text-end fw-bold">
+                                    Q <%= prestamos.reduce((sum, p) => sum + p.saldo, 0).toLocaleString('es-GT') %>
+                                </td>
+                                <% diasSemana.forEach(function(dia) { %>
+                                    <td class="text-center">
+                                        <%
+                                            let totalDia = 0;
+                                            let pagadoDia = 0;
+                                            prestamos.forEach(function(p) {
+                                                const cuota = p.dias[dia.fecha];
+                                                if (cuota) {
+                                                    totalDia += cuota.cuota_programada;
+                                                    pagadoDia += cuota.monto_pagado;
+                                                }
+                                            });
+                                        %>
+                                        <% if (totalDia > 0) { %>
+                                            <div class="fs-8 fw-bold">Q<%= pagadoDia %></div>
+                                            <div class="fs-9 text-muted">de Q<%= totalDia %></div>
+                                        <% } else { %>
+                                            <span class="text-muted fs-8">-</span>
+                                        <% } %>
+                                    </td>
+                                <% }) %>
+                            </tr>
+                        </tfoot>
+                        <% } %>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Resumen -->
+        <% if (prestamos.length > 0) { %>
+        <div class="row g-5 mt-2">
+            <div class="col-md-3">
+                <div class="card card-body text-center py-4">
+                    <span class="text-muted fs-7">Prestamos activos</span>
+                    <span class="fs-2 fw-bold text-gray-800"><%= prestamos.length %></span>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-body text-center py-4">
+                    <span class="text-muted fs-7">Saldo total</span>
+                    <span class="fs-2 fw-bold text-gray-800">Q <%= prestamos.reduce((s, p) => s + p.saldo, 0).toLocaleString('es-GT') %></span>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-body text-center py-4">
+                    <span class="text-muted fs-7">Cobrado esta semana</span>
+                    <%
+                        let cobradoSemana = 0;
+                        prestamos.forEach(function(p) {
+                            diasSemana.forEach(function(dia) {
+                                const cuota = p.dias[dia.fecha];
+                                if (cuota) cobradoSemana += cuota.monto_pagado;
+                            });
+                        });
+                    %>
+                    <span class="fs-2 fw-bold text-success">Q <%= cobradoSemana.toLocaleString('es-GT') %></span>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-body text-center py-4">
+                    <span class="text-muted fs-7">Pendiente esta semana</span>
+                    <%
+                        let pendienteSemana = 0;
+                        prestamos.forEach(function(p) {
+                            diasSemana.forEach(function(dia) {
+                                const cuota = p.dias[dia.fecha];
+                                if (cuota && cuota.estado_cuota !== 'PAGADO') pendienteSemana += cuota.cuota_programada;
+                            });
+                        });
+                    %>
+                    <span class="fs-2 fw-bold text-warning">Q <%= pendienteSemana.toLocaleString('es-GT') %></span>
+                </div>
+            </div>
+        </div>
+        <% } %>
+
+    </div>
+</div>
