@@ -11,10 +11,11 @@ function viewLocals(req, res, next) {
 		path === "/" ? "inicio"
 			: path.startsWith("/prestamos") ? "prestamos"
 				: path.startsWith("/clientes") ? "clientes"
-					: path.startsWith("/pagos") ? "pagos"
-						: path.startsWith("/reportes") ? "reportes"
-							: path.startsWith("/configuracion") ? "configuracion"
-								: "";
+					: path.startsWith("/cobranza") ? "cobranza"
+						: path.startsWith("/pagos") ? "pagos"
+							: path.startsWith("/reportes") ? "reportes"
+								: path.startsWith("/configuracion") ? "configuracion"
+									: "";
 	return next();
 }
 
