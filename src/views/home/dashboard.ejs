@@ -1,23 +1,25 @@
 <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
     <div class="container-fluid">
 
-        <!-- KPI Cards -->
+        <!-- KPI Cards Row 1 -->
         <div class="row g-5 g-xl-8">
 
             <div class="col-xl-3 col-md-6">
                 <div class="card card-xl-stretch mb-xl-8">
                     <div class="card-body d-flex align-items-center">
                         <div class="symbol symbol-45px me-5">
-                      <span class="symbol-label bg-light-primary">
-                        <i class="ki-duotone ki-wallet fs-2 text-primary">
-                          <span class="path1"></span><span class="path2"></span>
-                        </i>
-                      </span>
+                            <span class="symbol-label bg-light-primary">
+                                <i class="ki-duotone ki-wallet fs-2 text-primary">
+                                    <span class="path1"></span><span class="path2"></span>
+                                </i>
+                            </span>
                         </div>
                         <div class="d-flex flex-column">
                             <span class="text-muted fw-semibold">Cobros de hoy</span>
-                            <span class="fs-2 fw-bold text-gray-800">Q 0</span>
-                            <span class="fs-8 text-muted">Actualizado recientemente</span>
+                            <span class="fs-2 fw-bold text-gray-800" id="kpi-cobros-hoy">
+                                <span class="spinner-border spinner-border-sm"></span>
+                            </span>
+                            <span class="fs-8 text-muted">Recaudado al momento</span>
                         </div>
                     </div>
                 </div>
@@ -27,16 +29,18 @@
                 <div class="card card-xl-stretch mb-xl-8">
                     <div class="card-body d-flex align-items-center">
                         <div class="symbol symbol-45px me-5">
-                      <span class="symbol-label bg-light-warning">
-                        <i class="ki-duotone ki-time fs-2 text-warning">
-                          <span class="path1"></span><span class="path2"></span>
-                        </i>
-                      </span>
+                            <span class="symbol-label bg-light-warning">
+                                <i class="ki-duotone ki-time fs-2 text-warning">
+                                    <span class="path1"></span><span class="path2"></span>
+                                </i>
+                            </span>
                         </div>
                         <div class="d-flex flex-column">
-                            <span class="text-muted fw-semibold">Pagos pendientes</span>
-                            <span class="fs-2 fw-bold text-gray-800">0</span>
-                            <span class="fs-8 text-muted">Próximos 7 días</span>
+                            <span class="text-muted fw-semibold">Cuotas pendientes hoy</span>
+                            <span class="fs-2 fw-bold text-gray-800" id="kpi-cuotas-pendientes">
+                                <span class="spinner-border spinner-border-sm"></span>
+                            </span>
+                            <span class="fs-8 text-muted">Incluye atrasadas</span>
                         </div>
                     </div>
                 </div>
@@ -46,16 +50,18 @@
                 <div class="card card-xl-stretch mb-xl-8">
                     <div class="card-body d-flex align-items-center">
                         <div class="symbol symbol-45px me-5">
-                      <span class="symbol-label bg-light-success">
-                        <i class="ki-duotone ki-user fs-2 text-success">
-                          <span class="path1"></span><span class="path2"></span>
-                        </i>
-                      </span>
+                            <span class="symbol-label bg-light-danger">
+                                <i class="ki-duotone ki-abstract-26 fs-2 text-danger">
+                                    <span class="path1"></span><span class="path2"></span>
+                                </i>
+                            </span>
                         </div>
                         <div class="d-flex flex-column">
-                            <span class="text-muted fw-semibold">Clientes nuevos</span>
-                            <span class="fs-2 fw-bold text-gray-800">0</span>
-                            <span class="fs-8 text-muted">Últimas 24 horas</span>
+                            <span class="text-muted fw-semibold">Cuotas atrasadas</span>
+                            <span class="fs-2 fw-bold text-danger" id="kpi-cuotas-atrasadas">
+                                <span class="spinner-border spinner-border-sm"></span>
+                            </span>
+                            <span class="fs-8 text-muted" id="kpi-monto-atrasado">Q 0 pendiente</span>
                         </div>
                     </div>
                 </div>
@@ -65,15 +71,17 @@
                 <div class="card card-xl-stretch mb-xl-8">
                     <div class="card-body d-flex align-items-center">
                         <div class="symbol symbol-45px me-5">
-                      <span class="symbol-label bg-light-info">
-                        <i class="ki-duotone ki-graph-up fs-2 text-info">
-                          <span class="path1"></span><span class="path2"></span>
-                        </i>
-                      </span>
+                            <span class="symbol-label bg-light-info">
+                                <i class="ki-duotone ki-graph-up fs-2 text-info">
+                                    <span class="path1"></span><span class="path2"></span>
+                                </i>
+                            </span>
                         </div>
                         <div class="d-flex flex-column">
                             <span class="text-muted fw-semibold">Préstamos activos</span>
-                            <span class="fs-2 fw-bold text-gray-800">0</span>
+                            <span class="fs-2 fw-bold text-gray-800" id="kpi-prestamos-activos">
+                                <span class="spinner-border spinner-border-sm"></span>
+                            </span>
                             <span class="fs-8 text-muted">En curso</span>
                         </div>
                     </div>
@@ -82,9 +90,139 @@
 
         </div>
 
-        <!-- Quick Actions + Alerts -->
+        <!-- KPI Cards Row 2 -->
         <div class="row g-5 g-xl-8">
+
+            <div class="col-xl-3 col-md-6">
+                <div class="card card-xl-stretch mb-xl-8">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="symbol symbol-45px me-5">
+                            <span class="symbol-label bg-light-success">
+                                <i class="ki-duotone ki-people fs-2 text-success">
+                                    <span class="path1"></span><span class="path2"></span>
+                                </i>
+                            </span>
+                        </div>
+                        <div class="d-flex flex-column">
+                            <span class="text-muted fw-semibold">Clientes activos</span>
+                            <span class="fs-2 fw-bold text-gray-800" id="kpi-total-clientes">
+                                <span class="spinner-border spinner-border-sm"></span>
+                            </span>
+                            <span class="fs-8 text-muted">En cartera</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6">
+                <div class="card card-xl-stretch mb-xl-8">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="symbol symbol-45px me-5">
+                            <span class="symbol-label bg-light-primary">
+                                <i class="ki-duotone ki-dollar fs-2 text-primary">
+                                    <span class="path1"></span><span class="path2"></span>
+                                </i>
+                            </span>
+                        </div>
+                        <div class="d-flex flex-column">
+                            <span class="text-muted fw-semibold">Capital colocado</span>
+                            <span class="fs-2 fw-bold text-gray-800" id="kpi-capital-colocado">
+                                <span class="spinner-border spinner-border-sm"></span>
+                            </span>
+                            <span class="fs-8 text-muted">En préstamos activos</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6">
+                <div class="card card-xl-stretch mb-xl-8">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="symbol symbol-45px me-5">
+                            <span class="symbol-label bg-light-success">
+                                <i class="ki-duotone ki-check-circle fs-2 text-success">
+                                    <span class="path1"></span><span class="path2"></span>
+                                </i>
+                            </span>
+                        </div>
+                        <div class="d-flex flex-column">
+                            <span class="text-muted fw-semibold">Total cobrado</span>
+                            <span class="fs-2 fw-bold text-success" id="kpi-total-cobrado">
+                                <span class="spinner-border spinner-border-sm"></span>
+                            </span>
+                            <span class="fs-8 text-muted">Acumulado general</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6">
+                <div class="card card-xl-stretch mb-xl-8">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="symbol symbol-45px me-5">
+                            <span class="symbol-label bg-light-warning">
+                                <i class="ki-duotone ki-abstract-33 fs-2 text-warning">
+                                    <span class="path1"></span><span class="path2"></span>
+                                </i>
+                            </span>
+                        </div>
+                        <div class="d-flex flex-column">
+                            <span class="text-muted fw-semibold">Por cobrar</span>
+                            <span class="fs-2 fw-bold text-gray-800" id="kpi-total-por-cobrar">
+                                <span class="spinner-border spinner-border-sm"></span>
+                            </span>
+                            <span class="fs-8 text-muted">Saldo en cartera</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Quick Actions + Cobranza Hoy -->
+        <div class="row g-5 g-xl-8">
+
+            <!-- Cobranza del día -->
             <div class="col-xl-8">
+                <div class="card mb-5 mb-xl-8">
+                    <div class="card-header border-0 pt-5">
+                        <h3 class="card-title align-items-start flex-column">
+                            <span class="card-label fw-bold fs-3 mb-1">Cobranza del día</span>
+                            <span class="text-muted mt-1 fw-semibold fs-7">Cuotas programadas para hoy</span>
+                        </h3>
+                        <% if (permission.includes('/cobranza')) { %>
+                        <div class="card-toolbar">
+                            <a href="/cobranza" class="btn btn-sm btn-light-primary">Ver cobranza completa</a>
+                        </div>
+                        <% } %>
+                    </div>
+                    <div class="card-body py-3">
+                        <div class="table-responsive">
+                            <table class="table table-row-dashed table-row-gray-300 align-middle gs-0 gy-4">
+                                <thead>
+                                <tr class="fw-bold text-muted">
+                                    <th class="min-w-200px">Cliente</th>
+                                    <th class="min-w-100px">Teléfono</th>
+                                    <th class="min-w-100px text-end">Cuota</th>
+                                    <th class="min-w-80px text-end">Mora</th>
+                                    <th class="min-w-80px">Estado</th>
+                                </tr>
+                                </thead>
+                                <tbody id="tbl-cobranza-hoy">
+                                <tr>
+                                    <td colspan="5" class="text-center text-muted py-8">
+                                        <span class="spinner-border spinner-border-sm me-2"></span> Cargando...
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Acciones rápidas -->
+            <div class="col-xl-4">
                 <div class="card mb-5 mb-xl-8">
                     <div class="card-header">
                         <div class="card-title">
@@ -92,54 +230,61 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <div class="d-flex flex-wrap gap-3">
-                            <a href="/prestamos/nuevo" class="btn btn-primary">+ Nuevo préstamo</a>
-                            <a href="/clientes/nuevo" class="btn btn-light">+ Nuevo cliente</a>
-                            <a href="/reportes" class="btn btn-light">Ver reportes</a>
+                        <div class="d-flex flex-column gap-3">
+                            <% if (permission.includes('/prestamos')) { %>
+                            <a href="/prestamos/nuevo" class="btn btn-primary btn-sm">
+                                <i class="ki-duotone ki-plus fs-3"></i> Nuevo préstamo
+                            </a>
+                            <% } %>
+                            <% if (permission.includes('/clientes')) { %>
+                            <a href="/clientes/nuevo" class="btn btn-light btn-sm">
+                                <i class="ki-duotone ki-plus fs-3"></i> Nuevo cliente
+                            </a>
+                            <% } %>
+                            <% if (permission.includes('/cobranza')) { %>
+                            <a href="/cobranza" class="btn btn-light btn-sm">
+                                <i class="ki-duotone ki-receipt fs-3"></i> Ir a cobranza
+                            </a>
+                            <% } %>
+                            <% if (permission.includes('/reportes')) { %>
+                            <a href="/reportes" class="btn btn-light btn-sm">
+                                <i class="ki-duotone ki-chart-line fs-3"></i> Ver reportes
+                            </a>
+                            <% } %>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="col-xl-4">
+                <!-- Resumen rápido -->
                 <div class="card mb-5 mb-xl-8">
                     <div class="card-header">
                         <div class="card-title">
-                            <h3 class="fw-bold m-0">Alertas</h3>
+                            <h3 class="fw-bold m-0">Resumen</h3>
                         </div>
                     </div>
-                    <div class="card-body">
-                        <div class="notice d-flex bg-light-primary rounded border-primary border border-dashed p-6">
-                      <span class="svg-icon svg-icon-2tx svg-icon-primary me-4">
-                        <i class="ki-duotone ki-information-5 fs-2x">
-                          <span class="path1"></span><span class="path2"></span><span class="path3"></span>
-                        </i>
-                      </span>
-                            <div class="d-flex flex-stack flex-grow-1">
-                                <div class="fw-semibold">
-                                    <div class="fs-6 text-gray-800">Sin alertas por el momento.</div>
-                                    <div class="fs-7 text-muted">Todo en orden.</div>
-                                </div>
-                            </div>
+                    <div class="card-body pt-2">
+                        <div class="d-flex flex-stack mb-5">
+                            <span class="text-muted fw-semibold fs-7">Tasa de cobro hoy</span>
+                            <span class="fw-bold fs-6" id="kpi-tasa-cobro">--</span>
                         </div>
-                        <!-- Aquí puede poner alertas reales -->
+                        <div class="d-flex flex-stack mb-5">
+                            <span class="text-muted fw-semibold fs-7">Saldo por cobrar</span>
+                            <span class="fw-bold fs-6" id="kpi-saldo-pendiente">--</span>
+                        </div>
                     </div>
                 </div>
             </div>
+
         </div>
 
-        <!-- Recent Activity Table -->
+        <!-- Actividad reciente -->
         <div class="card mb-5 mb-xl-8">
             <div class="card-header border-0 pt-5">
                 <h3 class="card-title align-items-start flex-column">
                     <span class="card-label fw-bold fs-3 mb-1">Actividad reciente</span>
-                    <span class="text-muted mt-1 fw-semibold fs-7">Movimientos más recientes del sistema</span>
+                    <span class="text-muted mt-1 fw-semibold fs-7">Últimos pagos registrados</span>
                 </h3>
-                <div class="card-toolbar">
-                    <a href="/movimientos" class="btn btn-sm btn-light">Ver todo</a>
-                </div>
             </div>
-
             <div class="card-body py-3">
                 <div class="table-responsive">
                     <table class="table table-row-dashed table-row-gray-300 align-middle gs-0 gy-4">
@@ -147,37 +292,16 @@
                         <tr class="fw-bold text-muted">
                             <th class="min-w-140px">Fecha</th>
                             <th class="min-w-200px">Cliente</th>
-                            <th class="min-w-150px">Acción</th>
+                            <th class="min-w-120px">Préstamo</th>
                             <th class="min-w-120px text-end">Monto</th>
-                            <th class="min-w-120px">Estado</th>
                         </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="tbl-actividad-reciente">
                         <tr>
-                            <td colspan="5" class="text-center text-muted py-8">
-                                Aún no hay actividad registrada.
+                            <td colspan="4" class="text-center text-muted py-8">
+                                <span class="spinner-border spinner-border-sm me-2"></span> Cargando...
                             </td>
                         </tr>
-
-                        <!-- Ejemplo:
-                        <tr>
-                          <td>2026-02-07 09:12</td>
-                          <td>
-                            <div class="d-flex align-items-center">
-                              <div class="symbol symbol-35px me-3">
-                                <span class="symbol-label bg-light">JP</span>
-                              </div>
-                              <div class="d-flex flex-column">
-                                <span class="text-gray-800 fw-bold">Juan Pérez</span>
-                                <span class="text-muted fw-semibold fs-7">CUI: 123...</span>
-                              </div>
-                            </div>
-                          </td>
-                          <td><span class="badge badge-light-primary">Pago</span></td>
-                          <td class="text-end fw-bold">Q 150</td>
-                          <td><span class="badge badge-light-success">Aplicado</span></td>
-                        </tr>
-                        -->
                         </tbody>
                     </table>
                 </div>
@@ -186,3 +310,90 @@
 
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const Q = (v) => 'Q ' + Number(v).toLocaleString('es-GT');
+
+    fetch('/api/dashboard/stats', {
+        credentials: 'same-origin',
+        headers: { 'Accept': 'application/json' }
+    })
+    .then(r => r.json())
+    .then(res => {
+        if (res.code !== 'OK') {
+            console.error('Dashboard error:', res);
+            return;
+        }
+        const d = res.data;
+
+        // KPIs
+        document.getElementById('kpi-cobros-hoy').textContent = Q(d.cobros_hoy);
+        document.getElementById('kpi-cuotas-pendientes').textContent = d.cuotas_pendientes_hoy;
+        document.getElementById('kpi-cuotas-atrasadas').textContent = d.cuotas_atrasadas;
+        document.getElementById('kpi-monto-atrasado').textContent = Q(d.monto_atrasado) + ' pendiente';
+        document.getElementById('kpi-prestamos-activos').textContent = d.prestamos_activos;
+        document.getElementById('kpi-total-clientes').textContent = d.total_clientes;
+        document.getElementById('kpi-capital-colocado').textContent = Q(d.capital_colocado);
+        document.getElementById('kpi-total-cobrado').textContent = Q(d.total_cobrado);
+        document.getElementById('kpi-total-por-cobrar').textContent = Q(d.total_por_cobrar - d.total_cobrado);
+
+        // Resumen
+        const tasaCobro = d.cuotas_pendientes_hoy > 0
+            ? '0%'
+            : (d.cobros_hoy > 0 ? '100%' : '--');
+        document.getElementById('kpi-tasa-cobro').textContent = tasaCobro;
+        document.getElementById('kpi-saldo-pendiente').textContent = Q(d.total_por_cobrar - d.total_cobrado);
+
+        // Cobranza del día
+        const tblCobranza = document.getElementById('tbl-cobranza-hoy');
+        if (d.cobranza_hoy.length === 0) {
+            tblCobranza.innerHTML = '<tr><td colspan="5" class="text-center text-muted py-8">No hay cuotas programadas para hoy.</td></tr>';
+        } else {
+            tblCobranza.innerHTML = d.cobranza_hoy.map(c => {
+                const initials = (c.cliente_nombre || '').split(' ').map(w => w[0]).slice(0, 2).join('');
+                const estadoBadge = c.cuota_estado === 'Pendiente'
+                    ? '<span class="badge badge-light-warning">Pendiente</span>'
+                    : '<span class="badge badge-light-success">Pagado</span>';
+                return '<tr>' +
+                    '<td><div class="d-flex align-items-center">' +
+                        '<div class="symbol symbol-35px me-3"><span class="symbol-label bg-light-primary text-primary fw-bold">' + initials + '</span></div>' +
+                        '<div class="d-flex flex-column"><span class="text-gray-800 fw-bold">' + c.cliente_nombre + '</span>' +
+                        '<span class="text-muted fw-semibold fs-7">Préstamo #' + c.prestamo_id + '</span></div>' +
+                    '</div></td>' +
+                    '<td>' + (c.telefono || '--') + '</td>' +
+                    '<td class="text-end fw-bold">' + Q(c.cuota_programada) + '</td>' +
+                    '<td class="text-end">' + (c.mora > 0 ? '<span class="text-danger">' + Q(c.mora) + '</span>' : Q(0)) + '</td>' +
+                    '<td>' + estadoBadge + '</td>' +
+                '</tr>';
+            }).join('');
+        }
+
+        // Actividad reciente
+        const tblActividad = document.getElementById('tbl-actividad-reciente');
+        if (d.actividad_reciente.length === 0) {
+            tblActividad.innerHTML = '<tr><td colspan="4" class="text-center text-muted py-8">Aún no hay pagos registrados.</td></tr>';
+        } else {
+            tblActividad.innerHTML = d.actividad_reciente.map(a => {
+                const fecha = new Date(a.fecha_pago).toLocaleString('es-GT', { dateStyle: 'short', timeStyle: 'short' });
+                const initials = (a.cliente_nombre || '').split(' ').map(w => w[0]).slice(0, 2).join('');
+                return '<tr>' +
+                    '<td class="text-muted">' + fecha + '</td>' +
+                    '<td><div class="d-flex align-items-center">' +
+                        '<div class="symbol symbol-35px me-3"><span class="symbol-label bg-light">' + initials + '</span></div>' +
+                        '<span class="text-gray-800 fw-bold">' + a.cliente_nombre + '</span>' +
+                    '</div></td>' +
+                    '<td><span class="badge badge-light-primary">#' + a.prestamo_id + ' - Día ' + a.dia_num + '</span></td>' +
+                    '<td class="text-end fw-bold text-success">' + Q(a.monto_pagado) + '</td>' +
+                '</tr>';
+            }).join('');
+        }
+    })
+    .catch(err => {
+        console.error('Error loading dashboard:', err);
+        document.querySelectorAll('.spinner-border').forEach(el => {
+            el.parentElement.textContent = 'Error';
+        });
+    });
+});
+</script>

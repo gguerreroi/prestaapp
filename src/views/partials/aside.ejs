@@ -54,6 +54,7 @@
                     </a>
                 </div>
 
+                <% if (typeof permission !== 'undefined' && permission.includes('/prestamos')) { %>
                 <div class="menu-item <%= activeMenu === 'prestamos' ? 'here show' : ''%>">
                     <a class="menu-link <%= activeMenu === 'prestamos' ? 'here show active' : ''%>" href="/prestamos">
                   <span class="menu-icon">
@@ -64,7 +65,9 @@
                         <span class="menu-title">Préstamos</span>
                     </a>
                 </div>
+                <% } %>
 
+                <% if (typeof permission !== 'undefined' && permission.includes('/clientes')) { %>
                 <div class="menu-item <%= activeMenu === 'clientes' ? 'here show' : ''%>">
                     <a class="menu-link <%= activeMenu === 'clientes' ? 'here show active' : ''%>" href="/clientes">
                   <span class="menu-icon">
@@ -75,7 +78,9 @@
                         <span class="menu-title">Clientes</span>
                     </a>
                 </div>
+                <% } %>
 
+                <% if (typeof permission !== 'undefined' && permission.includes('/cobranza')) { %>
                 <div class="menu-item <%= activeMenu === 'cobranza' ? 'here show' : ''%>">
                     <a class="menu-link <%= activeMenu === 'cobranza' ? 'here show active' : ''%>" href="/cobranza">
                   <span class="menu-icon">
@@ -86,7 +91,9 @@
                         <span class="menu-title">Cobranza</span>
                     </a>
                 </div>
+                <% } %>
 
+                <% if (typeof permission !== 'undefined' && permission.includes('/reportes')) { %>
                 <div class="menu-item <%= activeMenu === 'reportes' ? 'here show' : ''%>">
                     <a class="menu-link <%= activeMenu === 'reportes' ? 'here show active' : ''%>" href="/reportes">
                   <span class="menu-icon">
@@ -97,6 +104,7 @@
                         <span class="menu-title">Reportes</span>
                     </a>
                 </div>
+                <% } %>
 
                 <div class="menu-item mt-6">
                     <div class="menu-content px-8">
