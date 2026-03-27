@@ -1,17 +1,18 @@
 import { Router} from "express"
 import appAuth from "../../middlewares/auth/app-auth.middleware"
+import requirePermission from "../../middlewares/auth/permission.middleware"
 import { dbExec } from "../../config/db.query"
 
 const router = Router();
 
 // URL base: /clientes
-router.get('/nuevo', appAuth, (req, res)=> {
+router.get('/nuevo', appAuth, requirePermission('/clientes'), (req, res)=> {
 	res.render('clientes/cliente-nuevo', {
 		pageScripts: ['/assets/js/custom/nuevo-cliente.js']
 	})
 })
 
-router.get('/:id', appAuth, async (req, res)=> {
+router.get('/:id', appAuth, requirePermission('/clientes'), async (req, res)=> {
 	const { id } = req.params;
 	const c = await dbExec("clientes.sp_cliente_detalle", {cui9: id })
 
@@ -24,7 +25,7 @@ router.get('/:id', appAuth, async (req, res)=> {
 	})
 })
 
-router.get('/', appAuth, (req, res)=> {
+router.get('/', appAuth, requirePermission('/clientes'), (req, res)=> {
 	res.render('clientes/clientes', {
 		pageScripts: ['/assets/js/custom/listado-clientes.js']
 	})

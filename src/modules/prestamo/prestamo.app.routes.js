@@ -1,16 +1,17 @@
 import { Router } from "express"
 import appAuth from "../../middlewares/auth/app-auth.middleware"
+import requirePermission from "../../middlewares/auth/permission.middleware"
 import { dbExec } from "../../config/db.query"
 
 const router = Router();
 // URL base: /prestamos
-router.get('/nuevo', appAuth, (req, res)=> {
+router.get('/nuevo', appAuth, requirePermission('/prestamos'), (req, res)=> {
 	res.render('prestamo/prestamo-nuevo', {
 		pageScripts: ['/assets/js/custom/nuevo-prestamo.js']
 	})
 })
 
-router.get('/:id', appAuth, async (req, res)=> {
+router.get('/:id', appAuth, requirePermission('/prestamos'), async (req, res)=> {
 	const { id } = req.params;
 	const p = await dbExec("prestamos.sp_prestamo_detalle", {prestamo_id: id })
 
@@ -23,7 +24,7 @@ router.get('/:id', appAuth, async (req, res)=> {
 	})
 })
 
-router.get('/', appAuth, (req, res)=> {
+router.get('/', appAuth, requirePermission('/prestamos'), (req, res)=> {
 	res.render('prestamo/prestamos', {
 		pageScripts: ['/assets/js/custom/listado-prestamo.js']
 	})

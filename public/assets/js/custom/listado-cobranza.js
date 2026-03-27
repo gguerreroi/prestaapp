@@ -49,7 +49,7 @@
 				data: "prestamo_id",
 				name: "prestamo_id",
 				render: function (id) {
-					return `<a href="/prestamos/${id}" class="text-gray-800 fw-bold text-hover-primary">#${id}</a>`;
+					return `<a href="/cobranza/${id}" class="text-gray-800 fw-bold text-hover-primary">#${id}</a>`;
 				},
 			},
 
@@ -137,7 +137,7 @@
 				searchable: false,
 				className: "text-end",
 				render: function (_, __, row) {
-					return `<a href="/prestamos/${row.prestamo_id}" class="btn btn-sm btn-light">Ver</a>`;
+					return `<a href="/cobranza/${row.prestamo_id}" class="btn btn-sm btn-light">Ver</a>`;
 				},
 			},
 		],
