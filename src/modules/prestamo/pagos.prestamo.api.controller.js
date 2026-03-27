@@ -1,5 +1,5 @@
 import { connection, mssql } from "../../config/db";
-import getInfo from "../../middlewares/auth/getInfo";
+import getInfo from "../../middlewares/auth/get-info.middleware";
 
 export async function registrarPago(req, res) {
 	const { id } = req.params;

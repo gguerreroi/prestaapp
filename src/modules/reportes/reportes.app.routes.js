@@ -1,18 +1,18 @@
 import { Router } from "express"
-import requireSessionAuth from "../../middlewares/auth/requireSessionAuth.middleware"
+import appAuth from "../../middlewares/auth/app-auth.middleware"
 import { dbQuery } from "../../config/db.query"
 
 const router = Router();
 
 // URL base: /reportes
-router.get('/', requireSessionAuth, (req, res) => {
+router.get('/', appAuth, (req, res) => {
 	res.render('reportes/reportes', {
 		title: 'Reportes'
 	})
 })
 
 // GET /reportes/cobranza-semanal?semana=2026-02-10
-router.get('/cobranza-semanal', requireSessionAuth, async (req, res) => {
+router.get('/cobranza-semanal', appAuth, async (req, res) => {
 	try {
 		// Calcular lunes de la semana solicitada (o la semana actual)
 		let lunes;

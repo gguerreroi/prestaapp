@@ -1,5 +1,5 @@
 import { Router } from "express"
-import requireSessionAuth from "../../middlewares/auth/requireSessionAuth.middleware"
+import requireSessionAuth from "../../middlewares/auth/app-auth.middleware"
 
 const router = Router();
 

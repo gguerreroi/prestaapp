@@ -282,7 +282,7 @@
 	function getDisplayName() {
 		if (customerFound && customerData) {
 			return (
-				customerData.NombreCompleto.toUpperCase() ||
+				customerData.NombreCompleto ||
 				`${customerData.nombres.toUpperCase() || ""} ${customerData.apellidos.toUpperCase() || ""}`.trim() ||
 				"—"
 			);

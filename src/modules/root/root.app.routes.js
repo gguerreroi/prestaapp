@@ -1,9 +1,9 @@
 import { Router } from "express"
-import requireSessionAuth from "../../middlewares/auth/requireSessionAuth.middleware"
+import appAuth from "../../middlewares/auth/app-auth.middleware"
 
 const router = Router();
 
-router.get('/', requireSessionAuth, (req, res)=> {
+router.get('/', appAuth, (req, res)=> {
 	res.render('home/dashboard.ejs', {
 		title: 'Inicio'
 	})

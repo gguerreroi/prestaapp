@@ -1,4 +1,4 @@
-import getInfo from './getInfo.js';
+import getInfo from './get-info.middleware.js';
 
 function normalizePathForPermission(pathname) {
 	// Decide aquí tu regla. En vez de "primeros 4 segmentos",

@@ -1,5 +1,5 @@
 import { connection, mssql } from "../../config/db.js";
-import getInfo from "../../middlewares/auth/getInfo.js";
+import getInfo from "../../middlewares/auth/get-info.middleware.js";
 
 const VIEW_NAME = "ui.vw_datatables_prestamos_listado";
 

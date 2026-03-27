@@ -1,5 +1,5 @@
 import { connection, mssql } from "../../config/db";
-import getInfo from "../../middlewares/auth/getInfo"; // ajuste el path según su proyecto
+import getInfo from "../../middlewares/auth/get-info.middleware"; // ajuste el path según su proyecto
 
 function getFileUrl(req, file) {
 	if (!file) return null;

@@ -1,17 +1,17 @@
 import { Router} from "express"
-import requireSessionAuth from "../../middlewares/auth/requireSessionAuth.middleware"
+import appAuth from "../../middlewares/auth/app-auth.middleware"
 import { dbExec } from "../../config/db.query"
 
 const router = Router();
 
 // URL base: /clientes
-router.get('/nuevo', requireSessionAuth, (req, res)=> {
+router.get('/nuevo', appAuth, (req, res)=> {
 	res.render('clientes/cliente-nuevo', {
 		pageScripts: ['/assets/js/custom/nuevo-cliente.js']
 	})
 })
 
-router.get('/:id', requireSessionAuth, async (req, res)=> {
+router.get('/:id', appAuth, async (req, res)=> {
 	const { id } = req.params;
 	const c = await dbExec("clientes.sp_cliente_detalle", {cui9: id })
 
@@ -24,7 +24,7 @@ router.get('/:id', requireSessionAuth, async (req, res)=> {
 	})
 })
 
-router.get('/', requireSessionAuth, (req, res)=> {
+router.get('/', appAuth, (req, res)=> {
 	res.render('clientes/clientes', {
 		pageScripts: ['/assets/js/custom/listado-clientes.js']
 	})

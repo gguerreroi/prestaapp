@@ -1,6 +1,7 @@
 "use strict";
 
 import express from "express";
+import expressLayouts from "express-ejs-layouts";
 import morgan from "morgan";
 import path from "path";
 import cookieParser from "cookie-parser";
@@ -8,7 +9,6 @@ import fileUpload from "express-fileupload";
 import session from "express-session";
 import passport from "passport";
 import SequelizeStoreFactory from "connect-session-sequelize";
-import expressLayouts from "express-ejs-layouts";
 
 import env from "./config/env.js";
 
@@ -26,9 +26,6 @@ const SequelizeStore = SequelizeStoreFactory(session.Store);
 // Config base
 app.set("port", env.APP.PORT);
 app.set("view engine", "ejs");
-
-// Nota: __dirname no existe en ESM por defecto.
-// Si tu build actual sí lo soporta, ok. Si no, te digo cómo arreglarlo abajo.
 app.set("views", path.join(__dirname, "views"));
 app.set("trust proxy", true);
 app.use(expressLayouts);
