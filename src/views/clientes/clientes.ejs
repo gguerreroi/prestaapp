@@ -51,15 +51,25 @@
                 <div class="card-toolbar">
                     <div class="d-flex justify-content-end gap-2" data-kt-clientes-table-toolbar="base">
 
-                        <select class="form-select form-select-solid w-200px"
-                                data-kt-clientes-table-filter="estado">
-                            <option value="">Todos los estados</option>
-                            <option value="AC">Activos</option>
-                            <option value="IN">Inactivos</option>
-                            <option value="BL">Bloqueados</option>
-                        </select>
+                        <div class="d-flex align-items-center">
+                            <span class="text-muted fs-7 me-2">Estado</span>
+                            <select class="form-select form-select-solid form-select-sm w-160px"
+                                    data-kt-clientes-table-filter="estado">
+                                <option value="">Todos</option>
+                                <option value="AC">Activos</option>
+                                <option value="IN">Inactivos</option>
+                                <option value="BL">Bloqueados</option>
+                            </select>
+                        </div>
 
-                        <button type="button" class="btn btn-light" data-kt-clientes-table-filter="reset">
+                        <div class="d-flex align-items-center">
+                            <span class="text-muted fs-7 me-2">Agente</span>
+                            <select class="form-select form-select-solid form-select-sm w-200px" id="fltAgente">
+                                <option value="">Todos</option>
+                            </select>
+                        </div>
+
+                        <button type="button" class="btn btn-light btn-sm" data-kt-clientes-table-filter="reset">
                             Limpiar
                         </button>
                     </div>

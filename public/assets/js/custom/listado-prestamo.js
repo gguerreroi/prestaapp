@@ -15,7 +15,6 @@
 
 	const fmtDate = (d) => {
 		if (!d) return "-";
-		// fechas tipo DATE: usar UTC para no “correr” un día
 		return new Date(d).toLocaleDateString("es-GT", {
 			timeZone: "UTC",
 			year: "numeric",
@@ -38,11 +37,28 @@
 		return `<span class="badge gc-paid">No</span>`;
 	};
 
+	// ─── Cargar agentes en el select ───
+	const fltAgente = document.getElementById("fltAgente");
+	if (fltAgente) {
+		fetch("/api/ui/select2/cartera?take=50", { credentials: "same-origin" })
+			.then(r => r.json())
+			.then(res => {
+				const items = res?.data?.results || [];
+				items.forEach(item => {
+					const opt = document.createElement("option");
+					opt.value = item.id;
+					opt.textContent = item.text;
+					fltAgente.appendChild(opt);
+				});
+			})
+			.catch(err => console.error("Error cargando agentes:", err));
+	}
+
 	// DataTables init
 	const dt = $table.DataTable({
 		processing: true,
 		serverSide: true,
-		searching: true,    // DataTables manda search[value]
+		searching: true,
 		ordering: true,
 		lengthMenu: [10, 25, 50, 100],
 		pageLength: 25,
@@ -50,10 +66,14 @@
 			url: endpoint,
 			type: "GET",
 			data: function (d) {
-				// filtros extra (además del search global)
-				d.estado = document.getElementById("fltEstado")?.value || "";
-				d.atrasos = document.getElementById("fltAtrasos")?.value || "";
-				// TIP: si quiere, puede mandar estos al backend y filtrar ahí.
+				// Filtros extra enviados al backend
+				const estado = document.getElementById("fltEstado")?.value || "";
+				const atrasos = document.getElementById("fltAtrasos")?.value || "";
+				const agente = document.getElementById("fltAgente")?.value || "";
+
+				if (estado) d.estado = estado;
+				if (atrasos) d.atrasos = atrasos;
+				if (agente) d.agente_id = agente;
 			},
 			error: function (xhr) {
 				console.error("DataTables error:", xhr?.responseText || xhr);
@@ -158,7 +178,7 @@
 		},
 	});
 
-	// Search input custom (arriba)
+	// Search input custom
 	const searchEl = document.getElementById("dtSearch");
 	if (searchEl) {
 		let t = null;
@@ -174,10 +194,12 @@
 	const btnReload = document.getElementById("btnReload");
 	if (btnReload) btnReload.addEventListener("click", () => dt.ajax.reload(null, false));
 
-	// Filtros (en este ejemplo solo recargamos; para filtrar real, haga que backend use req.query.estado/atrasos)
+	// Filtros — recargan la tabla al cambiar
 	const fltEstado = document.getElementById("fltEstado");
 	if (fltEstado) fltEstado.addEventListener("change", () => dt.ajax.reload());
 
 	const fltAtrasos = document.getElementById("fltAtrasos");
 	if (fltAtrasos) fltAtrasos.addEventListener("change", () => dt.ajax.reload());
+
+	if (fltAgente) fltAgente.addEventListener("change", () => dt.ajax.reload());
 })();

@@ -122,6 +122,102 @@
 		}
 	});
 
+	// ─── Reversar pagos (solo admin) ───
+	const btnReversar = document.getElementById('btnReversar');
+	const reversarCount = document.getElementById('reversarCount');
+	const checksReversar = Array.from(document.querySelectorAll('.js-cuota-reversar'));
+
+	if (btnReversar && checksReversar.length > 0) {
+		function getSelectedReversar() {
+			return checksReversar
+				.filter(c => c.checked)
+				.map(c => ({
+					cuota: Number(c.dataset.cuota),
+					pagado: Number(c.dataset.pagado || 0),
+				}))
+				.sort((a, b) => a.cuota - b.cuota);
+		}
+
+		function renderReversarState() {
+			const sel = getSelectedReversar();
+			reversarCount.textContent = String(sel.length);
+			btnReversar.disabled = sel.length === 0;
+		}
+
+		checksReversar.forEach(c => c.addEventListener('change', renderReversarState));
+
+		btnReversar.addEventListener('click', async () => {
+			const selected = getSelectedReversar();
+			if (selected.length === 0) return;
+
+			const cuotas = selected.map(x => x.cuota);
+			const totalRevertir = selected.reduce((acc, x) => acc + x.pagado, 0);
+
+			const ok = await Swal.fire({
+				title: 'Reversar pagos',
+				html: `
+					<div class="text-start">
+						<div class="alert alert-danger py-3 px-4 mb-3">
+							<i class="bi bi-exclamation-triangle me-2"></i>
+							Esta acción revertirá los pagos seleccionados.
+						</div>
+						<div><b>Préstamo:</b> #${prestamoId}</div>
+						<div><b>Cuotas a reversar:</b> ${cuotas.join(', ')}</div>
+						<div class="mt-2"><b>Total a revertir:</b> ${moneyQ(totalRevertir)}</div>
+					</div>
+				`,
+				icon: 'warning',
+				showCancelButton: true,
+				confirmButtonText: 'Sí, reversar',
+				cancelButtonText: 'Cancelar',
+				buttonsStyling: false,
+				customClass: {
+					confirmButton: "btn btn-danger",
+					cancelButton: "btn btn-light"
+				}
+			}).then(r => r.isConfirmed);
+
+			if (!ok) return;
+
+			btnReversar.disabled = true;
+
+			try {
+				const resp = await fetch(`/api/prestamo/${prestamoId}`, {
+					method: 'DELETE',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ cuotas })
+				});
+
+				const data = await resp.json().catch(() => ({}));
+				if (!resp.ok) {
+					throw new Error(data?.message || 'No se pudo reversar el pago');
+				}
+
+				await Swal.fire({
+					text: data?.message || 'Pagos reversados correctamente',
+					icon: 'success',
+					buttonsStyling: false,
+					confirmButtonText: "Ok",
+					customClass: { confirmButton: "btn btn-primary" }
+				});
+
+				window.location.reload();
+
+			} catch (e) {
+				Swal.fire({
+					text: e.message || 'Error al reversar pago',
+					icon: 'error',
+					buttonsStyling: false,
+					confirmButtonText: "Ok",
+					customClass: { confirmButton: "btn btn-primary" }
+				});
+				renderReversarState();
+			}
+		});
+
+		renderReversarState();
+	}
+
 	// init
 	renderState();
 })();

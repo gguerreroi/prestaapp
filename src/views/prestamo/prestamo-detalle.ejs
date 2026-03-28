@@ -61,10 +61,19 @@ const progreso = total_cuotas > 0 ? Math.min(100, Math.round((cuotas_pagadas / t
 
         <div class="d-flex align-items-center gap-2 gap-lg-3">
             <a href="/prestamos" class="btn btn-light">Volver</a>
+            <a href="/prestamos/pdf/<%= prestamo.prestamo_id %>" target="_blank" class="btn btn-light-danger btn-sm">
+                <i class="bi bi-file-earmark-pdf fs-4"></i> PDF
+            </a>
             <button type="button" class="btn btn-primary" id="btnPagar" disabled>
                 Registrar pago
                 <span class="badge badge-light ms-2" id="payCount">0</span>
             </button>
+            <% if (user && user.codrole === 1) { %>
+            <button type="button" class="btn btn-danger btn-sm" id="btnReversar" disabled>
+                <i class="bi bi-arrow-counterclockwise"></i> Reversar
+                <span class="badge badge-light ms-2" id="reversarCount">0</span>
+            </button>
+            <% } %>
             <span class="badge <%= badgeEstado(prestamo.estado) %> text-uppercase"><%= prestamo.estado %></span>
         </div>
     </div>
@@ -241,9 +250,21 @@ const progreso = total_cuotas > 0 ? Math.min(100, Math.round((cuotas_pagadas / t
                                 <tbody>
                                 <% plan.forEach((r) => { %>
                                     <tr class="<%= isToday(r.fecha_cuota) ? 'gc-today-row' : '' %>">
-                                        <% const canPay = ['PENDIENTE','ATRASADO'].includes(String(r.estado || '').toUpperCase()); %>
+                                        <%
+                                            const estadoUpper = String(r.estado || '').toUpperCase();
+                                            const canPay = ['PENDIENTE','ATRASADO'].includes(estadoUpper);
+                                            const canReverse = estadoUpper === 'PAGADO' && user && user.codrole === 1 && isToday(r.fecha_pago);
+                                        %>
                                         <td class="w-25px ps-4">
                                             <div class="form-check form-check-sm form-check-custom form-check-solid">
+                                                <% if (canReverse) { %>
+                                                <input
+                                                        class="form-check-input js-cuota-reversar"
+                                                        type="checkbox"
+                                                        data-cuota="<%= r.dia_num %>"
+                                                        data-pagado="<%= r.monto_pagado || 0 %>"
+                                                />
+                                                <% } else { %>
                                                 <input
                                                         class="form-check-input js-cuota-check"
                                                         type="checkbox"
@@ -252,6 +273,7 @@ const progreso = total_cuotas > 0 ? Math.min(100, Math.round((cuotas_pagadas / t
                                                         data-mora="<%= r.mora || 0 %>"
                                                         data-importe="<%= r.cuota_programada || 0 %>"
                                                 />
+                                                <% } %>
                                             </div>
                                         </td>
 

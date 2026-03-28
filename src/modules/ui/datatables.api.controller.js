@@ -74,38 +74,69 @@ export async function datatables(req, res) {
 		// ✅ Order column seguro (debe existir en la vista)
 		const orderColumnSafe = cols.includes(requestedOrderCol) ? requestedOrderCol : cols[0];
 
-		// ===== 2) Búsqueda: genérica (search sobre todas las columnas “text-like”) =====
-		// Para algo súper eficiente, lo ideal es que cada vista traiga un "search_text".
-		// Aquí lo hacemos genérico con CONCAT en SQL (aceptable para comenzar).
-		const whereSearch = searchValue
-			? `WHERE CONCAT_WS(' ',
-            ${cols.map(c => `TRY_CONVERT(NVARCHAR(4000), ${c})`).join(",")}
-          ) LIKE @q`
-			: "";
+		// ===== 2) Filtros exactos (estado, atrasos, agente_id, etc.) =====
+		// Patrón seguro: solo se agregan WHERE si la columna existe en la vista
+		const whereParts = [];
+		const filterInputs = []; // { name, type, value }
 
-		// ===== 3) Queries =====
+		// Filtros permitidos: { queryParam: { column, type, compare } }
+		const allowedFilters = {
+			estado:          { column: "estado",           type: mssql.NVarChar(50),  compare: "=" },
+			cliente__estado: { column: "cliente__estado",   type: mssql.NVarChar(10),  compare: "=" },
+			atrasos:         { column: "cuotas_atrasadas", type: mssql.Int,           compare: "special_atrasos" },
+			agente_id:       { column: "agente_id",        type: mssql.Int,           compare: "=" },
+		};
+
+		for (const [param, cfg] of Object.entries(allowedFilters)) {
+			const val = (req.query[param] ?? "").toString().trim();
+			if (!val || !cols.includes(cfg.column)) continue;
+
+			const paramName = `flt_${param}`;
+			if (cfg.compare === "=") {
+				whereParts.push(`[${cfg.column}] = @${paramName}`);
+				filterInputs.push({ name: paramName, type: cfg.type, value: val });
+			} else if (cfg.compare === "special_atrasos") {
+				// atrasos=1 -> cuotas_atrasadas > 0, atrasos=0 -> cuotas_atrasadas = 0
+				if (val === "1") {
+					whereParts.push(`[${cfg.column}] > 0`);
+				} else if (val === "0") {
+					whereParts.push(`[${cfg.column}] = 0`);
+				}
+			}
+		}
+
+		// ===== 3) Búsqueda global (search sobre todas las columnas "text-like") =====
+		if (searchValue) {
+			whereParts.push(`CONCAT_WS(' ', ${cols.map(c => `TRY_CONVERT(NVARCHAR(4000), [${c}])`).join(",")}) LIKE @q`);
+		}
+
+		const whereClause = whereParts.length > 0 ? `WHERE ${whereParts.join(" AND ")}` : "";
+
+		// ===== 4) Queries =====
 		const sqlTotal = `SELECT COUNT(1) AS total FROM ${viewName};`;
 		const sqlFiltered = `
       SELECT COUNT(1) AS total
       FROM ${viewName}
-      ${whereSearch};
+      ${whereClause};
     `;
 
-		// ✅ Asegurar ORDER BY siempre (requisito para OFFSET/FETCH)
 		const sqlData = `
       SELECT *
       FROM ${viewName}
-      ${whereSearch}
+      ${whereClause}
       ORDER BY ${orderColumnSafe} ${orderDir}
       OFFSET @start ROWS FETCH NEXT @length ROWS ONLY;
     `;
-
-		console.log("DataTables SQL:", { sqlTotal, sqlFiltered, sqlData, params: { start, length, searchValue, orderColumnSafe, orderDir } });
 
 		const reqDb = pool.request();
 		reqDb.input("start", mssql.Int, start);
 		reqDb.input("length", mssql.Int, length);
 		reqDb.input("q", mssql.NVarChar(500), `%${searchValue}%`);
+
+		// Agregar parámetros de filtros
+		for (const fi of filterInputs) {
+			reqDb.input(fi.name, fi.type, fi.value);
+		}
 
 		const totalRs = await reqDb.query(sqlTotal);
 		const recordsTotal = Number(totalRs?.recordset?.[0]?.total || 0);

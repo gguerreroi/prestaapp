@@ -7,6 +7,23 @@
 	const searchInput = document.querySelector('[data-kt-clientes-table-filter="search"]');
 	const estadoSelect = document.querySelector('[data-kt-clientes-table-filter="estado"]');
 	const resetBtn = document.querySelector('[data-kt-clientes-table-filter="reset"]');
+	const fltAgente = document.getElementById("fltAgente");
+
+	// Cargar agentes en el select
+	if (fltAgente) {
+		fetch("/api/ui/select2/cartera?take=50", { credentials: "same-origin" })
+			.then(r => r.json())
+			.then(res => {
+				const items = res?.data?.results || [];
+				items.forEach(item => {
+					const opt = document.createElement("option");
+					opt.value = item.id;
+					opt.textContent = item.text;
+					fltAgente.appendChild(opt);
+				});
+			})
+			.catch(err => console.error("Error cargando agentes:", err));
+	}
 
 	const fmtEstado = (codigo) => {
 		const c = (codigo || "").toString().toUpperCase();
@@ -27,18 +44,19 @@
 			url: "/api/ui/datatables/clientes_listado",
 			type: "GET",
 			data: function (d) {
-				// filtros extra
-				d.estado = estadoSelect ? (estadoSelect.value || "") : "";
+				const estado = estadoSelect ? (estadoSelect.value || "") : "";
+				const agente = fltAgente ? (fltAgente.value || "") : "";
+
+				if (estado) d.cliente__estado = estado;
+				if (agente) d.agente_id = agente;
 			},
 			dataSrc: function (json) {
-				// si su endpoint ya retorna el formato DataTables, esto funciona directo
 				return json.data || [];
 			}
 		},
 		columns: [
 			{ data: "cui9", name: "cui9" },
 
-			// Cliente (nombres + apellidos)
 			{
 				data: null,
 				name: "cliente_nombres",
@@ -57,21 +75,18 @@
 				}
 			},
 
-			// CUI (13 dígitos)
 			{
 				data: null,
 				name: "cliente_cui4",
 				render: function (data, type, row) {
-					// soporta ambos: separado (cui9 + cui4) o ya armado (cui)
 					const cui9 = row.cui9 || row.cliente_cui9 || "";
 					const cui4 = row.cliente_cui4 || row.cui4 || "";
 					const cui = row.cui || (cui9 && cui4 ? `${cui9}${cui4}` : cui9);
 
-					// formateo #### ####V #### (si viene 13)
 					const digits = (cui || "").toString().replace(/\D/g, "");
 					if (digits.length === 13) {
 						const a = digits.slice(0, 4);
-						const b = digits.slice(4, 9); // incluye verificador
+						const b = digits.slice(4, 9);
 						const c = digits.slice(9, 13);
 						return `<span class="text-gray-800">${a} ${b} ${c}</span>`;
 					}
@@ -81,21 +96,15 @@
 
 			{ data: "cliente_telefono", name: "cliente_telefono", defaultContent: "-" },
 
-			// Cartera / Agente
 			{
 				data: "agente_nombre",
 				name: "agente_nombre",
 				render: function (data, type, row) {
-					const txt =
-						row.agente_nombre ||
-						row.cartera ||
-						row.cliente_cartera ||
-						"-";
+					const txt = row.agente_nombre || row.cartera || row.cliente_cartera || "-";
 					return `<span class="text-gray-800">${txt}</span>`;
 				}
 			},
 
-			// Estado
 			{
 				data: "cliente__estado",
 				name: "cliente__estado",
@@ -104,7 +113,6 @@
 				}
 			},
 
-			// Acciones
 			{
 				data: null,
 				orderable: false,
@@ -122,35 +130,34 @@
 		]
 	});
 
-	// Search input -> DataTables search
+	// Search
 	if (searchInput) {
-		searchInput.addEventListener("keyup", function () {
-			dt.search(this.value).draw();
+		let t = null;
+		searchInput.addEventListener("input", () => {
+			clearTimeout(t);
+			t = setTimeout(() => {
+				dt.search(searchInput.value || "").draw();
+			}, 250);
 		});
 	}
 
-	// Estado filter
-	if (estadoSelect) {
-		estadoSelect.addEventListener("change", function () {
-			dt.ajax.reload();
-		});
-	}
+	// Filtros — recargan la tabla
+	if (estadoSelect) estadoSelect.addEventListener("change", () => dt.ajax.reload());
+	if (fltAgente) fltAgente.addEventListener("change", () => dt.ajax.reload());
 
 	// Reset
 	if (resetBtn) {
 		resetBtn.addEventListener("click", function () {
 			if (searchInput) searchInput.value = "";
 			if (estadoSelect) estadoSelect.value = "";
-			dt.search("").draw();
-			dt.ajax.reload();
+			if (fltAgente) fltAgente.value = "";
+			dt.search("").ajax.reload();
 		});
 	}
 
-	// Row click (opcional): click en fila abre detalle
+	// Row click
 	$(tableEl).on("click", "tbody tr", function (e) {
-		// evitar que un click a un botón dispare esto
 		if ($(e.target).closest("a,button").length) return;
-
 		const row = dt.row(this).data();
 		const id = row?.cui9 || row?.cliente_cui9;
 		if (id) window.location.href = `/clientes/${id}`;

@@ -72,6 +72,24 @@
                             <% }) %>
                         </select>
                     </div>
+
+                    <!-- Exportar -->
+                    <div class="d-flex align-items-center gap-2">
+                        <a href="/reportes/cobranza-semanal/excel?semana=<%= fechaLunes %><%= filtroAgente ? '&agente=' + filtroAgente : '' %>"
+                           class="btn btn-sm btn-light-success" title="Descargar Excel">
+                            <i class="ki-duotone ki-file-down fs-4">
+                                <span class="path1"></span><span class="path2"></span>
+                            </i>
+                            Excel
+                        </a>
+                        <a href="/reportes/cobranza-semanal/pdf?semana=<%= fechaLunes %><%= filtroAgente ? '&agente=' + filtroAgente : '' %>"
+                           class="btn btn-sm btn-light-danger" title="Descargar PDF" target="_blank">
+                            <i class="ki-duotone ki-file-down fs-4">
+                                <span class="path1"></span><span class="path2"></span>
+                            </i>
+                            PDF
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -85,7 +103,10 @@
                             <tr class="fw-bold text-muted fs-7 text-uppercase bg-light">
                                 <th class="ps-4 min-w-50px text-center">No.</th>
                                 <th class="min-w-200px">Cliente</th>
-                                <th class="min-w-100px text-end">Saldo</th>
+                                <th class="min-w-90px text-end">Principal</th>
+                                <th class="min-w-90px text-end">Interés</th>
+                                <th class="min-w-90px text-end">Total</th>
+                                <th class="min-w-90px text-end">Saldo</th>
                                 <% diasSemana.forEach(function(dia) { %>
                                     <th class="min-w-100px text-center">
                                         <div><%= dia.nombre %></div>
@@ -97,7 +118,7 @@
                         <tbody class="fw-semibold text-gray-700">
                             <% if (prestamos.length === 0) { %>
                                 <tr>
-                                    <td colspan="<%= 3 + diasSemana.length %>" class="text-center text-muted py-8">
+                                    <td colspan="<%= 6 + diasSemana.length %>" class="text-center text-muted py-8">
                                         No hay prestamos activos con cuotas en esta semana.
                                     </td>
                                 </tr>
@@ -114,6 +135,15 @@
                                                     #<%= p.prestamo_id %> &middot; Q<%= p.cuota_diaria %>/dia
                                                 </span>
                                             </div>
+                                        </td>
+                                        <td class="text-end">
+                                            Q <%= p.principal.toLocaleString('es-GT') %>
+                                        </td>
+                                        <td class="text-end">
+                                            Q <%= p.interes.toLocaleString('es-GT') %>
+                                        </td>
+                                        <td class="text-end">
+                                            Q <%= p.total_pagar.toLocaleString('es-GT') %>
                                         </td>
                                         <td class="text-end fw-bold">
                                             Q <%= p.saldo.toLocaleString('es-GT') %>
@@ -148,6 +178,15 @@
                         <tfoot>
                             <tr class="fw-bold bg-light-primary">
                                 <td colspan="2" class="ps-4">TOTALES</td>
+                                <td class="text-end fw-bold">
+                                    Q <%= prestamos.reduce((sum, p) => sum + p.principal, 0).toLocaleString('es-GT') %>
+                                </td>
+                                <td class="text-end fw-bold">
+                                    Q <%= prestamos.reduce((sum, p) => sum + p.interes, 0).toLocaleString('es-GT') %>
+                                </td>
+                                <td class="text-end fw-bold">
+                                    Q <%= prestamos.reduce((sum, p) => sum + p.total_pagar, 0).toLocaleString('es-GT') %>
+                                </td>
                                 <td class="text-end fw-bold">
                                     Q <%= prestamos.reduce((sum, p) => sum + p.saldo, 0).toLocaleString('es-GT') %>
                                 </td>

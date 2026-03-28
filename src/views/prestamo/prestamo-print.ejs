@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Préstamo #<%= prestamo.prestamo_id %></title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 10px;
+            color: #333;
+            padding: 6mm;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #1a73e8;
+            padding-bottom: 8px;
+        }
+        .header-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #1a73e8;
+        }
+        .header-sub {
+            font-size: 10px;
+            color: #666;
+            margin-top: 2px;
+        }
+        .header-right {
+            text-align: right;
+            font-size: 9px;
+            color: #888;
+        }
+
+        /* Client info */
+        .client-section {
+            background: #f4f6fa;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 10px 14px;
+            margin-bottom: 10px;
+        }
+        .client-section h3 {
+            font-size: 11px;
+            color: #1a73e8;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .client-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3px 20px;
+        }
+        .client-field {
+            display: flex;
+            gap: 4px;
+        }
+        .client-field .label {
+            color: #888;
+            font-size: 9px;
+            min-width: 60px;
+        }
+        .client-field .value {
+            font-weight: bold;
+            font-size: 10px;
+        }
+
+        /* Loan info */
+        .loan-section {
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 10px 14px;
+            margin-bottom: 12px;
+        }
+        .loan-section h3 {
+            font-size: 11px;
+            color: #1a73e8;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .loan-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px 16px;
+        }
+        .loan-field .label {
+            color: #888;
+            font-size: 8px;
+            text-transform: uppercase;
+        }
+        .loan-field .value {
+            font-weight: bold;
+            font-size: 12px;
+        }
+        .loan-field .value.big {
+            font-size: 14px;
+            color: #1a73e8;
+        }
+
+        /* Payment grid */
+        .grid-title {
+            font-size: 12px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 6px;
+        }
+        .payment-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 4px;
+            margin-bottom: 12px;
+        }
+        .payment-cell {
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 5px 6px;
+            min-height: 62px;
+            position: relative;
+        }
+        .payment-cell .day-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3px;
+        }
+        .payment-cell .day-num {
+            font-size: 8px;
+            font-weight: bold;
+            color: #666;
+        }
+        .payment-cell .day-date {
+            font-size: 8px;
+            color: #999;
+        }
+        .payment-cell .cuota-line {
+            font-size: 9px;
+            color: #555;
+        }
+        .payment-cell .paid-line {
+            font-size: 10px;
+            font-weight: bold;
+        }
+        .payment-cell .mora-line {
+            font-size: 8px;
+            color: #c62828;
+            font-weight: bold;
+        }
+
+        /* Cell states */
+        .cell-pagado {
+            background-color: #e8f5e9;
+            border-color: #81c784;
+        }
+        .cell-pagado .paid-line {
+            color: #2e7d32;
+        }
+        .cell-atrasado {
+            background-color: #fce4ec;
+            border-color: #e57373;
+        }
+        .cell-atrasado .day-num {
+            color: #c62828;
+        }
+        .cell-pendiente {
+            background-color: #fafafa;
+            border-color: #ddd;
+        }
+
+        /* Summary */
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+        .summary-item {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 8px;
+            text-align: center;
+        }
+        .summary-label {
+            font-size: 8px;
+            color: #888;
+            text-transform: uppercase;
+            margin-bottom: 2px;
+        }
+        .summary-value {
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .text-success { color: #2e7d32; }
+        .text-danger { color: #c62828; }
+        .text-primary { color: #1a73e8; }
+        .text-warning { color: #e65100; }
+
+        .footer {
+            margin-top: 10px;
+            text-align: center;
+            font-size: 8px;
+            color: #aaa;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 9px;
+            font-weight: bold;
+        }
+        .badge-activo { background: #e3f2fd; color: #1565c0; }
+        .badge-pagado { background: #e8f5e9; color: #2e7d32; }
+        .badge-anulado { background: #f5f5f5; color: #757575; }
+    </style>
+</head>
+<body>
+
+<%
+    const fmtDate = (d) => {
+        if (!d) return '-';
+        const dt = new Date(d);
+        return dt.toLocaleDateString('es-GT', { timeZone: 'UTC', day: '2-digit', month: '2-digit', year: 'numeric' });
+    };
+    const fmtDateShort = (d) => {
+        if (!d) return '-';
+        const dt = new Date(d);
+        return `${dt.getUTCDate().toString().padStart(2,'0')}/${(dt.getUTCMonth()+1).toString().padStart(2,'0')}`;
+    };
+    const Q = (v) => 'Q' + Number(v || 0).toLocaleString('es-GT');
+    const estadoPrestamo = prestamo.estado?.toUpperCase() || '';
+    const badgeClass = estadoPrestamo === 'ACTIVO' ? 'badge-activo' : estadoPrestamo === 'PAGADO' ? 'badge-pagado' : 'badge-anulado';
+    const interes = (prestamo.total_pagar || 0) - (prestamo.principal || 0);
+%>
+
+<!-- Header -->
+<div class="header">
+    <div>
+        <div class="header-title">PrestaApp</div>
+        <div class="header-sub">Detalle de Préstamo #<%= prestamo.prestamo_id %></div>
+    </div>
+    <div class="header-right">
+        Generado: <%= new Date().toLocaleString('es-GT', { dateStyle: 'short', timeStyle: 'short', timeZone: 'America/Guatemala' }) %>
+    </div>
+</div>
+
+<!-- Client Info -->
+<div class="client-section">
+    <h3>Datos del Cliente</h3>
+    <div class="client-grid">
+        <div class="client-field">
+            <span class="label">Nombre:</span>
+            <span class="value"><%= prestamo.cliente_nombres %> <%= prestamo.cliente_apellidos %></span>
+        </div>
+        <div class="client-field">
+            <span class="label">Teléfono:</span>
+            <span class="value"><%= prestamo.cliente_telefono || '-' %></span>
+        </div>
+        <div class="client-field">
+            <span class="label">CUI:</span>
+            <span class="value"><%= prestamo.cliente_cui9 %> <%= prestamo.cliente_cui4 || '' %></span>
+        </div>
+        <div class="client-field">
+            <span class="label">Dirección:</span>
+            <span class="value"><%= prestamo.cliente_direccion || '-' %></span>
+        </div>
+    </div>
+</div>
+
+<!-- Loan Info -->
+<div class="loan-section">
+    <h3>Información del Préstamo</h3>
+    <div class="loan-grid">
+        <div class="loan-field">
+            <div class="label">Principal</div>
+            <div class="value big"><%= Q(prestamo.principal) %></div>
+        </div>
+        <div class="loan-field">
+            <div class="label">Interés</div>
+            <div class="value"><%= Q(interes) %></div>
+        </div>
+        <div class="loan-field">
+            <div class="label">Total a Pagar</div>
+            <div class="value big"><%= Q(prestamo.total_pagar) %></div>
+        </div>
+        <div class="loan-field">
+            <div class="label">Cuota Diaria</div>
+            <div class="value"><%= Q(prestamo.cuota_diaria) %></div>
+        </div>
+        <div class="loan-field">
+            <div class="label">Fecha Inicio</div>
+            <div class="value"><%= fmtDate(prestamo.fecha_inicio) %></div>
+        </div>
+        <div class="loan-field">
+            <div class="label">Plazo</div>
+            <div class="value"><%= prestamo.plazo_dias %> días</div>
+        </div>
+        <div class="loan-field">
+            <div class="label">Agente</div>
+            <div class="value"><%= prestamo.agente_nombres || '' %> <%= prestamo.agente_apellidos || '' %></div>
+        </div>
+        <div class="loan-field">
+            <div class="label">Estado</div>
+            <div class="value"><span class="badge <%= badgeClass %>"><%= estadoPrestamo %></span></div>
+        </div>
+    </div>
+</div>
+
+<!-- Payment Grid 5 col x 7 rows -->
+<div class="grid-title">Plan de Pagos</div>
+<div class="payment-grid">
+    <% for (let i = 0; i < 35; i++) { %>
+        <%
+            const cuota = plan[i];
+            let cellClass = 'cell-pendiente';
+            if (cuota) {
+                const est = (cuota.estado || '').toUpperCase();
+                if (est === 'PAGADO') cellClass = 'cell-pagado';
+                else if (est === 'ATRASADO' || est === 'MOROSO') cellClass = 'cell-atrasado';
+            }
+        %>
+        <div class="payment-cell <%= cellClass %>">
+            <% if (cuota) { %>
+                <div class="day-header">
+                    <span class="day-num">Día <%= cuota.dia_num %></span>
+                    <span class="day-date"><%= fmtDateShort(cuota.fecha_cuota) %></span>
+                </div>
+                <div class="cuota-line">Cuota: <%= Q(cuota.cuota_programada) %></div>
+                <% if (cuota.monto_pagado > 0) { %>
+                    <div class="paid-line">Pagado: <%= Q(cuota.monto_pagado) %></div>
+                <% } %>
+                <% if (cuota.mora > 0) { %>
+                    <div class="mora-line">Mora: <%= Q(cuota.mora) %></div>
+                <% } %>
+                <% if (cuota.fecha_pago) { %>
+                    <div style="font-size:7px; color:#999; margin-top:1px;">Pago: <%= fmtDateShort(cuota.fecha_pago) %></div>
+                <% } %>
+            <% } else { %>
+                <div class="day-header">
+                    <span class="day-num">Día <%= i + 1 %></span>
+                    <span class="day-date">-</span>
+                </div>
+                <div class="cuota-line" style="color:#ccc;">-</div>
+            <% } %>
+        </div>
+    <% } %>
+</div>
+
+<!-- Summary -->
+<div class="summary">
+    <div class="summary-item">
+        <div class="summary-label">Total Programado</div>
+        <div class="summary-value text-primary"><%= Q(totales.total_programado) %></div>
+    </div>
+    <div class="summary-item">
+        <div class="summary-label">Total Cobrado</div>
+        <div class="summary-value text-success"><%= Q(totales.total_pagado) %></div>
+    </div>
+    <div class="summary-item">
+        <div class="summary-label">Saldo Pendiente</div>
+        <div class="summary-value text-warning"><%= Q(totales.saldo_pendiente) %></div>
+    </div>
+    <div class="summary-item">
+        <div class="summary-label">Mora Total</div>
+        <div class="summary-value text-danger"><%= Q(totales.total_mora) %></div>
+    </div>
+</div>
+
+<div class="summary" style="margin-top: 6px;">
+    <div class="summary-item">
+        <div class="summary-label">Cuotas Pagadas</div>
+        <div class="summary-value"><%= totales.cuotas_pagadas %> de 35</div>
+    </div>
+    <div class="summary-item">
+        <div class="summary-label">Cuotas Pendientes</div>
+        <div class="summary-value"><%= totales.cuotas_pendientes %></div>
+    </div>
+    <div class="summary-item" style="grid-column: span 2;">
+        <div class="summary-label">Avance</div>
+        <div style="background:#eee; border-radius:4px; height:14px; margin-top:3px; overflow:hidden;">
+            <div style="background:#4caf50; height:100%; width:<%= Math.round((totales.cuotas_pagadas / 35) * 100) %>%; border-radius:4px;"></div>
+        </div>
+        <div style="font-size:9px; color:#666; margin-top:2px;"><%= Math.round((totales.cuotas_pagadas / 35) * 100) %>% completado</div>
+    </div>
+</div>
+
+<div class="footer">
+    PrestaApp &mdash; Reporte generado automáticamente
+</div>
+
+</body>
+</html>

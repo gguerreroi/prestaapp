@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Cobranza Semanal - <%= diasSemana[0].fechaCorta %> al <%= diasSemana[6].fechaCorta %></title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 9px;
+            color: #333;
+            padding: 5mm;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 8px;
+            border-bottom: 2px solid #1a73e8;
+            padding-bottom: 6px;
+        }
+        .header-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #1a73e8;
+        }
+        .header-sub {
+            font-size: 10px;
+            color: #666;
+        }
+        .header-right {
+            text-align: right;
+            font-size: 9px;
+            color: #888;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 10px;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 3px 5px;
+            text-align: center;
+            vertical-align: middle;
+        }
+        th {
+            background-color: #e8e8e8;
+            font-weight: bold;
+            font-size: 8px;
+            text-transform: uppercase;
+        }
+        th.text-end, td.text-end {
+            text-align: right;
+        }
+        td.text-start {
+            text-align: left;
+        }
+
+        .pagado {
+            background-color: #e8f5e9;
+            color: #1b7a1b;
+            font-weight: bold;
+        }
+        .atrasado {
+            background-color: #fde8e8;
+            color: #c62828;
+            font-weight: bold;
+        }
+        .pendiente {
+            color: #666;
+        }
+
+        .totals-row td {
+            background-color: #dce6f0;
+            font-weight: bold;
+            border-top: 2px solid #999;
+            border-bottom: 2px solid #999;
+        }
+
+        .summary {
+            display: flex;
+            gap: 20px;
+            margin-top: 8px;
+        }
+        .summary-item {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 6px 12px;
+            text-align: center;
+        }
+        .summary-label {
+            font-size: 8px;
+            color: #888;
+            text-transform: uppercase;
+        }
+        .summary-value {
+            font-size: 13px;
+            font-weight: bold;
+        }
+        .text-success { color: #1b7a1b; }
+        .text-warning { color: #e65100; }
+
+        .footer {
+            margin-top: 10px;
+            text-align: center;
+            font-size: 8px;
+            color: #aaa;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div>
+        <div class="header-title">Cobranza Semanal</div>
+        <div class="header-sub">
+            Semana del <%= diasSemana[0].fechaCorta %> al <%= diasSemana[6].fechaCorta %>
+            &nbsp;&mdash;&nbsp; Agente: <strong><%= agenteName %></strong>
+        </div>
+    </div>
+    <div class="header-right">
+        PrestaApp<br>
+        Generado: <%= new Date().toLocaleString('es-GT', { dateStyle: 'short', timeStyle: 'short', timeZone: 'America/Guatemala' }) %>
+    </div>
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th style="width: 30px;">No.</th>
+            <th style="width: 160px; text-align: left;">Cliente</th>
+            <th class="text-end" style="width: 70px;">Principal</th>
+            <th class="text-end" style="width: 65px;">Interés</th>
+            <th class="text-end" style="width: 65px;">Total</th>
+            <th class="text-end" style="width: 70px;">Saldo</th>
+            <% diasSemana.forEach(function(dia) { %>
+                <th style="width: 72px;">
+                    <%= dia.nombre %><br><span style="font-weight:normal;"><%= dia.fechaCorta %></span>
+                </th>
+            <% }) %>
+        </tr>
+    </thead>
+    <tbody>
+        <% if (prestamos.length === 0) { %>
+            <tr>
+                <td colspan="<%= 6 + diasSemana.length %>" style="padding: 15px; color: #999;">
+                    No hay préstamos activos con cuotas en esta semana.
+                </td>
+            </tr>
+        <% } else { %>
+            <% prestamos.forEach(function(p, idx) { %>
+                <tr>
+                    <td><%= idx + 1 %></td>
+                    <td class="text-start">
+                        <strong><%= p.cliente_nombre %></strong><br>
+                        <span style="color:#999; font-size:7px;">#<%= p.prestamo_id %> &middot; Q<%= p.cuota_diaria %>/día</span>
+                    </td>
+                    <td class="text-end">Q <%= p.principal.toLocaleString('es-GT') %></td>
+                    <td class="text-end">Q <%= p.interes.toLocaleString('es-GT') %></td>
+                    <td class="text-end">Q <%= p.total_pagar.toLocaleString('es-GT') %></td>
+                    <td class="text-end" style="font-weight:bold;">Q <%= p.saldo.toLocaleString('es-GT') %></td>
+                    <% diasSemana.forEach(function(dia) { %>
+                        <% const cuota = p.dias[dia.fecha]; %>
+                        <td<% if (cuota) { %><% if (cuota.estado_cuota === 'PAGADO') { %> class="pagado"<% } else if (cuota.estado_cuota === 'ATRASADO' || cuota.estado_cuota === 'MOROSO') { %> class="atrasado"<% } else { %> class="pendiente"<% } %><% } %>>
+                            <% if (cuota) { %>
+                                <% if (cuota.estado_cuota === 'PAGADO') { %>
+                                    Q<%= cuota.monto_pagado %>
+                                <% } else { %>
+                                    Q<%= cuota.cuota_programada %>
+                                <% } %>
+                            <% } else { %>
+                                -
+                            <% } %>
+                        </td>
+                    <% }) %>
+                </tr>
+            <% }) %>
+        <% } %>
+    </tbody>
+    <% if (prestamos.length > 0) { %>
+    <tfoot>
+        <tr class="totals-row">
+            <td colspan="2" style="text-align:left; padding-left:8px;">TOTALES</td>
+            <td class="text-end">Q <%= prestamos.reduce((s, p) => s + p.principal, 0).toLocaleString('es-GT') %></td>
+            <td class="text-end">Q <%= prestamos.reduce((s, p) => s + p.interes, 0).toLocaleString('es-GT') %></td>
+            <td class="text-end">Q <%= prestamos.reduce((s, p) => s + p.total_pagar, 0).toLocaleString('es-GT') %></td>
+            <td class="text-end">Q <%= prestamos.reduce((s, p) => s + p.saldo, 0).toLocaleString('es-GT') %></td>
+            <% diasSemana.forEach(function(dia) { %>
+                <td>
+                    <%
+                        let totalDia = 0;
+                        let pagadoDia = 0;
+                        prestamos.forEach(function(p) {
+                            const cuota = p.dias[dia.fecha];
+                            if (cuota) {
+                                totalDia += cuota.cuota_programada;
+                                pagadoDia += cuota.monto_pagado;
+                            }
+                        });
+                    %>
+                    <% if (totalDia > 0) { %>
+                        <strong>Q<%= pagadoDia %></strong><br>
+                        <span style="color:#999; font-size:7px;">de Q<%= totalDia %></span>
+                    <% } else { %>
+                        -
+                    <% } %>
+                </td>
+            <% }) %>
+        </tr>
+    </tfoot>
+    <% } %>
+</table>
+
+<% if (prestamos.length > 0) { %>
+<div class="summary">
+    <div class="summary-item">
+        <div class="summary-label">Préstamos activos</div>
+        <div class="summary-value"><%= prestamos.length %></div>
+    </div>
+    <div class="summary-item">
+        <div class="summary-label">Saldo total</div>
+        <div class="summary-value">Q <%= prestamos.reduce((s, p) => s + p.saldo, 0).toLocaleString('es-GT') %></div>
+    </div>
+    <div class="summary-item">
+        <div class="summary-label">Cobrado esta semana</div>
+        <%
+            let cobradoSemana = 0;
+            prestamos.forEach(function(p) {
+                diasSemana.forEach(function(dia) {
+                    const cuota = p.dias[dia.fecha];
+                    if (cuota) cobradoSemana += cuota.monto_pagado;
+                });
+            });
+        %>
+        <div class="summary-value text-success">Q <%= cobradoSemana.toLocaleString('es-GT') %></div>
+    </div>
+    <div class="summary-item">
+        <div class="summary-label">Pendiente esta semana</div>
+        <%
+            let pendienteSemana = 0;
+            prestamos.forEach(function(p) {
+                diasSemana.forEach(function(dia) {
+                    const cuota = p.dias[dia.fecha];
+                    if (cuota && cuota.estado_cuota !== 'PAGADO') pendienteSemana += cuota.cuota_programada;
+                });
+            });
+        %>
+        <div class="summary-value text-warning">Q <%= pendienteSemana.toLocaleString('es-GT') %></div>
+    </div>
+</div>
+<% } %>
+
+<div class="footer">
+    PrestaApp &mdash; Reporte generado automáticamente
+</div>
+
+</body>
+</html>
