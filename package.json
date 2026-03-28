@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "babel-node dist/index.js --env-file=.env",
-    "build": "babel src/ -d dist",
+    "build": "rimraf dist && babel src -d dist && cpx \"src/views/**/*\" dist/views",
     "dev": "nodemon src/index.js --exec babel-node --env-file=.env"
   },
   "repository": {
