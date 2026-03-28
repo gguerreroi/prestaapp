@@ -375,8 +375,15 @@ document.addEventListener('DOMContentLoaded', function() {
             tblActividad.innerHTML = '<tr><td colspan="4" class="text-center text-muted py-8">Aún no hay pagos registrados.</td></tr>';
         } else {
             tblActividad.innerHTML = d.actividad_reciente.map(a => {
-                const fecha = new Date(a.fecha_pago).toLocaleString('es-GT', { dateStyle: 'short', timeStyle: 'short' });
+
+              const fecha = new Date(a.fecha_pago).toLocaleString('es-GT', {
+                  dateStyle: 'short',
+                  timeStyle: 'short',
+                  timeZone: 'UTC'
+              });
                 const initials = (a.cliente_nombre || '').split(' ').map(w => w[0]).slice(0, 2).join('');
+                console.log("a.fecha_pago", a.fecha_pago)
+                console.log("fecha", fecha)
                 return '<tr>' +
                     '<td class="text-muted">' + fecha + '</td>' +
                     '<td><div class="d-flex align-items-center">' +
