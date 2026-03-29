@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Cobranza Mensual - <%= mesLabel %></title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, Helvetica, sans-serif; font-size: 8px; color: #333; padding: 5mm; }
+        .header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 8px; border-bottom: 2px solid #1a73e8; padding-bottom: 6px; }
+        .header-title { font-size: 16px; font-weight: bold; color: #1a73e8; }
+        .header-sub { font-size: 10px; color: #666; }
+        .header-right { text-align: right; font-size: 8px; color: #888; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 8px; }
+        th, td { border: 1px solid #ccc; padding: 2px 4px; text-align: center; vertical-align: middle; }
+        th { background-color: #e8e8e8; font-weight: bold; font-size: 7px; text-transform: uppercase; }
+        th.text-end, td.text-end { text-align: right; }
+        td.text-start { text-align: left; }
+        .totals-row td { background-color: #dce6f0; font-weight: bold; border-top: 2px solid #999; }
+        .text-danger { color: #c62828; }
+        .text-primary { color: #1a73e8; }
+        .text-success { color: #1b7a1b; }
+        .kpis { display: flex; gap: 15px; margin-bottom: 8px; }
+        .kpi-item { border: 1px solid #ddd; border-radius: 4px; padding: 5px 10px; text-align: center; flex: 1; }
+        .kpi-label { font-size: 7px; color: #888; text-transform: uppercase; }
+        .kpi-value { font-size: 12px; font-weight: bold; }
+        .footer { margin-top: 8px; text-align: center; font-size: 7px; color: #aaa; }
+    </style>
+</head>
+<body>
+
+<%
+    const fmtD = (d) => d ? new Date(d).toLocaleDateString('es-GT', { timeZone: 'UTC', day: '2-digit', month: '2-digit' }) : '-';
+    const Q = (v) => 'Q' + Number(v || 0).toLocaleString('es-GT');
+%>
+
+<div class="header">
+    <div>
+        <div class="header-title">Cobranza Mensual</div>
+        <div class="header-sub"><%= mesLabel %> &mdash; Agente: <strong><%= agenteName %></strong></div>
+    </div>
+    <div class="header-right">
+        PrestaApp<br>
+        Generado: <%= new Date().toLocaleString('es-GT', { dateStyle: 'short', timeStyle: 'short', timeZone: 'America/Guatemala' }) %>
+    </div>
+</div>
+
+<div class="kpis">
+    <div class="kpi-item">
+        <div class="kpi-label">Capital colocado en el mes</div>
+        <div class="kpi-value text-primary"><%= Q(kpis.capitalColocadoMes) %></div>
+    </div>
+    <div class="kpi-item">
+        <div class="kpi-label">Saldo total cartera</div>
+        <div class="kpi-value"><%= Q(kpis.totalSaldo) %></div>
+    </div>
+    <div class="kpi-item">
+        <div class="kpi-label">Cobrado en el mes</div>
+        <div class="kpi-value text-success"><%= Q(kpis.cobradoEnMes) %></div>
+    </div>
+    <div class="kpi-item">
+        <div class="kpi-label">Prestamos activos</div>
+        <div class="kpi-value"><%= prestamos.length %></div>
+    </div>
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th rowspan="2" style="width:25px;">No.</th>
+            <th rowspan="2" style="width:130px; text-align:left;">Cliente</th>
+            <th rowspan="2" style="width:45px;">Inicio</th>
+            <th rowspan="2" style="width:45px;">Fin</th>
+            <th rowspan="2" style="width:55px;" class="text-end">Principal</th>
+            <th rowspan="2" style="width:55px;" class="text-end">Saldo</th>
+            <% semanas.forEach(function(s) { %>
+                <th colspan="3">Sem <%= s.label %></th>
+            <% }) %>
+            <th colspan="3" style="background:#dce6f0;">Total</th>
+        </tr>
+        <tr>
+            <% for (let i = 0; i < 5; i++) { %>
+                <th class="text-end">Cuota</th>
+                <th class="text-end">Mora</th>
+                <th class="text-end">Adm</th>
+            <% } %>
+        </tr>
+    </thead>
+    <tbody>
+        <% if (prestamos.length === 0) { %>
+            <tr><td colspan="21" style="padding:15px; color:#999;">No hay prestamos activos.</td></tr>
+        <% } else { %>
+            <% prestamos.forEach(function(p, idx) { %>
+                <%
+                    const totC = p.semanas.reduce((s, w) => s + w.cuota, 0);
+                    const totM = p.semanas.reduce((s, w) => s + w.mora, 0);
+                    const totA = p.semanas.reduce((s, w) => s + w.admon, 0);
+                %>
+                <tr>
+                    <td><%= idx + 1 %></td>
+                    <td class="text-start">
+                        <strong><%= p.cliente_nombre %></strong>
+                        <div style="color:#999; font-size:6px;">#<%= p.prestamo_id %></div>
+                    </td>
+                    <td><%= fmtD(p.fecha_inicio) %></td>
+                    <td><%= fmtD(p.fecha_fin) %></td>
+                    <td class="text-end"><%= Q(p.principal) %></td>
+                    <td class="text-end" style="font-weight:bold;"><%= Q(p.saldo) %></td>
+                    <% p.semanas.forEach(function(w) { %>
+                        <td class="text-end"><%= w.cuota ? Q(w.cuota) : '-' %></td>
+                        <td class="text-end"><%= w.mora ? '<span class="text-danger">' + Q(w.mora) + '</span>' : '-' %></td>
+                        <td class="text-end"><%= w.admon ? '<span class="text-primary">' + Q(w.admon) + '</span>' : '-' %></td>
+                    <% }) %>
+                    <td class="text-end" style="font-weight:bold;"><%= totC ? Q(totC) : '-' %></td>
+                    <td class="text-end" style="font-weight:bold;"><%= totM ? '<span class="text-danger">' + Q(totM) + '</span>' : '-' %></td>
+                    <td class="text-end" style="font-weight:bold;"><%= totA ? '<span class="text-primary">' + Q(totA) + '</span>' : '-' %></td>
+                </tr>
+            <% }) %>
+        <% } %>
+    </tbody>
+    <% if (prestamos.length > 0) { %>
+    <tfoot>
+        <tr class="totals-row">
+            <td colspan="4" style="text-align:left; padding-left:5px;">TOTALES</td>
+            <td class="text-end"><%= Q(prestamos.reduce((s, p) => s + p.principal, 0)) %></td>
+            <td class="text-end"><%= Q(prestamos.reduce((s, p) => s + p.saldo, 0)) %></td>
+            <% for (let si = 0; si < 4; si++) { %>
+                <td class="text-end"><%= Q(prestamos.reduce((s, p) => s + p.semanas[si].cuota, 0)) %></td>
+                <td class="text-end"><%= Q(prestamos.reduce((s, p) => s + p.semanas[si].mora, 0)) %></td>
+                <td class="text-end"><%= Q(prestamos.reduce((s, p) => s + p.semanas[si].admon, 0)) %></td>
+            <% } %>
+            <td class="text-end"><%= Q(prestamos.reduce((s, p) => s + p.semanas.reduce((a, w) => a + w.cuota, 0), 0)) %></td>
+            <td class="text-end"><%= Q(prestamos.reduce((s, p) => s + p.semanas.reduce((a, w) => a + w.mora, 0), 0)) %></td>
+            <td class="text-end"><%= Q(prestamos.reduce((s, p) => s + p.semanas.reduce((a, w) => a + w.admon, 0), 0)) %></td>
+        </tr>
+    </tfoot>
+    <% } %>
+</table>
+
+<div class="footer">PrestaApp &mdash; Reporte generado automaticamente</div>
+
+</body>
+</html>

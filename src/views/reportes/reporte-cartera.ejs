@@ -1,0 +1,201 @@
+<!--begin::Toolbar-->
+<div class="toolbar py-3 py-lg-6" id="kt_toolbar">
+    <div class="container-xxl d-flex flex-stack flex-wrap gap-2">
+        <div class="page-title d-flex flex-column justify-content-center me-3">
+            <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">
+                Reporte por Cartera / Agente
+            </h1>
+            <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
+                <li class="breadcrumb-item text-muted"><a href="/" class="text-muted text-hover-primary">Inicio</a></li>
+                <li class="breadcrumb-item"><span class="bullet bg-gray-400 w-5px h-2px"></span></li>
+                <li class="breadcrumb-item text-muted"><a href="/reportes" class="text-muted text-hover-primary">Reportes</a></li>
+                <li class="breadcrumb-item"><span class="bullet bg-gray-400 w-5px h-2px"></span></li>
+                <li class="breadcrumb-item text-dark">Por Cartera</li>
+            </ul>
+        </div>
+        <a href="/reportes/reporte-cartera/pdf" target="_blank" class="btn btn-sm btn-light-danger">
+            <i class="bi bi-file-earmark-pdf"></i> PDF
+        </a>
+    </div>
+</div>
+<!--end::Toolbar-->
+
+<%
+    const Q = (v) => 'Q ' + Number(v || 0).toLocaleString('es-GT');
+    const fmtD = (d) => d ? new Date(d).toLocaleDateString('es-GT', { timeZone: 'UTC', day: '2-digit', month: '2-digit', year: '2-digit' }) : '-';
+%>
+
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+    <div class="container-xxl pb-10" id="kt_content_container">
+
+        <!-- KPIs globales -->
+        <div class="row g-5 mb-5">
+            <div class="col-md-2 col-6">
+                <div class="card card-body text-center py-4">
+                    <span class="text-muted fs-8">Prestamos</span>
+                    <span class="fs-2 fw-bolder"><%= globalTotales.prestamos %></span>
+                </div>
+            </div>
+            <div class="col-md-2 col-6">
+                <div class="card card-body text-center py-4">
+                    <span class="text-muted fs-8">Capital</span>
+                    <span class="fs-4 fw-bolder text-primary"><%= Q(globalTotales.capital) %></span>
+                </div>
+            </div>
+            <div class="col-md-2 col-6">
+                <div class="card card-body text-center py-4">
+                    <span class="text-muted fs-8">Saldo</span>
+                    <span class="fs-4 fw-bolder"><%= Q(globalTotales.saldo) %></span>
+                </div>
+            </div>
+            <div class="col-md-2 col-6">
+                <div class="card card-body text-center py-4">
+                    <span class="text-muted fs-8">Cobrado</span>
+                    <span class="fs-4 fw-bolder text-success"><%= Q(globalTotales.cobrado) %></span>
+                </div>
+            </div>
+            <div class="col-md-2 col-6">
+                <div class="card card-body text-center py-4">
+                    <span class="text-muted fs-8">Mora</span>
+                    <span class="fs-4 fw-bolder text-danger"><%= Q(globalTotales.mora) %></span>
+                </div>
+            </div>
+            <div class="col-md-2 col-6">
+                <div class="card card-body text-center py-4">
+                    <span class="text-muted fs-8">Admon. cobrado</span>
+                    <span class="fs-4 fw-bolder text-primary"><%= Q(globalTotales.admon_cobrado) %></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cards por agente -->
+        <% agentes.forEach(function(ag, agIdx) { %>
+        <div class="card mb-5">
+            <!-- Header del agente con totales -->
+            <div class="card-header border-0 pt-5 pb-3">
+                <div class="card-title">
+                    <h3 class="fw-bold m-0">
+                        <i class="bi bi-person-badge text-primary me-2"></i>
+                        <%= ag.agente_nombre %>
+                        <span class="badge badge-light-primary ms-2"><%= ag.totales.prestamos %> prestamos</span>
+                    </h3>
+                </div>
+                <div class="card-toolbar">
+                    <button class="btn btn-sm btn-light" type="button"
+                            data-bs-toggle="collapse" data-bs-target="#agente-<%= agIdx %>"
+                            aria-expanded="true">
+                        <i class="bi bi-chevron-down"></i> Detalle
+                    </button>
+                </div>
+            </div>
+
+            <!-- Totales del agente -->
+            <div class="card-body pt-0 pb-3">
+                <div class="row g-3">
+                    <div class="col">
+                        <div class="border rounded p-2 text-center">
+                            <div class="text-muted fs-9">Capital</div>
+                            <div class="fw-bold text-primary"><%= Q(ag.totales.capital) %></div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="border rounded p-2 text-center">
+                            <div class="text-muted fs-9">Saldo</div>
+                            <div class="fw-bold"><%= Q(ag.totales.saldo) %></div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="border rounded p-2 text-center">
+                            <div class="text-muted fs-9">Cobrado</div>
+                            <div class="fw-bold text-success"><%= Q(ag.totales.cobrado) %></div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="border rounded p-2 text-center">
+                            <div class="text-muted fs-9">Mora</div>
+                            <div class="fw-bold text-danger"><%= Q(ag.totales.mora) %></div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="border rounded p-2 text-center">
+                            <div class="text-muted fs-9">Admon.</div>
+                            <div class="fw-bold"><%= Q(ag.totales.admon_cobrado) %> / <%= Q(ag.totales.admon_total) %></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabla de préstamos (colapsable) -->
+            <div class="collapse show" id="agente-<%= agIdx %>">
+                <div class="card-body pt-0">
+                    <div class="table-responsive">
+                        <table class="table table-row-dashed table-row-gray-300 align-middle gs-0 gy-3 fs-8">
+                            <thead>
+                            <tr class="fw-bold text-muted text-uppercase fs-9">
+                                <th>ID</th>
+                                <th class="min-w-160px">Cliente</th>
+                                <th>Inicio</th>
+                                <th class="text-end">Principal</th>
+                                <th class="text-end">Saldo</th>
+                                <th class="text-end">Cobrado</th>
+                                <th class="text-end">Mora</th>
+                                <th class="text-end">Admon.</th>
+                                <th class="text-center">Progreso</th>
+                                <th class="text-center">Atrasos</th>
+                                <th class="text-end">Acciones</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <% ag.prestamos.forEach(function(p) { %>
+                                <tr>
+                                    <td class="fw-bold text-gray-800">#<%= p.prestamo_id %></td>
+                                    <td>
+                                        <div class="fw-bold text-gray-800"><%= p.cliente_nombre %></div>
+                                        <% if (p.cliente_telefono) { %>
+                                            <div class="text-muted fs-9">Tel: <%= p.cliente_telefono %></div>
+                                        <% } %>
+                                    </td>
+                                    <td><%= fmtD(p.fecha_inicio) %></td>
+                                    <td class="text-end"><%= Q(p.principal) %></td>
+                                    <td class="text-end fw-bold"><%= Q(p.saldo) %></td>
+                                    <td class="text-end text-success"><%= Q(p.total_pagado) %></td>
+                                    <td class="text-end">
+                                        <%= p.mora_total > 0 ? '<span class="text-danger">' + Q(p.mora_total) + '</span>' : '-' %>
+                                    </td>
+                                    <td class="text-end">
+                                        <% if (p.cobro_admon > 0) { %>
+                                            <span class="badge badge-light-<%= p.cobro_admon_pagado ? 'success' : 'warning' %> fs-9">
+                                                <%= Q(p.cobro_admon) %>
+                                            </span>
+                                        <% } else { %>-<% } %>
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="d-flex align-items-center justify-content-center gap-1">
+                                            <span class="fs-9"><%= p.cuotas_pagadas %>/<%= p.plazo_dias %></span>
+                                            <div class="progress h-5px w-50px">
+                                                <div class="progress-bar bg-success" style="width:<%= p.progreso %>%"></div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="text-center">
+                                        <% if (p.cuotas_atrasadas > 0) { %>
+                                            <span class="badge badge-light-danger"><%= p.cuotas_atrasadas %></span>
+                                        <% } else { %>
+                                            <span class="badge badge-light-success">0</span>
+                                        <% } %>
+                                    </td>
+                                    <td class="text-end">
+                                        <a href="/prestamos/<%= p.prestamo_id %>" class="btn btn-sm btn-light">Ver</a>
+                                    </td>
+                                </tr>
+                            <% }) %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <% }) %>
+
+    </div>
+</div>

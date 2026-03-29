@@ -218,6 +218,62 @@
 		renderReversarState();
 	}
 
+	// ─── Cobro administrativo ───
+	const btnCobrarAdmon = document.getElementById('btnCobrarAdmon');
+	if (btnCobrarAdmon) {
+		btnCobrarAdmon.addEventListener('click', async () => {
+			const ok = await Swal.fire({
+				title: 'Cobrar administrativo',
+				text: 'Se registrara el cobro administrativo de este prestamo.',
+				icon: 'question',
+				showCancelButton: true,
+				confirmButtonText: 'Si, cobrar',
+				cancelButtonText: 'Cancelar',
+				buttonsStyling: false,
+				customClass: {
+					confirmButton: "btn btn-success",
+					cancelButton: "btn btn-light"
+				}
+			}).then(r => r.isConfirmed);
+
+			if (!ok) return;
+
+			btnCobrarAdmon.disabled = true;
+
+			try {
+				const resp = await fetch(`/api/prestamo/${prestamoId}/cobro-admon`, {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' }
+				});
+
+				const data = await resp.json().catch(() => ({}));
+				if (!resp.ok) {
+					throw new Error(data?.message || 'No se pudo registrar el cobro');
+				}
+
+				await Swal.fire({
+					text: 'Cobro administrativo registrado',
+					icon: 'success',
+					buttonsStyling: false,
+					confirmButtonText: "Ok",
+					customClass: { confirmButton: "btn btn-primary" }
+				});
+
+				window.location.reload();
+
+			} catch (e) {
+				Swal.fire({
+					text: e.message || 'Error al registrar cobro',
+					icon: 'error',
+					buttonsStyling: false,
+					confirmButtonText: "Ok",
+					customClass: { confirmButton: "btn btn-primary" }
+				});
+				btnCobrarAdmon.disabled = false;
+			}
+		});
+	}
+
 	// init
 	renderState();
 })();

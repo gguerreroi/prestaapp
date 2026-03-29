@@ -42,84 +42,94 @@
                 </a>
             </div>
 
+            <!-- Cobranza mensual -->
+            <div class="col-xl-4 col-md-6">
+                <a href="/reportes/cobranza-mensual" class="card card-xl-stretch mb-xl-8 card-hover text-decoration-none">
+                    <div class="card-body d-flex flex-column align-items-start p-8">
+                        <div class="symbol symbol-50px mb-5">
+                            <span class="symbol-label bg-light-info">
+                                <i class="bi bi-calendar-month fs-2x text-info"></i>
+                            </span>
+                        </div>
+                        <h3 class="fs-4 fw-bold text-gray-800 mb-2">Cobranza mensual</h3>
+                        <p class="text-muted fw-semibold fs-7 mb-0">
+                            Resumen mensual por semana: cuotas cobradas, mora y cobros administrativos con totales de cartera.
+                        </p>
+                        <span class="badge badge-light-info mt-4">Ver reporte &rarr;</span>
+                    </div>
+                </a>
+            </div>
+
             <!-- Resumen general -->
             <div class="col-xl-4 col-md-6">
-                <div class="card card-xl-stretch mb-xl-8">
+                <a href="/reportes/resumen-general" class="card card-xl-stretch mb-xl-8 card-hover text-decoration-none">
                     <div class="card-body d-flex flex-column align-items-start p-8">
                         <div class="symbol symbol-50px mb-5">
                             <span class="symbol-label bg-light-success">
-                                <i class="ki-duotone ki-chart-simple fs-2x text-success">
-                                    <span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span>
-                                </i>
+                                <i class="bi bi-bar-chart-line fs-2x text-success"></i>
                             </span>
                         </div>
                         <h3 class="fs-4 fw-bold text-gray-800 mb-2">Resumen general</h3>
                         <p class="text-muted fw-semibold fs-7 mb-0">
-                            KPIs de prestamos activos, capital colocado, mora total y cobranza del dia.
+                            KPIs de prestamos activos, capital colocado, mora total, cobranza del mes y desempeño por agente.
                         </p>
-                        <span class="badge badge-light-warning mt-4">Proximamente</span>
+                        <span class="badge badge-light-success mt-4">Ver reporte &rarr;</span>
                     </div>
-                </div>
+                </a>
             </div>
 
             <!-- Reporte por cartera / agente -->
             <div class="col-xl-4 col-md-6">
-                <div class="card card-xl-stretch mb-xl-8">
+                <a href="/reportes/reporte-cartera" class="card card-xl-stretch mb-xl-8 card-hover text-decoration-none">
                     <div class="card-body d-flex flex-column align-items-start p-8">
                         <div class="symbol symbol-50px mb-5">
                             <span class="symbol-label bg-light-info">
-                                <i class="ki-duotone ki-people fs-2x text-info">
-                                    <span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span>
-                                </i>
+                                <i class="bi bi-people fs-2x text-info"></i>
                             </span>
                         </div>
                         <h3 class="fs-4 fw-bold text-gray-800 mb-2">Reporte por cartera / agente</h3>
                         <p class="text-muted fw-semibold fs-7 mb-0">
-                            Desempeno de cada agente de cobranza: prestamos asignados, cobros realizados y atrasos.
+                            Desempeño de cada agente: prestamos asignados, cobros realizados, mora y atrasos.
                         </p>
-                        <span class="badge badge-light-warning mt-4">Proximamente</span>
+                        <span class="badge badge-light-info mt-4">Ver reporte &rarr;</span>
                     </div>
-                </div>
+                </a>
             </div>
 
             <!-- Reporte de morosidad -->
             <div class="col-xl-4 col-md-6">
-                <div class="card card-xl-stretch mb-xl-8">
+                <a href="/reportes/reporte-morosidad" class="card card-xl-stretch mb-xl-8 card-hover text-decoration-none">
                     <div class="card-body d-flex flex-column align-items-start p-8">
                         <div class="symbol symbol-50px mb-5">
                             <span class="symbol-label bg-light-danger">
-                                <i class="ki-duotone ki-time fs-2x text-danger">
-                                    <span class="path1"></span><span class="path2"></span>
-                                </i>
+                                <i class="bi bi-exclamation-triangle fs-2x text-danger"></i>
                             </span>
                         </div>
                         <h3 class="fs-4 fw-bold text-gray-800 mb-2">Reporte de morosidad</h3>
                         <p class="text-muted fw-semibold fs-7 mb-0">
-                            Listado de prestamos con atrasos, dias de mora y montos pendientes por cobrar.
+                            Listado de prestamos con atrasos, dias de mora, tasa de morosidad y montos pendientes.
                         </p>
-                        <span class="badge badge-light-warning mt-4">Proximamente</span>
+                        <span class="badge badge-light-danger mt-4">Ver reporte &rarr;</span>
                     </div>
-                </div>
+                </a>
             </div>
 
             <!-- Reporte de pagos diarios -->
             <div class="col-xl-4 col-md-6">
-                <div class="card card-xl-stretch mb-xl-8">
+                <a href="/reportes/reporte-pagos-diarios" class="card card-xl-stretch mb-xl-8 card-hover text-decoration-none">
                     <div class="card-body d-flex flex-column align-items-start p-8">
                         <div class="symbol symbol-50px mb-5">
                             <span class="symbol-label bg-light-warning">
-                                <i class="ki-duotone ki-wallet fs-2x text-warning">
-                                    <span class="path1"></span><span class="path2"></span>
-                                </i>
+                                <i class="bi bi-wallet2 fs-2x text-warning"></i>
                             </span>
                         </div>
                         <h3 class="fs-4 fw-bold text-gray-800 mb-2">Reporte de pagos diarios</h3>
                         <p class="text-muted fw-semibold fs-7 mb-0">
-                            Detalle de pagos recibidos por dia o rango de fechas con totales y desglose.
+                            Resumen diario y detalle de cada pago recibido: cuotas, mora y cobros administrativos.
                         </p>
-                        <span class="badge badge-light-warning mt-4">Proximamente</span>
+                        <span class="badge badge-light-warning mt-4">Ver reporte &rarr;</span>
                     </div>
-                </div>
+                </a>
             </div>
 
         </div>

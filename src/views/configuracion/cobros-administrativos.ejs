@@ -1,0 +1,68 @@
+<!--begin::Toolbar-->
+<div class="toolbar py-3 py-lg-6" id="kt_toolbar">
+    <div class="container-xxl d-flex flex-stack flex-wrap gap-2">
+        <div class="page-title d-flex flex-column justify-content-center me-3">
+            <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">
+                Cobros Administrativos
+            </h1>
+            <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
+                <li class="breadcrumb-item text-muted">
+                    <a href="/" class="text-muted text-hover-primary">Inicio</a>
+                </li>
+                <li class="breadcrumb-item"><span class="bullet bg-gray-400 w-5px h-2px"></span></li>
+                <li class="breadcrumb-item text-muted">
+                    <a href="/configuracion" class="text-muted text-hover-primary">Configuracion</a>
+                </li>
+                <li class="breadcrumb-item"><span class="bullet bg-gray-400 w-5px h-2px"></span></li>
+                <li class="breadcrumb-item text-dark">Cobros Administrativos</li>
+            </ul>
+        </div>
+
+        <div class="d-flex align-items-center gap-2">
+            <button type="button" class="btn btn-primary btn-sm" id="btnAgregar">
+                <i class="bi bi-plus-lg"></i> Agregar
+            </button>
+        </div>
+    </div>
+</div>
+<!--end::Toolbar-->
+
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+    <div class="container-xxl" id="kt_content_container">
+
+        <div class="card">
+            <div class="card-header border-0 pt-6">
+                <div class="card-title">
+                    <h3 class="fw-bold m-0">Rangos de cobros administrativos</h3>
+                </div>
+                <div class="card-toolbar">
+                    <span class="text-muted fs-7">Los cobros se aplican segun el monto del prestamo</span>
+                </div>
+            </div>
+
+            <div class="card-body pt-0">
+                <div class="table-responsive">
+                    <table class="table table-row-dashed table-row-gray-300 align-middle gs-0 gy-4" id="tblCobros">
+                        <thead>
+                        <tr class="fw-bold text-muted fs-7 text-uppercase">
+                            <th class="min-w-60px">ID</th>
+                            <th class="min-w-140px text-end">Monto Minimo</th>
+                            <th class="min-w-140px text-end">Monto Maximo</th>
+                            <th class="min-w-140px text-end">Cobro Administrativo</th>
+                            <th class="min-w-120px text-end">Acciones</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tbodyCobros">
+                        <tr>
+                            <td colspan="5" class="text-center text-muted py-8">
+                                <span class="spinner-border spinner-border-sm me-2"></span> Cargando...
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

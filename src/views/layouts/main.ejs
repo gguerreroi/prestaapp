@@ -12,7 +12,7 @@
       class="header-fixed header-tablet-and-mobile-fixed toolbar-enabled toolbar-fixed toolbar-tablet-and-mobile-fixed aside-enabled aside-fixed"
       style="--kt-toolbar-height:55px;--kt-toolbar-height-tablet-and-mobile:55px">
 <!-- App Root -->
-<div class="d-flex flex-column flex-root">
+<div class="d-flex flex-column flex-root" style="min-height:100vh;">
     <!-- Page -->
     <div class="page d-flex flex-row flex-column-fluid">
         <!-- Aside (Sidebar) -->
@@ -30,14 +30,13 @@
             <div class="footer py-4 d-flex flex-lg-column" id="kt_footer">
                 <div class="container-fluid d-flex flex-column flex-md-row align-items-center justify-content-between">
                     <div class="text-dark order-2 order-md-1">
-                        <span class="text-muted fw-semibold me-1">©</span>
+                        <span class="text-muted fw-semibold me-1">&copy; <%= new Date().getFullYear() %></span>
                         <span class="text-gray-800 fw-bold">PrestaApp</span>
-                        <span class="text-muted fw-semibold ms-3">
-                        IP: <span class="text-gray-700"><%= clientIp || 'N/A' %></span>
-                        </span>
+                        <span class="text-muted fw-semibold ms-2">v1.0</span>
                     </div>
-                    <div class="text-muted fw-semibold">
-                        v1.0
+                    <div class="text-muted fw-semibold order-1 order-md-2">
+                        <i class="bi bi-globe2 me-1"></i>
+                        IP: <span class="text-gray-700"><%= clientIp || 'N/A' %></span>
                     </div>
                 </div>
             </div>

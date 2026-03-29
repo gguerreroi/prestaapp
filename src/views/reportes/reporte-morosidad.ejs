@@ -1,0 +1,197 @@
+<!--begin::Toolbar-->
+<div class="toolbar py-3 py-lg-6" id="kt_toolbar">
+    <div class="container-xxl d-flex flex-stack flex-wrap gap-2">
+        <div class="page-title d-flex flex-column justify-content-center me-3">
+            <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">
+                Reporte de Morosidad
+            </h1>
+            <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
+                <li class="breadcrumb-item text-muted"><a href="/" class="text-muted text-hover-primary">Inicio</a></li>
+                <li class="breadcrumb-item"><span class="bullet bg-gray-400 w-5px h-2px"></span></li>
+                <li class="breadcrumb-item text-muted"><a href="/reportes" class="text-muted text-hover-primary">Reportes</a></li>
+                <li class="breadcrumb-item"><span class="bullet bg-gray-400 w-5px h-2px"></span></li>
+                <li class="breadcrumb-item text-dark">Morosidad</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!--end::Toolbar-->
+
+<%
+    const Q = (v) => 'Q ' + Number(v || 0).toLocaleString('es-GT');
+    const fmtD = (d) => d ? new Date(d).toLocaleDateString('es-GT', { timeZone: 'UTC', day: '2-digit', month: '2-digit', year: '2-digit' }) : '-';
+%>
+
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+    <div class="container-xxl pb-10" id="kt_content_container">
+
+        <!-- Navegacion y filtros -->
+        <div class="card mb-5">
+            <div class="card-body py-5">
+                <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+                    <div class="d-flex align-items-center gap-2">
+                        <a href="/reportes/reporte-morosidad?mes=<%= mesAnterior %><%= filtroAgente ? '&agente=' + filtroAgente : '' %>"
+                           class="btn btn-icon btn-sm btn-light"><i class="bi bi-chevron-left"></i></a>
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-calendar3 text-danger"></i>
+                            <span class="fw-bold fs-5 text-gray-800"><%= mesLabel %></span>
+                            <input type="month" id="inputMes" class="form-control form-control-sm form-control-solid w-150px"
+                                   value="<%= mesActual %>" />
+                        </div>
+                        <a href="/reportes/reporte-morosidad?mes=<%= mesSiguiente %><%= filtroAgente ? '&agente=' + filtroAgente : '' %>"
+                           class="btn btn-icon btn-sm btn-light"><i class="bi bi-chevron-right"></i></a>
+                        <a href="/reportes/reporte-morosidad<%= filtroAgente ? '?agente=' + filtroAgente : '' %>"
+                           class="btn btn-sm btn-light-primary ms-2">Mes actual</a>
+                    </div>
+
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="text-muted fs-7">Agente:</span>
+                        <select class="form-select form-select-solid form-select-sm w-200px" id="fltAgente">
+                            <option value="">Todos</option>
+                            <% agentes.forEach(function(ag) { %>
+                                <option value="<%= ag.agente_id %>" <%= filtroAgente == ag.agente_id ? 'selected' : '' %>>
+                                    <%= ag.nombre %>
+                                </option>
+                            <% }) %>
+                        </select>
+                    </div>
+
+                    <a href="/reportes/reporte-morosidad/pdf?mes=<%= mesActual %><%= filtroAgente ? '&agente=' + filtroAgente : '' %>"
+                       class="btn btn-sm btn-light-danger" target="_blank">
+                        <i class="bi bi-file-earmark-pdf"></i> PDF
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- KPIs -->
+        <div class="row g-5 mb-5">
+            <div class="col-md-2 col-6">
+                <div class="card card-body text-center py-4">
+                    <span class="text-muted fs-8">Prestamos morosos</span>
+                    <span class="fs-1 fw-bolder text-danger"><%= kpis.totalMorosos %></span>
+                    <span class="text-muted fs-9">de <%= kpis.totalActivos %> activos</span>
+                </div>
+            </div>
+            <div class="col-md-2 col-6">
+                <div class="card card-body text-center py-4">
+                    <span class="text-muted fs-8">Tasa de morosidad</span>
+                    <span class="fs-1 fw-bolder text-danger"><%= kpis.tasaMorosidad %>%</span>
+                    <div class="progress h-6px mt-2">
+                        <div class="progress-bar bg-danger" style="width:<%= kpis.tasaMorosidad %>%"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2 col-6">
+                <div class="card card-body text-center py-4">
+                    <span class="text-muted fs-8">Cuotas atrasadas</span>
+                    <span class="fs-2 fw-bolder text-danger"><%= kpis.totalCuotasAtrasadas %></span>
+                </div>
+            </div>
+            <div class="col-md-2 col-6">
+                <div class="card card-body text-center py-4">
+                    <span class="text-muted fs-8">Monto cuotas</span>
+                    <span class="fs-4 fw-bolder text-warning"><%= Q(kpis.totalMontoCuotasAtrasadas) %></span>
+                </div>
+            </div>
+            <div class="col-md-2 col-6">
+                <div class="card card-body text-center py-4">
+                    <span class="text-muted fs-8">Mora acumulada</span>
+                    <span class="fs-4 fw-bolder text-danger"><%= Q(kpis.totalMontoMora) %></span>
+                </div>
+            </div>
+            <div class="col-md-2 col-6">
+                <div class="card card-body text-center py-4">
+                    <span class="text-muted fs-8">Total pendiente</span>
+                    <span class="fs-4 fw-bolder text-dark"><%= Q(kpis.totalPendiente) %></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabla -->
+        <div class="card">
+            <div class="card-header border-0 pt-6">
+                <div class="card-title"><h3 class="fw-bold m-0">Prestamos con atrasos</h3></div>
+                <div class="card-toolbar">
+                    <span class="text-muted fs-7">Ordenado por dias de mora (mayor a menor)</span>
+                </div>
+            </div>
+            <div class="card-body pt-0">
+                <div class="table-responsive">
+                    <table class="table table-row-dashed table-row-gray-300 align-middle gs-0 gy-4">
+                        <thead>
+                        <tr class="fw-bold text-muted fs-7 text-uppercase">
+                            <th>ID</th>
+                            <th class="min-w-180px">Cliente</th>
+                            <th>Agente</th>
+                            <th>Inicio</th>
+                            <th class="text-end">Principal</th>
+                            <th class="text-end">Saldo</th>
+                            <th class="text-center">Cuotas atraso</th>
+                            <th class="text-center">Dias mora</th>
+                            <th class="text-end">Monto cuotas</th>
+                            <th class="text-end">Mora</th>
+                            <th class="text-end">Total deuda</th>
+                            <th class="text-end">Acciones</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <% if (prestamos.length === 0) { %>
+                            <tr><td colspan="12" class="text-center text-muted py-8">
+                                <i class="bi bi-check-circle text-success fs-2 d-block mb-2"></i>
+                                No hay prestamos con atrasos en este periodo.
+                            </td></tr>
+                        <% } else { %>
+                            <% prestamos.forEach(function(p) { %>
+                                <%
+                                    const deudaTotal = p.monto_cuotas_atrasadas + p.monto_mora;
+                                    const severidad = p.dias_mora_max >= 14 ? 'danger' : p.dias_mora_max >= 7 ? 'warning' : 'light-warning';
+                                %>
+                                <tr>
+                                    <td class="fw-bold text-gray-800">#<%= p.prestamo_id %></td>
+                                    <td>
+                                        <div class="fw-bold text-gray-800"><%= p.cliente_nombre %></div>
+                                        <% if (p.cliente_telefono) { %>
+                                            <div class="text-muted fs-8">Tel: <%= p.cliente_telefono %></div>
+                                        <% } %>
+                                    </td>
+                                    <td class="text-muted"><%= p.agente_nombre %></td>
+                                    <td><%= fmtD(p.fecha_inicio) %></td>
+                                    <td class="text-end"><%= Q(p.principal) %></td>
+                                    <td class="text-end fw-bold"><%= Q(p.saldo) %></td>
+                                    <td class="text-center">
+                                        <span class="badge badge-light-danger fs-7 fw-bold"><%= p.cuotas_atrasadas %></span>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="badge badge-<%= severidad %> fs-7 fw-bold"><%= p.dias_mora_max %> dias</span>
+                                    </td>
+                                    <td class="text-end text-warning fw-bold"><%= Q(p.monto_cuotas_atrasadas) %></td>
+                                    <td class="text-end text-danger fw-bold"><%= Q(p.monto_mora) %></td>
+                                    <td class="text-end fw-bolder"><%= Q(deudaTotal) %></td>
+                                    <td class="text-end">
+                                        <a href="/prestamos/<%= p.prestamo_id %>" class="btn btn-sm btn-light">Ver</a>
+                                    </td>
+                                </tr>
+                            <% }) %>
+                        <% } %>
+                        </tbody>
+                        <% if (prestamos.length > 0) { %>
+                        <tfoot>
+                            <tr class="fw-bold bg-light-danger">
+                                <td colspan="6" class="ps-4">TOTALES</td>
+                                <td class="text-center"><%= kpis.totalCuotasAtrasadas %></td>
+                                <td></td>
+                                <td class="text-end"><%= Q(kpis.totalMontoCuotasAtrasadas) %></td>
+                                <td class="text-end text-danger"><%= Q(kpis.totalMontoMora) %></td>
+                                <td class="text-end fw-bolder"><%= Q(kpis.totalPendiente) %></td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
+                        <% } %>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

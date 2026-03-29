@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Pagos Diarios - <%= mesLabel %></title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, Helvetica, sans-serif; font-size: 8px; color: #333; padding: 5mm; }
+        .header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 10px; border-bottom: 2px solid #e65100; padding-bottom: 6px; }
+        .header-title { font-size: 16px; font-weight: bold; color: #e65100; }
+        .header-sub { font-size: 10px; color: #666; }
+        .header-right { text-align: right; font-size: 8px; color: #888; }
+
+        .kpis { display: flex; gap: 10px; margin-bottom: 12px; }
+        .kpi { border: 1px solid #ddd; border-radius: 4px; padding: 6px 10px; text-align: center; flex: 1; }
+        .kpi-label { font-size: 7px; color: #888; text-transform: uppercase; }
+        .kpi-value { font-size: 13px; font-weight: bold; }
+        .text-success { color: #1b7a1b; }
+        .text-danger { color: #c62828; }
+        .text-primary { color: #1a73e8; }
+        .text-warning { color: #e65100; }
+
+        .section-title { font-size: 12px; font-weight: bold; color: #333; margin: 12px 0 6px; }
+
+        table { width: 100%; border-collapse: collapse; margin-bottom: 10px; }
+        th, td { border: 1px solid #ccc; padding: 2px 5px; vertical-align: middle; }
+        th { background-color: #fff3e0; font-weight: bold; font-size: 7px; text-transform: uppercase; text-align: center; }
+        th.text-end, td.text-end { text-align: right; }
+        td.text-start { text-align: left; }
+        td.text-center { text-align: center; }
+        .totals-row td { background-color: #fff3e0; font-weight: bold; border-top: 2px solid #e65100; }
+
+        .footer { margin-top: 10px; text-align: center; font-size: 7px; color: #aaa; }
+    </style>
+</head>
+<body>
+
+<%
+    const Q = (v) => 'Q' + Number(v || 0).toLocaleString('es-GT');
+    const fmtD = (d) => d ? new Date(d).toLocaleDateString('es-GT', { timeZone: 'UTC', day: '2-digit', month: '2-digit', year: 'numeric' }) : '-';
+    const fmtDT = (d) => d ? new Date(d).toLocaleString('es-GT', { timeZone: 'UTC', day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }) : '-';
+    const fmtDiaCorto = (d) => {
+        const dt = new Date(d + 'T12:00:00');
+        const dias = ['Dom','Lun','Mar','Mie','Jue','Vie','Sab'];
+        return dias[dt.getDay()] + ' ' + dt.getDate();
+    };
+%>
+
+<div class="header">
+    <div>
+        <div class="header-title">Reporte de Pagos Diarios</div>
+        <div class="header-sub"><%= mesLabel %> &mdash; Agente: <strong><%= agenteName %></strong></div>
+    </div>
+    <div class="header-right">
+        PrestaApp<br>
+        Generado: <%= new Date().toLocaleString('es-GT', { dateStyle: 'short', timeStyle: 'short', timeZone: 'America/Guatemala' }) %>
+    </div>
+</div>
+
+<div class="kpis">
+    <div class="kpi">
+        <div class="kpi-label">Total pagos</div>
+        <div class="kpi-value"><%= kpis.totalPagos %></div>
+    </div>
+    <div class="kpi">
+        <div class="kpi-label">Cuotas cobradas</div>
+        <div class="kpi-value text-success"><%= Q(kpis.totalCuotas) %></div>
+    </div>
+    <div class="kpi">
+        <div class="kpi-label">Mora cobrada</div>
+        <div class="kpi-value text-danger"><%= Q(kpis.totalMora) %></div>
+    </div>
+    <div class="kpi">
+        <div class="kpi-label">Cobros admon.</div>
+        <div class="kpi-value text-primary"><%= Q(kpis.totalAdmon) %></div>
+    </div>
+    <div class="kpi">
+        <div class="kpi-label">Total general</div>
+        <div class="kpi-value"><%= Q(kpis.totalGeneral) %></div>
+    </div>
+</div>
+
+<!-- Resumen diario -->
+<div class="section-title">Resumen por dia</div>
+<table>
+    <thead>
+    <tr>
+        <th style="width:120px; text-align:left;">Dia</th>
+        <th style="width:50px;">Pagos</th>
+        <th class="text-end" style="width:80px;">Cuotas</th>
+        <th class="text-end" style="width:60px;">Mora</th>
+        <th class="text-end" style="width:60px;">Admon.</th>
+        <th class="text-end" style="width:80px;">Total dia</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% resumenDiario.forEach(function(d) { %>
+        <tr>
+            <td class="text-start" style="font-weight:bold;"><%= fmtDiaCorto(d.fecha) %> - <%= fmtD(d.fecha) %></td>
+            <td class="text-center"><%= d.cantidadPagos %></td>
+            <td class="text-end text-success"><%= Q(d.totalCuotas) %></td>
+            <td class="text-end"><%= d.totalMora > 0 ? '<span class="text-danger">' + Q(d.totalMora) + '</span>' : '-' %></td>
+            <td class="text-end"><%= d.totalAdmon > 0 ? '<span class="text-primary">' + Q(d.totalAdmon) + '</span>' : '-' %></td>
+            <td class="text-end" style="font-weight:bold;"><%= Q(d.totalDia) %></td>
+        </tr>
+    <% }) %>
+    </tbody>
+    <% if (resumenDiario.length > 0) { %>
+    <tfoot>
+        <tr class="totals-row">
+            <td style="text-align:left;">TOTALES</td>
+            <td class="text-center"><%= kpis.totalPagos %></td>
+            <td class="text-end text-success"><%= Q(kpis.totalCuotas) %></td>
+            <td class="text-end text-danger"><%= Q(kpis.totalMora) %></td>
+            <td class="text-end text-primary"><%= Q(kpis.totalAdmon) %></td>
+            <td class="text-end" style="font-weight:bold;"><%= Q(kpis.totalGeneral) %></td>
+        </tr>
+    </tfoot>
+    <% } %>
+</table>
+
+<!-- Detalle -->
+<div class="section-title">Detalle de pagos (<%= pagos.length %>)</div>
+<table>
+    <thead>
+    <tr>
+        <th style="width:70px;">Fecha/Hora</th>
+        <th style="width:130px; text-align:left;">Cliente</th>
+        <th style="width:40px;">Prest.</th>
+        <th style="width:35px;">Cuota</th>
+        <th class="text-end" style="width:55px;">Monto</th>
+        <th class="text-end" style="width:45px;">Mora</th>
+        <th style="width:80px; text-align:left;">Agente</th>
+        <th style="width:70px; text-align:left;">Usuario</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% pagos.forEach(function(p) { %>
+        <tr>
+            <td class="text-center"><%= fmtDT(p.fecha_pago) %></td>
+            <td class="text-start"><strong><%= p.cliente_nombre %></strong></td>
+            <td class="text-center">#<%= p.prestamo_id %></td>
+            <td class="text-center"><%= p.dia_num %></td>
+            <td class="text-end text-success" style="font-weight:bold;"><%= Q(p.monto_pagado) %></td>
+            <td class="text-end"><%= p.mora > 0 ? '<span class="text-danger">' + Q(p.mora) + '</span>' : '-' %></td>
+            <td class="text-start"><%= p.agente_nombre %></td>
+            <td class="text-start"><%= p.usuario_pago || '-' %></td>
+        </tr>
+    <% }) %>
+    </tbody>
+</table>
+
+<div class="footer">PrestaApp &mdash; Reporte generado automaticamente</div>
+
+</body>
+</html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Reporte por Cartera / Agente</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, Helvetica, sans-serif; font-size: 8px; color: #333; padding: 5mm; }
+        .header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 10px; border-bottom: 2px solid #1a73e8; padding-bottom: 6px; }
+        .header-title { font-size: 16px; font-weight: bold; color: #1a73e8; }
+        .header-sub { font-size: 10px; color: #666; }
+        .header-right { text-align: right; font-size: 8px; color: #888; }
+
+        .global-kpis { display: flex; gap: 10px; margin-bottom: 12px; }
+        .gkpi { border: 1px solid #ddd; border-radius: 4px; padding: 6px 10px; text-align: center; flex: 1; }
+        .gkpi-label { font-size: 7px; color: #888; text-transform: uppercase; }
+        .gkpi-value { font-size: 13px; font-weight: bold; }
+
+        .agente-section { margin-bottom: 12px; page-break-inside: avoid; }
+        .agente-header { background: #f0f4f8; border: 1px solid #d0d8e0; border-radius: 4px; padding: 6px 10px; margin-bottom: 4px; display: flex; justify-content: space-between; align-items: center; }
+        .agente-name { font-size: 11px; font-weight: bold; color: #1a73e8; }
+        .agente-stats { display: flex; gap: 12px; font-size: 8px; }
+        .agente-stats span { color: #666; }
+        .agente-stats strong { color: #333; }
+
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #ccc; padding: 2px 4px; vertical-align: middle; }
+        th { background-color: #e8e8e8; font-weight: bold; font-size: 7px; text-transform: uppercase; text-align: center; }
+        th.text-end, td.text-end { text-align: right; }
+        td.text-start { text-align: left; }
+        td.text-center { text-align: center; }
+        .text-danger { color: #c62828; }
+        .text-success { color: #1b7a1b; }
+        .text-primary { color: #1a73e8; }
+        .badge-ok { background: #e8f5e9; color: #1b7a1b; padding: 1px 4px; border-radius: 3px; font-size: 7px; }
+        .badge-warn { background: #fff3e0; color: #e65100; padding: 1px 4px; border-radius: 3px; font-size: 7px; }
+        .badge-danger { background: #fce4ec; color: #c62828; padding: 1px 4px; border-radius: 3px; font-size: 7px; }
+
+        .progress-bar { background: #eee; border-radius: 3px; height: 6px; width: 40px; display: inline-block; vertical-align: middle; overflow: hidden; }
+        .progress-fill { background: #4caf50; height: 100%; border-radius: 3px; }
+
+        .footer { margin-top: 10px; text-align: center; font-size: 7px; color: #aaa; }
+    </style>
+</head>
+<body>
+
+<%
+    const Q = (v) => 'Q' + Number(v || 0).toLocaleString('es-GT');
+    const fmtD = (d) => d ? new Date(d).toLocaleDateString('es-GT', { timeZone: 'UTC', day: '2-digit', month: '2-digit', year: '2-digit' }) : '-';
+%>
+
+<div class="header">
+    <div>
+        <div class="header-title">Reporte por Cartera / Agente</div>
+        <div class="header-sub">Estado actual de la cartera</div>
+    </div>
+    <div class="header-right">
+        PrestaApp<br>
+        Generado: <%= new Date().toLocaleString('es-GT', { dateStyle: 'short', timeStyle: 'short', timeZone: 'America/Guatemala' }) %>
+    </div>
+</div>
+
+<div class="global-kpis">
+    <div class="gkpi">
+        <div class="gkpi-label">Prestamos</div>
+        <div class="gkpi-value"><%= globalTotales.prestamos %></div>
+    </div>
+    <div class="gkpi">
+        <div class="gkpi-label">Capital</div>
+        <div class="gkpi-value text-primary"><%= Q(globalTotales.capital) %></div>
+    </div>
+    <div class="gkpi">
+        <div class="gkpi-label">Saldo</div>
+        <div class="gkpi-value"><%= Q(globalTotales.saldo) %></div>
+    </div>
+    <div class="gkpi">
+        <div class="gkpi-label">Cobrado</div>
+        <div class="gkpi-value text-success"><%= Q(globalTotales.cobrado) %></div>
+    </div>
+    <div class="gkpi">
+        <div class="gkpi-label">Mora</div>
+        <div class="gkpi-value text-danger"><%= Q(globalTotales.mora) %></div>
+    </div>
+    <div class="gkpi">
+        <div class="gkpi-label">Admon.</div>
+        <div class="gkpi-value"><%= Q(globalTotales.admon_cobrado) %></div>
+    </div>
+</div>
+
+<% agentes.forEach(function(ag) { %>
+<div class="agente-section">
+    <div class="agente-header">
+        <div class="agente-name"><%= ag.agente_nombre %> (<%= ag.totales.prestamos %>)</div>
+        <div class="agente-stats">
+            <span>Capital: <strong><%= Q(ag.totales.capital) %></strong></span>
+            <span>Saldo: <strong><%= Q(ag.totales.saldo) %></strong></span>
+            <span>Cobrado: <strong class="text-success"><%= Q(ag.totales.cobrado) %></strong></span>
+            <span>Mora: <strong class="text-danger"><%= Q(ag.totales.mora) %></strong></span>
+        </div>
+    </div>
+    <table>
+        <thead>
+        <tr>
+            <th style="width:30px;">ID</th>
+            <th style="width:130px; text-align:left;">Cliente</th>
+            <th style="width:45px;">Inicio</th>
+            <th class="text-end" style="width:55px;">Principal</th>
+            <th class="text-end" style="width:55px;">Saldo</th>
+            <th class="text-end" style="width:55px;">Cobrado</th>
+            <th class="text-end" style="width:45px;">Mora</th>
+            <th class="text-end" style="width:45px;">Admon.</th>
+            <th style="width:65px;">Progreso</th>
+            <th style="width:40px;">Atrasos</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% ag.prestamos.forEach(function(p) { %>
+            <tr>
+                <td class="text-center">#<%= p.prestamo_id %></td>
+                <td class="text-start">
+                    <strong><%= p.cliente_nombre %></strong>
+                    <% if (p.cliente_telefono) { %><div style="color:#999; font-size:6px;">Tel: <%= p.cliente_telefono %></div><% } %>
+                </td>
+                <td class="text-center"><%= fmtD(p.fecha_inicio) %></td>
+                <td class="text-end"><%= Q(p.principal) %></td>
+                <td class="text-end" style="font-weight:bold;"><%= Q(p.saldo) %></td>
+                <td class="text-end text-success"><%= Q(p.total_pagado) %></td>
+                <td class="text-end"><%= p.mora_total > 0 ? '<span class="text-danger">' + Q(p.mora_total) + '</span>' : '-' %></td>
+                <td class="text-end">
+                    <% if (p.cobro_admon > 0) { %>
+                        <span class="<%= p.cobro_admon_pagado ? 'badge-ok' : 'badge-warn' %>"><%= Q(p.cobro_admon) %></span>
+                    <% } else { %>-<% } %>
+                </td>
+                <td class="text-center">
+                    <span style="font-size:7px;"><%= p.cuotas_pagadas %>/<%= p.plazo_dias %></span>
+                    <div class="progress-bar"><div class="progress-fill" style="width:<%= p.progreso %>%;"></div></div>
+                </td>
+                <td class="text-center">
+                    <% if (p.cuotas_atrasadas > 0) { %>
+                        <span class="badge-danger"><%= p.cuotas_atrasadas %></span>
+                    <% } else { %>
+                        <span class="badge-ok">0</span>
+                    <% } %>
+                </td>
+            </tr>
+        <% }) %>
+        </tbody>
+    </table>
+</div>
+<% }) %>
+
+<div class="footer">PrestaApp &mdash; Reporte generado automaticamente</div>
+
+</body>
+</html>

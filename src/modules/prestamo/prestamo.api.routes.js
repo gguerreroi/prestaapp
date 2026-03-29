@@ -4,6 +4,7 @@ import requirePermission from "../../middlewares/auth/permission.middleware";
 import { createLoan } from "./nuevo.prestamo.api.controller";
 import { registrarPago } from "./pagos.prestamo.api.controller";
 import { reversarPago } from "./reversarPago.api.controller";
+import { cobrarAdmon } from "./cobro-admon.api.controller";
 
 const router = Router();
 // Base URL: /api/prestamos
@@ -14,6 +15,7 @@ router.post(
   createLoan,
 );
 
+router.post("/:id/cobro-admon", apiAuth, cobrarAdmon);
 router.post("/:id", apiAuth, registrarPago);
 router.delete("/:id", apiAuth, reversarPago);
 

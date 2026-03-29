@@ -1,0 +1,216 @@
+<!--begin::Toolbar-->
+<div class="toolbar py-3 py-lg-6" id="kt_toolbar">
+    <div class="container-xxl d-flex flex-stack flex-wrap gap-2">
+        <div class="page-title d-flex flex-column justify-content-center me-3">
+            <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">
+                Reporte de Pagos Diarios
+            </h1>
+            <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
+                <li class="breadcrumb-item text-muted"><a href="/" class="text-muted text-hover-primary">Inicio</a></li>
+                <li class="breadcrumb-item"><span class="bullet bg-gray-400 w-5px h-2px"></span></li>
+                <li class="breadcrumb-item text-muted"><a href="/reportes" class="text-muted text-hover-primary">Reportes</a></li>
+                <li class="breadcrumb-item"><span class="bullet bg-gray-400 w-5px h-2px"></span></li>
+                <li class="breadcrumb-item text-dark">Pagos Diarios</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!--end::Toolbar-->
+
+<%
+    const Q = (v) => 'Q ' + Number(v || 0).toLocaleString('es-GT');
+    const fmtD = (d) => d ? new Date(d).toLocaleDateString('es-GT', { timeZone: 'UTC', day: '2-digit', month: '2-digit', year: 'numeric' }) : '-';
+    const fmtDT = (d) => d ? new Date(d).toLocaleString('es-GT', { timeZone: 'UTC', day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }) : '-';
+    const fmtDiaCorto = (d) => {
+        const dt = new Date(d + 'T12:00:00');
+        const dias = ['Dom','Lun','Mar','Mie','Jue','Vie','Sab'];
+        return dias[dt.getDay()] + ' ' + dt.getDate();
+    };
+%>
+
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+    <div class="container-xxl pb-10" id="kt_content_container">
+
+        <!-- Navegacion y filtros -->
+        <div class="card mb-5">
+            <div class="card-body py-5">
+                <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+                    <div class="d-flex align-items-center gap-2">
+                        <a href="/reportes/reporte-pagos-diarios?mes=<%= mesAnterior %><%= filtroAgente ? '&agente=' + filtroAgente : '' %>"
+                           class="btn btn-icon btn-sm btn-light"><i class="bi bi-chevron-left"></i></a>
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-calendar3 text-warning"></i>
+                            <span class="fw-bold fs-5 text-gray-800"><%= mesLabel %></span>
+                            <input type="month" id="inputMes" class="form-control form-control-sm form-control-solid w-150px"
+                                   value="<%= mesActual %>" />
+                        </div>
+                        <a href="/reportes/reporte-pagos-diarios?mes=<%= mesSiguiente %><%= filtroAgente ? '&agente=' + filtroAgente : '' %>"
+                           class="btn btn-icon btn-sm btn-light"><i class="bi bi-chevron-right"></i></a>
+                        <a href="/reportes/reporte-pagos-diarios<%= filtroAgente ? '?agente=' + filtroAgente : '' %>"
+                           class="btn btn-sm btn-light-primary ms-2">Mes actual</a>
+                    </div>
+
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="text-muted fs-7">Agente:</span>
+                        <select class="form-select form-select-solid form-select-sm w-200px" id="fltAgente">
+                            <option value="">Todos</option>
+                            <% agentes.forEach(function(ag) { %>
+                                <option value="<%= ag.agente_id %>" <%= filtroAgente == ag.agente_id ? 'selected' : '' %>>
+                                    <%= ag.nombre %>
+                                </option>
+                            <% }) %>
+                        </select>
+                    </div>
+
+                    <a href="/reportes/reporte-pagos-diarios/pdf?mes=<%= mesActual %><%= filtroAgente ? '&agente=' + filtroAgente : '' %>"
+                       class="btn btn-sm btn-light-danger" target="_blank">
+                        <i class="bi bi-file-earmark-pdf"></i> PDF
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- KPIs -->
+        <div class="row g-5 mb-5">
+            <div class="col-md-2 col-6">
+                <div class="card card-body text-center py-4">
+                    <span class="text-muted fs-8">Total pagos</span>
+                    <span class="fs-1 fw-bolder text-gray-800"><%= kpis.totalPagos %></span>
+                </div>
+            </div>
+            <div class="col-md-2 col-6">
+                <div class="card card-body text-center py-4">
+                    <span class="text-muted fs-8">Cuotas cobradas</span>
+                    <span class="fs-3 fw-bolder text-success"><%= Q(kpis.totalCuotas) %></span>
+                </div>
+            </div>
+            <div class="col-md-2 col-6">
+                <div class="card card-body text-center py-4">
+                    <span class="text-muted fs-8">Mora cobrada</span>
+                    <span class="fs-3 fw-bolder text-danger"><%= Q(kpis.totalMora) %></span>
+                </div>
+            </div>
+            <div class="col-md-2 col-6">
+                <div class="card card-body text-center py-4">
+                    <span class="text-muted fs-8">Cobros admon.</span>
+                    <span class="fs-3 fw-bolder text-primary"><%= Q(kpis.totalAdmon) %></span>
+                </div>
+            </div>
+            <div class="col-md-2 col-6">
+                <div class="card card-body text-center py-4">
+                    <span class="text-muted fs-8">Total general</span>
+                    <span class="fs-2 fw-bolder text-gray-800"><%= Q(kpis.totalGeneral) %></span>
+                </div>
+            </div>
+            <div class="col-md-2 col-6">
+                <div class="card card-body text-center py-4">
+                    <span class="text-muted fs-8">Dias con pagos</span>
+                    <span class="fs-1 fw-bolder text-gray-800"><%= kpis.diasConPagos %></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Resumen diario -->
+        <div class="card mb-5">
+            <div class="card-header border-0 pt-6">
+                <div class="card-title"><h3 class="fw-bold m-0">Resumen por dia</h3></div>
+            </div>
+            <div class="card-body pt-0">
+                <div class="table-responsive">
+                    <table class="table table-row-dashed table-row-gray-300 align-middle gs-0 gy-3">
+                        <thead>
+                        <tr class="fw-bold text-muted fs-7 text-uppercase">
+                            <th class="min-w-100px">Dia</th>
+                            <th class="text-center min-w-80px">Pagos</th>
+                            <th class="text-end min-w-120px">Cuotas</th>
+                            <th class="text-end min-w-100px">Mora</th>
+                            <th class="text-end min-w-100px">Admon.</th>
+                            <th class="text-end min-w-120px">Total dia</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <% if (resumenDiario.length === 0) { %>
+                            <tr><td colspan="6" class="text-center text-muted py-8">No hay pagos registrados en este mes.</td></tr>
+                        <% } else { %>
+                            <% resumenDiario.forEach(function(d) { %>
+                                <tr>
+                                    <td class="fw-bold text-gray-800"><%= fmtDiaCorto(d.fecha) %> - <%= fmtD(d.fecha) %></td>
+                                    <td class="text-center"><span class="badge badge-light-primary"><%= d.cantidadPagos %></span></td>
+                                    <td class="text-end text-success fw-bold"><%= Q(d.totalCuotas) %></td>
+                                    <td class="text-end"><%= d.totalMora > 0 ? '<span class="text-danger">' + Q(d.totalMora) + '</span>' : '-' %></td>
+                                    <td class="text-end"><%= d.totalAdmon > 0 ? '<span class="text-primary">' + Q(d.totalAdmon) + '</span>' : '-' %></td>
+                                    <td class="text-end fw-bolder"><%= Q(d.totalDia) %></td>
+                                </tr>
+                            <% }) %>
+                        <% } %>
+                        </tbody>
+                        <% if (resumenDiario.length > 0) { %>
+                        <tfoot>
+                            <tr class="fw-bold bg-light-warning">
+                                <td>TOTALES</td>
+                                <td class="text-center"><%= kpis.totalPagos %></td>
+                                <td class="text-end text-success"><%= Q(kpis.totalCuotas) %></td>
+                                <td class="text-end text-danger"><%= Q(kpis.totalMora) %></td>
+                                <td class="text-end text-primary"><%= Q(kpis.totalAdmon) %></td>
+                                <td class="text-end fw-bolder"><%= Q(kpis.totalGeneral) %></td>
+                            </tr>
+                        </tfoot>
+                        <% } %>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detalle de pagos -->
+        <div class="card">
+            <div class="card-header border-0 pt-6">
+                <div class="card-title"><h3 class="fw-bold m-0">Detalle de pagos</h3></div>
+                <div class="card-toolbar">
+                    <span class="text-muted fs-7"><%= pagos.length %> pagos registrados</span>
+                </div>
+            </div>
+            <div class="card-body pt-0">
+                <div class="table-responsive">
+                    <table class="table table-row-dashed table-row-gray-300 align-middle gs-0 gy-3 fs-8">
+                        <thead>
+                        <tr class="fw-bold text-muted text-uppercase fs-9">
+                            <th class="min-w-120px">Fecha/Hora</th>
+                            <th class="min-w-160px">Cliente</th>
+                            <th>Prestamo</th>
+                            <th class="text-center">Cuota #</th>
+                            <th class="text-end">Monto</th>
+                            <th class="text-end">Mora</th>
+                            <th>Agente</th>
+                            <th>Usuario</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <% if (pagos.length === 0) { %>
+                            <tr><td colspan="8" class="text-center text-muted py-8">No hay pagos en este periodo.</td></tr>
+                        <% } else { %>
+                            <% pagos.forEach(function(p) { %>
+                                <tr>
+                                    <td class="text-muted"><%= fmtDT(p.fecha_pago) %></td>
+                                    <td>
+                                        <span class="fw-bold text-gray-800"><%= p.cliente_nombre %></span>
+                                        <% if (p.cliente_telefono) { %>
+                                            <span class="text-muted fs-9 ms-1">(<%= p.cliente_telefono %>)</span>
+                                        <% } %>
+                                    </td>
+                                    <td><a href="/prestamos/<%= p.prestamo_id %>" class="text-hover-primary">#<%= p.prestamo_id %></a></td>
+                                    <td class="text-center"><span class="badge badge-light">Dia <%= p.dia_num %></span></td>
+                                    <td class="text-end text-success fw-bold"><%= Q(p.monto_pagado) %></td>
+                                    <td class="text-end"><%= p.mora > 0 ? '<span class="text-danger">' + Q(p.mora) + '</span>' : '-' %></td>
+                                    <td class="text-muted fs-9"><%= p.agente_nombre %></td>
+                                    <td class="text-muted fs-9"><%= p.usuario_pago || '-' %></td>
+                                </tr>
+                            <% }) %>
+                        <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

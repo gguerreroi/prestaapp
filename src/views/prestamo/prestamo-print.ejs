@@ -293,6 +293,17 @@
             <div class="value"><%= Q(prestamo.cuota_diaria) %></div>
         </div>
         <div class="loan-field">
+            <div class="label">Cobro Admon.</div>
+            <div class="value">
+                <%= Q(prestamo.cobro_admon) %>
+                <% if (prestamo.fecha_pago_cobro_admon) { %>
+                    <span style="color:#2e7d32; font-size:9px; font-weight:normal;"> (Cobrado)</span>
+                <% } else if (prestamo.cobro_admon > 0) { %>
+                    <span style="color:#e65100; font-size:9px; font-weight:normal;"> (Pendiente)</span>
+                <% } %>
+            </div>
+        </div>
+        <div class="loan-field">
             <div class="label">Fecha Inicio</div>
             <div class="value"><%= fmtDate(prestamo.fecha_inicio) %></div>
         </div>

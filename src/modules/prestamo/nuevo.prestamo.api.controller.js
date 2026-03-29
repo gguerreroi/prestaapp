@@ -122,6 +122,22 @@ export async function createLoan(req, res) {
 		const prestamoId = result.output?.prestamo_id ?? null;
 		const row = result.recordset?.[0] ?? null;
 
+		// Calcular y asignar cobro administrativo
+		if (prestamoId && pPrincipal) {
+			await pool.request()
+				.input("prestamo_id", mssql.BigInt, prestamoId)
+				.input("principal", mssql.Int, pPrincipal)
+				.query(`
+					UPDATE prestamos.core
+					SET cobro_admon = ISNULL((
+						SELECT TOP 1 cobro_admon
+						FROM prestamos.cobros_administrativos
+						WHERE @principal BETWEEN monto_minimo AND monto_maximo
+					), 0)
+					WHERE prestamo_id = @prestamo_id
+				`);
+		}
+
 		// Respuesta consistente
 		return res.status(201).json({
 			ok: true,

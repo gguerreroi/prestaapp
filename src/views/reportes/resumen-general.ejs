@@ -1,0 +1,191 @@
+<!--begin::Toolbar-->
+<div class="toolbar py-3 py-lg-6" id="kt_toolbar">
+    <div class="container-xxl d-flex flex-stack flex-wrap gap-2">
+        <div class="page-title d-flex flex-column justify-content-center me-3">
+            <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">
+                Resumen General
+            </h1>
+            <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
+                <li class="breadcrumb-item text-muted"><a href="/" class="text-muted text-hover-primary">Inicio</a></li>
+                <li class="breadcrumb-item"><span class="bullet bg-gray-400 w-5px h-2px"></span></li>
+                <li class="breadcrumb-item text-muted"><a href="/reportes" class="text-muted text-hover-primary">Reportes</a></li>
+                <li class="breadcrumb-item"><span class="bullet bg-gray-400 w-5px h-2px"></span></li>
+                <li class="breadcrumb-item text-dark">Resumen General</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!--end::Toolbar-->
+
+<%
+    const Q = (v) => 'Q ' + Number(v || 0).toLocaleString('es-GT');
+%>
+
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+    <div class="container-xxl pb-10" id="kt_content_container">
+
+        <!-- Navegacion -->
+        <div class="card mb-5">
+            <div class="card-body py-5">
+                <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+                    <div class="d-flex align-items-center gap-2">
+                        <a href="/reportes/resumen-general?mes=<%= mesAnterior %>"
+                           class="btn btn-icon btn-sm btn-light"><i class="bi bi-chevron-left"></i></a>
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-calendar3 text-primary"></i>
+                            <span class="fw-bold fs-5 text-gray-800"><%= mesLabel %></span>
+                            <input type="month" id="inputMes" class="form-control form-control-sm form-control-solid w-150px"
+                                   value="<%= mesActual %>" />
+                        </div>
+                        <a href="/reportes/resumen-general?mes=<%= mesSiguiente %>"
+                           class="btn btn-icon btn-sm btn-light"><i class="bi bi-chevron-right"></i></a>
+                        <a href="/reportes/resumen-general" class="btn btn-sm btn-light-primary ms-2">Mes actual</a>
+                    </div>
+                    <a href="/reportes/resumen-general/pdf?mes=<%= mesActual %>"
+                       class="btn btn-sm btn-light-danger" target="_blank">
+                        <i class="bi bi-file-earmark-pdf"></i> PDF
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- KPIs principales -->
+        <div class="row g-5 mb-5">
+            <div class="col-md-3 col-6">
+                <div class="card card-body text-center py-5">
+                    <span class="text-muted fs-7">Prestamos activos</span>
+                    <span class="fs-1 fw-bolder text-gray-800"><%= kpis.prestamos_activos %></span>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="card card-body text-center py-5">
+                    <span class="text-muted fs-7">Capital total colocado</span>
+                    <span class="fs-2 fw-bolder text-primary"><%= Q(kpis.capital_total) %></span>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="card card-body text-center py-5">
+                    <span class="text-muted fs-7">Capital colocado este mes</span>
+                    <span class="fs-2 fw-bolder text-info"><%= Q(kpis.capital_colocado_mes) %></span>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="card card-body text-center py-5">
+                    <span class="text-muted fs-7">Mora total acumulada</span>
+                    <span class="fs-2 fw-bolder text-danger"><%= Q(kpis.mora_total) %></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- KPIs cobranza del mes -->
+        <div class="row g-5 mb-5">
+            <div class="col-md-3 col-6">
+                <div class="card card-body text-center py-5">
+                    <span class="text-muted fs-7">Cobrado en el mes</span>
+                    <span class="fs-2 fw-bolder text-success"><%= Q(kpis.cobrado_mes) %></span>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="card card-body text-center py-5">
+                    <span class="text-muted fs-7">Programado en el mes</span>
+                    <span class="fs-2 fw-bolder text-gray-800"><%= Q(kpis.programado_mes) %></span>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="card card-body text-center py-5">
+                    <span class="text-muted fs-7">Tasa de cobro</span>
+                    <span class="fs-1 fw-bolder text-gray-800"><%= kpis.tasa_cobro_mes %>%</span>
+                    <div class="progress h-6px mt-2">
+                        <div class="progress-bar bg-success" style="width:<%= kpis.tasa_cobro_mes %>%"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="card card-body text-center py-5">
+                    <span class="text-muted fs-7">Cobrado hoy</span>
+                    <span class="fs-2 fw-bolder text-success"><%= Q(kpis.cobrado_hoy) %></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- KPIs cobro administrativo -->
+        <div class="row g-5 mb-5">
+            <div class="col-md-4 col-6">
+                <div class="card card-body text-center py-5">
+                    <span class="text-muted fs-7">Cobros admon. del mes</span>
+                    <span class="fs-2 fw-bolder text-primary"><%= Q(kpis.admon_cobrado_mes) %></span>
+                </div>
+            </div>
+            <div class="col-md-4 col-6">
+                <div class="card card-body text-center py-5">
+                    <span class="text-muted fs-7">Cuotas pagadas / total</span>
+                    <span class="fs-2 fw-bolder text-gray-800"><%= kpis.cuotas_pagadas_mes %> / <%= kpis.cuotas_total_mes %></span>
+                </div>
+            </div>
+            <div class="col-md-4 col-12">
+                <div class="card card-body text-center py-5">
+                    <span class="text-muted fs-7">Cobros admon. total cartera</span>
+                    <span class="fs-2 fw-bolder text-gray-800"><%= Q(kpis.admon_total) %></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabla por agente -->
+        <div class="card">
+            <div class="card-header border-0 pt-6">
+                <div class="card-title"><h3 class="fw-bold m-0">Desempeño por agente</h3></div>
+                <div class="card-toolbar">
+                    <span class="text-muted fs-7"><%= mesLabel %></span>
+                </div>
+            </div>
+            <div class="card-body pt-0">
+                <div class="table-responsive">
+                    <table class="table table-row-dashed table-row-gray-300 align-middle gs-0 gy-4">
+                        <thead>
+                        <tr class="fw-bold text-muted fs-7 text-uppercase">
+                            <th class="min-w-180px">Agente</th>
+                            <th class="min-w-80px text-center">Prestamos</th>
+                            <th class="min-w-120px text-end">Capital</th>
+                            <th class="min-w-120px text-end">Saldo</th>
+                            <th class="min-w-120px text-end">Cobrado mes</th>
+                            <th class="min-w-100px text-end">Mora mes</th>
+                            <th class="min-w-80px text-center">Cuotas pagadas</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <% if (agentes.length === 0) { %>
+                            <tr><td colspan="7" class="text-center text-muted py-8">No hay datos.</td></tr>
+                        <% } else { %>
+                            <% agentes.forEach(function(a) { %>
+                                <tr>
+                                    <td class="fw-bold text-gray-800"><%= a.agente_nombre %></td>
+                                    <td class="text-center"><span class="badge badge-light-primary"><%= a.prestamos_activos %></span></td>
+                                    <td class="text-end"><%= Q(a.capital) %></td>
+                                    <td class="text-end fw-bold"><%= Q(a.saldo) %></td>
+                                    <td class="text-end text-success fw-bold"><%= Q(a.cobrado_mes) %></td>
+                                    <td class="text-end"><%= a.mora_mes > 0 ? '<span class="text-danger">' + Q(a.mora_mes) + '</span>' : '-' %></td>
+                                    <td class="text-center"><%= a.cuotas_pagadas %></td>
+                                </tr>
+                            <% }) %>
+                        <% } %>
+                        </tbody>
+                        <% if (agentes.length > 1) { %>
+                        <tfoot>
+                            <tr class="fw-bold bg-light-primary">
+                                <td>TOTAL</td>
+                                <td class="text-center"><%= agentes.reduce((s, a) => s + a.prestamos_activos, 0) %></td>
+                                <td class="text-end"><%= Q(agentes.reduce((s, a) => s + a.capital, 0)) %></td>
+                                <td class="text-end"><%= Q(agentes.reduce((s, a) => s + a.saldo, 0)) %></td>
+                                <td class="text-end text-success"><%= Q(agentes.reduce((s, a) => s + a.cobrado_mes, 0)) %></td>
+                                <td class="text-end text-danger"><%= Q(agentes.reduce((s, a) => s + a.mora_mes, 0)) %></td>
+                                <td class="text-center"><%= agentes.reduce((s, a) => s + a.cuotas_pagadas, 0) %></td>
+                            </tr>
+                        </tfoot>
+                        <% } %>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

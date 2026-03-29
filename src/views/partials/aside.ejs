@@ -96,6 +96,23 @@
                 </div>
                 <% } %>
 
+                <% if (user && user.codrole === 1) { %>
+                <div class="menu-item mt-6">
+                    <div class="menu-content px-8">
+                        <div class="separator separator-dashed separator-white opacity-25"></div>
+                    </div>
+                </div>
+
+                <div class="menu-item <%= activeMenu === 'configuracion' ? 'here show' : ''%>">
+                    <a class="menu-link <%= activeMenu === 'configuracion' ? 'here show active' : ''%>" href="/configuracion">
+                  <span class="menu-icon">
+                    <i class="bi bi-gear fs-2"></i>
+                  </span>
+                        <span class="menu-title">Configuracion</span>
+                    </a>
+                </div>
+                <% } %>
+
                 <div class="menu-item mt-6">
                     <div class="menu-content px-8">
                         <div class="separator separator-dashed separator-white opacity-25"></div>

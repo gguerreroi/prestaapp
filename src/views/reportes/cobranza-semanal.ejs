@@ -107,6 +107,7 @@
                                 <th class="min-w-90px text-end">Interés</th>
                                 <th class="min-w-90px text-end">Total</th>
                                 <th class="min-w-90px text-end">Saldo</th>
+                                <th class="min-w-70px text-end">Admon.</th>
                                 <% diasSemana.forEach(function(dia) { %>
                                     <th class="min-w-100px text-center">
                                         <div><%= dia.nombre %></div>
@@ -118,7 +119,7 @@
                         <tbody class="fw-semibold text-gray-700">
                             <% if (prestamos.length === 0) { %>
                                 <tr>
-                                    <td colspan="<%= 6 + diasSemana.length %>" class="text-center text-muted py-8">
+                                    <td colspan="<%= 7 + diasSemana.length %>" class="text-center text-muted py-8">
                                         No hay prestamos activos con cuotas en esta semana.
                                     </td>
                                 </tr>
@@ -147,6 +148,15 @@
                                         </td>
                                         <td class="text-end fw-bold">
                                             Q <%= p.saldo.toLocaleString('es-GT') %>
+                                        </td>
+                                        <td class="text-end">
+                                            <% if (p.cobro_admon > 0) { %>
+                                                <span class="badge badge-light-<%= p.cobro_admon_pagado ? 'success' : 'warning' %> fs-8 px-2 py-1">
+                                                    Q<%= p.cobro_admon %>
+                                                </span>
+                                            <% } else { %>
+                                                -
+                                            <% } %>
                                         </td>
                                         <% diasSemana.forEach(function(dia) { %>
                                             <% const cuota = p.dias[dia.fecha]; %>
@@ -189,6 +199,9 @@
                                 </td>
                                 <td class="text-end fw-bold">
                                     Q <%= prestamos.reduce((sum, p) => sum + p.saldo, 0).toLocaleString('es-GT') %>
+                                </td>
+                                <td class="text-end fw-bold">
+                                    Q <%= prestamos.reduce((sum, p) => sum + (p.cobro_admon || 0), 0).toLocaleString('es-GT') %>
                                 </td>
                                 <% diasSemana.forEach(function(dia) { %>
                                     <td class="text-center">

@@ -136,6 +136,7 @@
             <th class="text-end" style="width: 65px;">Interés</th>
             <th class="text-end" style="width: 65px;">Total</th>
             <th class="text-end" style="width: 70px;">Saldo</th>
+            <th class="text-end" style="width: 50px;">Admon.</th>
             <% diasSemana.forEach(function(dia) { %>
                 <th style="width: 72px;">
                     <%= dia.nombre %><br><span style="font-weight:normal;"><%= dia.fechaCorta %></span>
@@ -146,7 +147,7 @@
     <tbody>
         <% if (prestamos.length === 0) { %>
             <tr>
-                <td colspan="<%= 6 + diasSemana.length %>" style="padding: 15px; color: #999;">
+                <td colspan="<%= 7 + diasSemana.length %>" style="padding: 15px; color: #999;">
                     No hay préstamos activos con cuotas en esta semana.
                 </td>
             </tr>
@@ -162,6 +163,11 @@
                     <td class="text-end">Q <%= p.interes.toLocaleString('es-GT') %></td>
                     <td class="text-end">Q <%= p.total_pagar.toLocaleString('es-GT') %></td>
                     <td class="text-end" style="font-weight:bold;">Q <%= p.saldo.toLocaleString('es-GT') %></td>
+                    <td class="text-end">
+                        <% if (p.cobro_admon > 0) { %>
+                            <span style="color:<%= p.cobro_admon_pagado ? '#1b7a1b' : '#888' %>;">Q<%= p.cobro_admon %></span>
+                        <% } else { %>-<% } %>
+                    </td>
                     <% diasSemana.forEach(function(dia) { %>
                         <% const cuota = p.dias[dia.fecha]; %>
                         <td<% if (cuota) { %><% if (cuota.estado_cuota === 'PAGADO') { %> class="pagado"<% } else if (cuota.estado_cuota === 'ATRASADO' || cuota.estado_cuota === 'MOROSO') { %> class="atrasado"<% } else { %> class="pendiente"<% } %><% } %>>
@@ -188,6 +194,7 @@
             <td class="text-end">Q <%= prestamos.reduce((s, p) => s + p.interes, 0).toLocaleString('es-GT') %></td>
             <td class="text-end">Q <%= prestamos.reduce((s, p) => s + p.total_pagar, 0).toLocaleString('es-GT') %></td>
             <td class="text-end">Q <%= prestamos.reduce((s, p) => s + p.saldo, 0).toLocaleString('es-GT') %></td>
+            <td class="text-end">Q <%= prestamos.reduce((s, p) => s + (p.cobro_admon || 0), 0).toLocaleString('es-GT') %></td>
             <% diasSemana.forEach(function(dia) { %>
                 <td>
                     <%
