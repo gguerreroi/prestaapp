@@ -16,7 +16,7 @@ async function connection() {
       port: env.DB.PORT,
       options: {
         encrypt: env.DB.ENCRYPT,
-        trustServerCertificate: true,
+        trustServerCertificate: false,
         enableArithAbort: true,
       },
     };
