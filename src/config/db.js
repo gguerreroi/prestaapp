@@ -21,6 +21,8 @@ async function connection() {
       },
     };
 
+    console.log("haciendo conexion con: ", cfg);
+
     const connPool = new mssql.ConnectionPool(cfg);
     pool = await connPool.connect();
 
