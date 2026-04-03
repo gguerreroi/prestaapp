@@ -231,23 +231,21 @@ const progreso = total_cuotas > 0 ? Math.min(100, Math.round((cuotas_pagadas / t
                     </div>
                 </div>
 
-                <!-- Acciones: PDF / Reversar -->
-                <div class="d-flex align-items-center flex-wrap gap-2 mb-5">
-                    <a href="/prestamos/pdf/<%= prestamo.prestamo_id %>" target="_blank" class="btn btn-light-danger btn-sm">
-                        <i class="bi bi-file-earmark-pdf"></i> PDF
-                    </a>
-                    <% if (user && user.codrole === 1) { %>
-                    <button type="button" class="btn btn-danger btn-sm" id="btnReversar" disabled>
-                        <i class="bi bi-arrow-counterclockwise"></i> Reversar
-                        <span class="badge badge-light ms-1" id="reversarCount">0</span>
-                    </button>
-                    <% } %>
-                </div>
-
                 <!-- Plan -->
                 <div class="card gc-elevated">
                     <div class="card-header">
                         <div class="card-title"><h3 class="fw-bold m-0">Plan de pagos</h3></div>
+                        <div class="card-toolbar d-flex align-items-center gap-2">
+                            <a href="/prestamos/pdf/<%= prestamo.prestamo_id %>" target="_blank" class="btn btn-light-danger btn-sm">
+                                <i class="bi bi-file-earmark-pdf"></i> PDF
+                            </a>
+                            <% if (user && user.codrole === 1) { %>
+                            <button type="button" class="btn btn-danger btn-sm" id="btnReversar" disabled>
+                                <i class="bi bi-arrow-counterclockwise"></i> Reversar
+                                <span class="badge badge-light ms-1" id="reversarCount">0</span>
+                            </button>
+                            <% } %>
+                        </div>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
