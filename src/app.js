@@ -31,6 +31,9 @@ app.set("trust proxy", true);
 app.use(expressLayouts);
 app.set("layout", "layouts/main");
 
+// Health check (antes de auth para que Azure pueda acceder sin sesión)
+app.get("/health", (req, res) => res.status(200).send("OK"));
+
 // Middlewares
 app.use(morgan("dev"));
 app.use(express.urlencoded({ extended: true }));
