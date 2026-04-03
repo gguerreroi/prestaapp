@@ -1,0 +1,12 @@
+import { Router } from "express"
+import appAuth from "../../middlewares/auth/app-auth.middleware"
+import requirePermission from "../../middlewares/auth/permission.middleware"
+
+const router = Router();
+
+// URL base: /health
+router.get('/', (req, res) => {
+	res.status(200).json({ status: "ok" })
+})
+
+export default router;
