@@ -68,15 +68,14 @@ export async function dashboardStats(req, res) {
 				INNER JOIN clientes.core c ON c.cui9 = p.cui9
 				WHERE c.cartera_id IN (SELECT agente_id FROM @agentes);
 
-				-- 7) Cuotas atrasadas (vencidas antes de hoy)
+				-- 7) Cuotas atrasadas
 				SELECT COUNT(*) AS cuotas_atrasadas,
 				       ISNULL(SUM(d.cuota_programada + d.mora), 0) AS monto_atrasado
 				FROM prestamos.detalle d
 				INNER JOIN prestamos.core p ON p.prestamo_id = d.prestamo_id
 				INNER JOIN clientes.core c ON c.cui9 = p.cui9
 				WHERE c.cartera_id IN (SELECT agente_id FROM @agentes)
-				  AND d.estado = 'Pendiente'
-				  AND d.fecha_cuota < CAST(GETDATE() AS DATE);
+				  AND d.estado IN ('ATRASADO', 'MOROSO');
 
 				-- 8) Actividad reciente (últimos 10 pagos)
 				SELECT TOP 10
