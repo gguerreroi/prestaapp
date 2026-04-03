@@ -7,6 +7,10 @@
 	const endpoint = "/api/cobranza/listado";
 	const $table = $(tableEl);
 
+	// Leer parametros de URL (ej: ?atrasos=1)
+	const urlParams = new URLSearchParams(window.location.search);
+	const filtroAtrasos = urlParams.get("atrasos") || "";
+
 	// helpers
 	const moneyQ = (n) =>
 		new Intl.NumberFormat("es-GT", { style: "currency", currency: "GTQ", maximumFractionDigits: 0 })
@@ -26,6 +30,16 @@
 		return `<span class="badge badge-light-success">0</span>`;
 	};
 
+	const formatFecha = (val) => {
+		if (!val) return '<span class="text-muted">--</span>';
+		const d = new Date(val);
+		if (isNaN(d.getTime())) return '<span class="text-muted">--</span>';
+		return d.toLocaleDateString("es-GT", { day: "2-digit", month: "2-digit", year: "numeric", timeZone: "UTC" });
+	};
+
+	// Indice de la columna proxima_cuota para orden por defecto
+	const COL_PROXIMA_CUOTA = 7;
+
 	// DataTables init
 	const dt = $table.DataTable({
 		processing: true,
@@ -34,11 +48,13 @@
 		ordering: true,
 		lengthMenu: [10, 25, 50, 100],
 		pageLength: 25,
+		order: [[COL_PROXIMA_CUOTA, "asc"]],
 		ajax: {
 			url: endpoint,
 			type: "GET",
 			data: function (d) {
 				d.estado = document.getElementById("fltEstado")?.value || "";
+				d.atrasos = filtroAtrasos;
 			},
 			error: function (xhr) {
 				console.error("DataTables error:", xhr?.responseText || xhr);
@@ -120,6 +136,14 @@
 				className: "text-center",
 				render: function (n) {
 					return badgeAtrasos(n);
+				},
+			},
+
+			{
+				data: "proxima_cuota",
+				name: "proxima_cuota",
+				render: function (val) {
+					return formatFecha(val);
 				},
 			},
 

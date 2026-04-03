@@ -7,7 +7,7 @@ const VIEW_NAME = "ui.vw_datatables_prestamos_listado";
 const VALID_ORDER_COLS = [
 	"prestamo_id", "cliente_nombres", "cliente_apellidos", "agente_nombre",
 	"cuota_diaria", "saldo", "cuotas_pagadas", "cuotas_atrasadas", "estado",
-	"fecha_inicio", "principal", "total_pagar", "plazo_dias"
+	"fecha_inicio", "principal", "total_pagar", "plazo_dias", "proxima_cuota"
 ];
 
 // Columnas usadas en búsqueda
@@ -43,6 +43,7 @@ export async function listadoCobranza(req, res) {
 		).toString().trim();
 
 		const estadoFilter = (req.query?.estado || "").toString().trim().toUpperCase();
+		const atrasosFilter = (req.query?.atrasos || "").toString().trim();
 
 		const orderColIndex = Number(
 			req.query?.order?.[0]?.column ??
@@ -77,6 +78,11 @@ export async function listadoCobranza(req, res) {
 		// Filtro por estado
 		if (estadoFilter && ["ACTIVO", "PAGADO", "ANULADO"].includes(estadoFilter)) {
 			whereParts.push("estado = @estado");
+		}
+
+		// Filtro por atrasos
+		if (atrasosFilter === "1") {
+			whereParts.push("cuotas_atrasadas > 0");
 		}
 
 		// Búsqueda global

@@ -58,9 +58,28 @@ export async function registrarPago(req, res) {
 		// El SP hace un SELECT final con prestamo_id, cuotas_pagadas, procesado_utc
 		const data = result?.recordset || [];
 
+		// Verificar si todas las cuotas están pagadas para marcar el préstamo como PAGADO
+		const checkReq = pool.request();
+		checkReq.input("check_prestamo_id", mssql.BigInt, Number(id));
+		const checkResult = await checkReq.query(`
+			SELECT COUNT(*) AS pendientes
+			FROM prestamos.detalle
+			WHERE prestamo_id = @check_prestamo_id AND estado != 'PAGADO'
+		`);
+
+		const pendientes = Number(checkResult?.recordset?.[0]?.pendientes || 1);
+		if (pendientes === 0) {
+			const updateReq = pool.request();
+			updateReq.input("upd_prestamo_id", mssql.BigInt, Number(id));
+			await updateReq.query(`
+				UPDATE prestamos.core SET estado = 'PAGADO'
+				WHERE prestamo_id = @upd_prestamo_id AND estado != 'PAGADO'
+			`);
+		}
+
 		return res.status(200).json({
 			code: "OK",
-			message: "Pago registrado correctamente",
+			message: pendientes === 0 ? "Préstamo pagado en su totalidad" : "Pago registrado correctamente",
 			data
 		});
 
