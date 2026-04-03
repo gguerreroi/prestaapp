@@ -24,7 +24,7 @@ module.exports = {
     ENCRYPT: toBool(process.env.DB_ENCRIPTION, "DB_ENCRIPTION"),
   },
   APP: {
-    PORT: Number(process.env.PORT || process.env.APP_PORT),
+    PORT: Number(process.env.PORT || process.env.APP_PORT || 3000),
     COOKIE: required("APP_COOKIE_SECRET"),
     SESSION: required("APP_SESSION_SECRET"),
   },

@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "babel-node dist/index.js --env-file=.env",
+    "start": "node dist/index.js",
     "build": "rimraf dist && babel src -d dist && cp -r src/views dist/views",
     "dev": "nodemon src/index.js --exec babel-node --env-file=.env"
   },
@@ -20,7 +20,6 @@
   },
   "homepage": "https://github.com/gguerreroi/prestaapp#readme",
   "dependencies": {
-    "@babel/node": "^7.28.0",
     "@babel/polyfill": "^7.12.1",
     "autoprefixer": "^10.4.21",
     "axios": "^1.11.0",
@@ -49,6 +48,7 @@
     "@babel/cli": "^7.28.3",
     "@babel/core": "^7.28.3",
     "@babel/preset-env": "^7.28.3",
+    "@babel/node": "^7.28.0",
     "nodemon": "^3.1.10"
   }
 }
