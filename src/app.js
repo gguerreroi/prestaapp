@@ -24,12 +24,12 @@ const app = express();
 const SequelizeStore = SequelizeStoreFactory(session.Store);
 
 // Config base
-app.set("port", env.APP.PORT);
+app.set("port", process.env.PORT || env.APP.PORT);
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.set("trust proxy", true);
 app.use(expressLayouts);
-app.set('layout', 'layouts/main');
+app.set("layout", "layouts/main");
 
 // Middlewares
 app.use(morgan("dev"));
@@ -38,14 +38,14 @@ app.use(express.json());
 app.use(cookieParser(env.APP.COOKIE));
 app.use(fileUpload());
 app.use(
-	session({
-		secret: env.APP.SESSION,
-		resave: true,
-		saveUninitialized: false,
-		store: new SequelizeStore({
-			db: sequelizeSession,
-		}),
-	})
+  session({
+    secret: env.APP.SESSION,
+    resave: true,
+    saveUninitialized: false,
+    store: new SequelizeStore({
+      db: sequelizeSession,
+    }),
+  }),
 );
 app.use(passport.initialize());
 app.use(passport.session());
