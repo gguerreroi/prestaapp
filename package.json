@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node dist/index.js",
     "build": "rm -Rf dist && babel src -d dist && cp -r src/views dist/views",
-    "dev": "nodemon src/index.js --exec babel-node --env-file=.env"
+    "dev": "nodemon src/index.js --exec babel-node --env-file=.env",
+    "postinstall": "node node_modules/puppeteer/install.mjs"
   },
   "repository": {
     "type": "git",
